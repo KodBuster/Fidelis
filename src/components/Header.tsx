@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { CartLink } from "@/components/cart/CartLink";
 import { CompareLink } from "@/components/compare/CompareLink";
@@ -106,15 +107,18 @@ function Logo({ compact = false }: { compact?: boolean }) {
   return (
     <Link
       href="/"
-      className={`relative z-0 flex flex-col group shrink-0 min-w-0 ${
+      className={`relative z-0 flex flex-col group shrink-0 ${
         compact ? "items-center" : "items-center md:items-start"
       }`}
     >
-      <span
-        role="img"
-        aria-label="Синоним"
-        className={`logo-brand block aspect-[20/3] max-w-full object-contain ${
-          compact ? "logo-brand-bold h-5 max-w-[6.5rem] sm:max-w-[7rem]" : "h-7 md:h-8"
+      <Image
+        src="/images/logo_20260527190756.png"
+        alt="Синоним"
+        width={1000}
+        height={150}
+        priority
+        className={`logo-header-olive block max-w-none object-contain ${
+          compact ? "h-5 w-[6.5rem] sm:w-28" : "h-7 w-36 md:h-8 md:w-40"
         }`}
       />
       {!compact && (
@@ -190,7 +194,7 @@ export function Header() {
             <MobileSearchLink className="py-2 px-0.5" />
           </div>
 
-          <div className="relative z-0 overflow-hidden px-2 sm:px-3">
+          <div className="relative z-0 flex justify-center px-2 sm:px-3">
             <Logo compact />
           </div>
 

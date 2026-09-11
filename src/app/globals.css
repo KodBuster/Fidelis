@@ -47,23 +47,10 @@ body {
   font-family: var(--font-body);
 }
 
-.logo-brand {
-  background-color: var(--color-olive-logo);
-  mask-image: url("/images/logo_20260527190756.png");
-  mask-size: contain;
-  mask-repeat: no-repeat;
-  mask-position: center;
-  -webkit-mask-image: url("/images/logo_20260527190756.png");
-  -webkit-mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-}
-
-.logo-brand-bold {
-  filter: drop-shadow(0.4px 0 0 var(--color-olive-logo))
-    drop-shadow(-0.4px 0 0 var(--color-olive-logo))
-    drop-shadow(0 0.3px 0 var(--color-olive-logo))
-    drop-shadow(0 -0.3px 0 var(--color-olive-logo));
+/* Header logo: real <img> (iOS-safe). Tint to brand olive #4a5335. */
+.logo-header-olive {
+  filter: brightness(0) saturate(100%) invert(30%) sepia(18%) saturate(720%)
+    hue-rotate(39deg) brightness(92%) contrast(88%);
 }
 
 @keyframes hero-unroll {
