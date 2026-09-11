@@ -56,6 +56,9 @@ export function ProductCard({
         <h3 className="text-sm md:text-base text-brand-text group-hover:text-brand-terracotta transition-colors">
           {product.name}
         </h3>
+        {product.artNo ? (
+          <p className="mt-1 text-xs text-brand-muted">Арт. {product.artNo}</p>
+        ) : null}
         <p className="mt-1.5 font-heading text-brand-olive-dark text-lg">
           {formatPrice(product.price)}
         </p>

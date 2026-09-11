@@ -549,16 +549,11 @@ export function pickOfferPrice(
   return pickPositivePrice(withPrice?.price, offers[0]?.price) ?? 0;
 }
 
+/** Product-level ArtNo only — never an offer/modification artNo. */
 function pickDefaultArtNo(
-  item: Pick<AdvantShopProductDetails, "artNo" | "offers">
+  item: Pick<AdvantShopProductDetails, "artNo">,
 ): string {
-  return (
-    item.artNo ??
-    item.offers?.find((offer) => offer.isMain)?.artNo ??
-    item.offers?.find((offer) => (offer.price ?? 0) > 0)?.artNo ??
-    item.offers?.[0]?.artNo ??
-    ""
-  );
+  return item.artNo?.trim() ?? "";
 }
 
 function buildSizeArtNos(
@@ -646,10 +641,7 @@ export function mapCatalogProduct(
     ? (parseCaratWeightFromDescription(description) ?? 0.2)
     : 0.2;
   const legacySlug = item.urlPath;
-  const artNo =
-    item.artNo ??
-    item.offers?.find((offer) => offer.isMain)?.artNo ??
-    item.offers?.[0]?.artNo;
+  const artNo = item.artNo?.trim() || undefined;
   const stockAmount = stock?.stockAmount ?? getAdvantShopStockAmount(item);
   const inStock =
     stock?.inStock ??
