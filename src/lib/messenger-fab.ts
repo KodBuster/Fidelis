@@ -4,7 +4,11 @@ export type MessengerFabOpenDetail = {
   focusOnDesktop?: boolean;
 };
 
-/** Opens contact options via full navigation (iOS-safe). */
+/** Opens the expandable messenger FAB (Sharoduvy-style). */
 export function openMessengerFab(_options?: MessengerFabOpenDetail) {
-  window.location.href = "/messengers";
+  window.dispatchEvent(
+    new CustomEvent<MessengerFabOpenDetail>(MESSENGER_FAB_OPEN_EVENT, {
+      detail: { focusOnDesktop: true, ..._options },
+    }),
+  );
 }

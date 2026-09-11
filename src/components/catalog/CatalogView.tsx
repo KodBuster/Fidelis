@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CATEGORIES, type CategorySlug, type Product } from "@/lib/products";
@@ -59,24 +59,22 @@ export function CatalogView({
     new URLSearchParams(searchParams.toString()),
     category
   );
-  // URL-driven panel — Links work on iOS 16 where button onClick often does not.
-  const filtersOpen = searchParams.get("panel") === "filters";
-
-  const openFiltersHref = useMemo(() => {
-    const query = buildFilterQuery(filters, {}, { panel: true });
-    return `${basePath}${query}`;
-  }, [basePath, filters]);
-
-  const closeFiltersHref = useMemo(() => {
-    const query = buildFilterQuery(filters, {}, { panel: false });
-    return `${basePath}${query}`;
-  }, [basePath, filters]);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
     setCatalogProducts(initialProducts);
     setCatalogError(initialError);
     setLoading(false);
   }, [initialProducts, initialError]);
+
+  useEffect(() => {
+    if (!filtersOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setFiltersOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [filtersOpen]);
 
   const retryLoad = useCallback(() => {
     const params = new URLSearchParams();
@@ -172,9 +170,9 @@ export function CatalogView({
 
         <div className={`relative flex transition-[gap] duration-300 ${filtersOpen ? "lg:gap-6" : "gap-0"}`}>
           {filtersOpen && (
-            <Link
-              href={closeFiltersHref}
-              scroll={false}
+            <button
+              type="button"
+              onClick={() => setFiltersOpen(false)}
               className="fixed inset-0 z-40 bg-black/30 backdrop-blur-[1px] transition-opacity duration-300 lg:hidden"
               aria-label="Закрыть фильтры"
             />
@@ -195,8 +193,7 @@ export function CatalogView({
               <CatalogFilters
                 filters={filters}
                 basePath={basePath}
-                keepPanelOpen={filtersOpen}
-                closeHref={closeFiltersHref}
+                onClose={() => setFiltersOpen(false)}
               />
             </div>
           </aside>
@@ -204,9 +201,9 @@ export function CatalogView({
           <div className="min-w-0 flex-1">
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
               <div className="flex flex-wrap items-center gap-3">
-                <Link
-                  href={filtersOpen ? closeFiltersHref : openFiltersHref}
-                  scroll={false}
+                <button
+                  type="button"
+                  onClick={() => setFiltersOpen((open) => !open)}
                   aria-expanded={filtersOpen}
                   aria-controls="catalog-filters"
                   className="inline-flex touch-manipulation items-center gap-2 rounded-lg border border-brand-olive/20 bg-brand-surface px-4 py-2.5 text-sm text-brand-text transition-colors hover:border-brand-olive [-webkit-tap-highlight-color:transparent]"
@@ -225,7 +222,7 @@ export function CatalogView({
                       {activeFilterCount}
                     </span>
                   )}
-                </Link>
+                </button>
 
                 <p className="text-sm text-brand-muted">
                   {loading

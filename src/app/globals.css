@@ -234,10 +234,143 @@ body {
   pointer-events: auto !important;
 }
 
-body.mango-chat-open #messenger-fab-root {
+body.mango-chat-open #messenger-fab-root,
+body.mango-chat-open .messenger-fab {
   pointer-events: none !important;
   opacity: 0;
   visibility: hidden;
+}
+
+/* Expandable messenger FAB (Sharoduvy interaction model) */
+.messenger-fab-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 115;
+  background: rgba(20, 20, 20, 0.28);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.messenger-fab-scrim.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.messenger-fab {
+  position: fixed;
+  right: 1.25rem;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  z-index: 120;
+  width: 56px;
+  height: 56px;
+}
+@media (min-width: 768px) {
+  .messenger-fab {
+    right: 1.5rem;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+.messenger-fab-main {
+  position: relative;
+  z-index: 2;
+  width: 56px;
+  height: 56px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  background: var(--color-brand-terracotta, #d47750);
+  box-shadow: 0 12px 28px -10px rgba(212, 119, 80, 0.55);
+  display: grid;
+  place-items: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.25s ease, background 0.2s ease;
+}
+.messenger-fab-main:hover {
+  background: var(--color-brand-terracotta-logo, #c96a4a);
+  transform: scale(1.05);
+}
+.messenger-fab-main:active {
+  transform: scale(0.96);
+}
+.messenger-fab-main-label,
+.messenger-fab-main-close {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+  transition: opacity 0.2s ease, transform 0.25s ease;
+}
+.messenger-fab-main-close {
+  opacity: 0;
+  transform: scale(0.6) rotate(-40deg);
+}
+.messenger-fab.open .messenger-fab-main-label {
+  opacity: 0;
+  transform: scale(0.7);
+}
+.messenger-fab.open .messenger-fab-main-close {
+  opacity: 1;
+  transform: scale(1) rotate(0);
+}
+.messenger-fab-item {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  background: var(--c, #4a5335);
+  color: #fff;
+  box-shadow: 0 10px 24px -8px rgba(20, 20, 20, 0.35);
+  --x: 0px;
+  --y: 0px;
+  --s: 0;
+  transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(var(--s));
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.messenger-fab-item--brand {
+  background: transparent;
+  box-shadow: none;
+}
+.messenger-fab-item--brand img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: block;
+  box-shadow: 0 10px 24px -8px rgba(20, 20, 20, 0.35);
+}
+.messenger-fab-icon {
+  display: grid;
+  place-items: center;
+}
+.messenger-fab-tip {
+  position: absolute;
+  right: calc(100% + 12px);
+  top: 50%;
+  white-space: nowrap;
+  background: #fff;
+  color: var(--color-brand-olive-dark, #141414);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(74, 83, 53, 0.12);
+  box-shadow: 0 8px 20px -10px rgba(20, 20, 20, 0.35);
+  opacity: 0;
+  transform: translateY(-50%) translateX(8px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.35s ease;
+}
+.messenger-fab.open .messenger-fab-tip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
 }
 
 /* Mobile: keep open chat fully inside the viewport so the close control is visible */

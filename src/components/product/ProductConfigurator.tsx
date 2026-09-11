@@ -24,7 +24,7 @@ export function ProductConfigurator({ product }: ProductConfiguratorProps) {
     (variant) => Math.abs(variant.weight - product.stoneWeight) < 0.001,
   ) ?? product.stoneVariants[0];
 
-  const { selectedSize, selectedSizeLabel, sizeHref, artNo, price, diamondWeight } =
+  const { selectedSize, setSelectedSize, selectedSizeLabel, artNo, price, diamondWeight } =
     useProductSelection();
   const cartStoneLabel = formatInsertMassLabel(diamondWeight);
   const [added, setAdded] = useState(false);
@@ -126,10 +126,12 @@ export function ProductConfigurator({ product }: ProductConfiguratorProps) {
                 const sizeAvailable =
                   sizeStock === undefined || sizeStock > 0;
                 return (
-                  <a
+                  <button
                     key={size.value}
-                    href={sizeHref(size.value)}
-                    aria-current={isSelected ? "true" : undefined}
+                    type="button"
+                    role="radio"
+                    aria-checked={isSelected}
+                    onClick={() => setSelectedSize(size.value)}
                     className={`touch-manipulation rounded-lg border px-2 py-2.5 text-center text-sm transition-colors [-webkit-tap-highlight-color:transparent] ${
                       isSelected
                         ? "border-brand-olive-logo bg-brand-olive-logo text-white font-medium"
@@ -139,7 +141,7 @@ export function ProductConfigurator({ product }: ProductConfiguratorProps) {
                     }`}
                   >
                     {size.label}
-                  </a>
+                  </button>
                 );
               })}
             </div>

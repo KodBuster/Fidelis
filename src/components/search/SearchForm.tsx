@@ -54,6 +54,11 @@ function searchHref(query: string) {
   return `/search?q=${encodeURIComponent(query.trim())}`;
 }
 
+/**
+ * Search form with autocomplete (Sharoduvy-style):
+ * real <form onSubmit>, enterKeyHint=search, no onBlur setState race,
+ * suggestions use onMouseDown preventDefault.
+ */
 export function SearchForm({
   autoFocus = false,
   defaultQuery = "",
@@ -64,7 +69,6 @@ export function SearchForm({
   enableAutocomplete = true,
 }: SearchFormProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const findRef = useRef<HTMLAnchorElement>(null);
   const listId = useId();
   const [suggestQuery, setSuggestQuery] = useState(defaultQuery);
   const [suggestions, setSuggestions] = useState<SearchAutocompleteResult | null>(
@@ -74,20 +78,11 @@ export function SearchForm({
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
 
-  const syncFindHref = () => {
-    const anchor = findRef.current;
-    if (!anchor) return;
-    const q = (inputRef.current?.value ?? "").trim();
-    // Native <a href> — same mechanism as working size chips.
-    anchor.href = q ? searchHref(q) : "/search";
-  };
-
   useEffect(() => {
     setSuggestQuery(defaultQuery);
     if (inputRef.current) {
       inputRef.current.value = defaultQuery;
     }
-    window.setTimeout(syncFindHref, 0);
   }, [defaultQuery]);
 
   useEffect(() => {
@@ -127,25 +122,24 @@ export function SearchForm({
     };
   }, [suggestQuery, enableAutocomplete]);
 
-  const flatSuggestions = suggestions
-    ? flattenAutocompleteSuggestions(suggestions)
-    : [];
+  const readQuery = () => inputRef.current?.value ?? suggestQuery;
 
   const leaveTo = (href: string) => {
     onSubmit?.();
     setOpen(false);
-    window.location.href = href;
+    window.location.assign(href);
   };
 
-  /** Keyboard / iOS search-key submit. */
+  const flatSuggestions = suggestions
+    ? flattenAutocompleteSuggestions(suggestions)
+    : [];
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     if (activeIndex >= 0 && flatSuggestions[activeIndex]) {
       leaveTo(flatSuggestions[activeIndex].href);
       return;
     }
-
     const q = String(new FormData(event.currentTarget).get("q") ?? "").trim();
     if (!q) {
       inputRef.current?.focus();
@@ -160,7 +154,6 @@ export function SearchForm({
       setActiveIndex(-1);
       return;
     }
-
     if (!enableAutocomplete || !open) return;
 
     if (event.key === "ArrowDown") {
@@ -170,7 +163,6 @@ export function SearchForm({
       );
       return;
     }
-
     if (event.key === "ArrowUp") {
       event.preventDefault();
       setActiveIndex((index) => (index > 0 ? index - 1 : -1));
@@ -191,19 +183,15 @@ export function SearchForm({
           type="search"
           name="q"
           defaultValue={defaultQuery}
-          onInput={(event) => {
-            setSuggestQuery(event.currentTarget.value);
-            syncFindHref();
-          }}
+          onInput={(event) => setSuggestQuery(event.currentTarget.value)}
           onFocus={() => {
             if (
               enableAutocomplete &&
-              (inputRef.current?.value.trim().length ?? 0) >= MIN_AUTOCOMPLETE_LENGTH
+              readQuery().trim().length >= MIN_AUTOCOMPLETE_LENGTH
             ) {
               setOpen(true);
             }
           }}
-          // Critical: no onBlur setState — it cancels the following tap on iOS.
           onKeyDown={handleKeyDown}
           autoFocus={autoFocus}
           enterKeyHint="search"
@@ -216,21 +204,15 @@ export function SearchForm({
             compact ? "py-2" : "py-2.5"
           } ${inputClassName}`}
         />
-        {/*
-          Plain <a> with NO onClick — identical to size chips that work on iOS 16.
-          href is kept in sync from the live input value.
-        */}
-        <a
-          ref={findRef}
-          href={defaultQuery.trim() ? searchHref(defaultQuery) : "/search"}
-          onTouchStart={syncFindHref}
-          onMouseDown={syncFindHref}
-          className={`inline-flex shrink-0 touch-manipulation items-center justify-center rounded-lg bg-brand-terracotta px-4 font-medium text-white transition-colors hover:bg-brand-terracotta-logo [-webkit-tap-highlight-color:transparent] ${
+        <button
+          type="submit"
+          onMouseDown={(event) => event.preventDefault()}
+          className={`shrink-0 touch-manipulation rounded-lg bg-brand-terracotta px-4 font-medium text-white transition-colors hover:bg-brand-terracotta-logo [-webkit-tap-highlight-color:transparent] ${
             compact ? "py-2 text-sm" : "py-2.5 text-base"
           }`}
         >
           Найти
-        </a>
+        </button>
       </div>
 
       {enableAutocomplete ? (
@@ -245,7 +227,7 @@ export function SearchForm({
             leaveTo(suggestion.href)
           }
           onShowAll={() => {
-            const q = (inputRef.current?.value ?? suggestQuery).trim();
+            const q = readQuery().trim();
             if (q) leaveTo(searchHref(q));
           }}
         />

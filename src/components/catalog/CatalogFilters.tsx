@@ -17,8 +17,7 @@ import {
 type CatalogFiltersProps = {
   filters: Filters;
   basePath: string;
-  keepPanelOpen?: boolean;
-  closeHref?: string;
+  onClose?: () => void;
 };
 
 function FilterSection({
@@ -92,41 +91,31 @@ function formatSizeLabel(size: number): string {
 export function CatalogFilters({
   filters,
   basePath,
-  keepPanelOpen = false,
-  closeHref,
+  onClose,
 }: CatalogFiltersProps) {
   const activeCount = countActiveFilters(filters);
   const showSizeFilter = shouldShowSizeFilter(filters.category);
-  const panelOpts = keepPanelOpen ? { panel: true } : undefined;
 
   const togglePrice = (id: string) => {
     const next = filters.priceRanges.includes(id)
       ? filters.priceRanges.filter((p) => p !== id)
       : [...filters.priceRanges, id];
-    return buildFilterQuery(filters, { priceRanges: next }, panelOpts);
+    return buildFilterQuery(filters, { priceRanges: next });
   };
 
   const toggleSize = (id: string) => {
     const next = filters.sizes.includes(id)
       ? filters.sizes.filter((size) => size !== id)
       : [...filters.sizes, id];
-    return buildFilterQuery(filters, { sizes: next }, panelOpts);
+    return buildFilterQuery(filters, { sizes: next });
   };
 
   const toggleComplects = () =>
-    buildFilterQuery(
-      filters,
-      { complectsOnly: !filters.complectsOnly },
-      panelOpts,
-    );
+    buildFilterQuery(filters, { complectsOnly: !filters.complectsOnly });
 
   const categoryHref = (slug: CategorySlug | null) => {
     const path = slug ? `/shop/${slug}` : "/shop";
-    const query = buildFilterQuery(
-      { ...filters, category: slug ?? undefined },
-      {},
-      panelOpts,
-    );
+    const query = buildFilterQuery({ ...filters, category: slug ?? undefined }, {});
     return `${path}${query}`;
   };
 
@@ -134,17 +123,17 @@ export function CatalogFilters({
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between mb-6 lg:mb-8">
         <h2 className="font-heading text-xl text-brand-olive-dark">Фильтры</h2>
-        {closeHref ? (
-          <Link
-            href={closeHref}
-            scroll={false}
+        {onClose ? (
+          <button
+            type="button"
+            onClick={onClose}
             className="touch-manipulation p-2 text-brand-muted transition-colors hover:text-brand-terracotta [-webkit-tap-highlight-color:transparent]"
             aria-label="Закрыть фильтры"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
               <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
-          </Link>
+          </button>
         ) : null}
       </div>
 

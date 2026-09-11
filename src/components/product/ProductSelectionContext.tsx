@@ -4,7 +4,9 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useState,
   type ReactNode,
 } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -67,10 +69,19 @@ export function ProductSelectionProvider({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const sizeParam = searchParams.get("size");
-  const defaultSize = pickDefaultSelectedSize(product);
-  const selectedSize = isValidSize(product, sizeParam)
-    ? sizeParam
-    : defaultSize;
+
+  const [selectedSize, setSelectedSizeState] = useState<string | null>(() => {
+    if (isValidSize(product, sizeParam)) return sizeParam;
+    return pickDefaultSelectedSize(product);
+  });
+
+  useEffect(() => {
+    if (isValidSize(product, sizeParam) && sizeParam !== selectedSize) {
+      setSelectedSizeState(sizeParam);
+    }
+    // Intentionally only sync when URL size changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sizeParam, product]);
 
   const sizeHref = useCallback(
     (size: string) => {
@@ -82,12 +93,18 @@ export function ProductSelectionProvider({
     [pathname, searchParams],
   );
 
-  // Kept for non-Link callers; selection itself is URL-driven (iOS-safe).
   const setSelectedSize = useCallback(
-    (_size: string | null) => {
-      // no-op: size chips navigate via Link href
+    (size: string | null) => {
+      setSelectedSizeState(size);
+      if (typeof window === "undefined") return;
+      const params = new URLSearchParams(window.location.search);
+      if (size) params.set("size", size);
+      else params.delete("size");
+      const query = params.toString();
+      const next = query ? `${pathname}?${query}` : pathname;
+      window.history.replaceState(null, "", next);
     },
-    [],
+    [pathname],
   );
 
   const value = useMemo(

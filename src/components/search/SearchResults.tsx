@@ -1,62 +1,9 @@
 import type { Product } from "@/lib/products";
 import { ProductCard } from "@/components/catalog/ProductCard";
-import { getSiteUrl } from "@/lib/site-url";
+import { SearchForm } from "./SearchForm";
 
 const SEARCH_GRID =
   "grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 lg:gap-6";
-
-type SearchFormNativeProps = {
-  defaultQuery?: string;
-  className?: string;
-  compact?: boolean;
-  autoFocus?: boolean;
-};
-
-/**
- * Native GET form with absolute action URL.
- * Forces a full document navigation (no App Router soft-nav),
- * which is what works on iOS Safari 16 alongside plain size links.
- */
-export function SearchFormNative({
-  defaultQuery = "",
-  className = "",
-  compact = false,
-  autoFocus = false,
-}: SearchFormNativeProps) {
-  const action = `${getSiteUrl()}/search`;
-
-  return (
-    <form
-      action={action}
-      method="get"
-      className={`relative ${className}`}
-      role="search"
-      acceptCharset="UTF-8"
-    >
-      <div className="flex gap-2">
-        <input
-          type="search"
-          name="q"
-          defaultValue={defaultQuery}
-          autoFocus={autoFocus}
-          enterKeyHint="search"
-          autoComplete="off"
-          placeholder="Кольцо, серьги, артикул…"
-          className={`min-w-0 flex-1 rounded-lg border border-brand-olive/20 bg-white px-4 text-base text-brand-text placeholder:text-brand-muted focus:border-brand-olive focus:outline-none focus:ring-2 focus:ring-brand-olive/20 ${
-            compact ? "py-2" : "py-2.5"
-          }`}
-        />
-        <input
-          type="submit"
-          value="Найти"
-          className={`shrink-0 cursor-pointer touch-manipulation rounded-lg border-0 bg-brand-terracotta px-4 font-medium text-white transition-colors hover:bg-brand-terracotta-logo [-webkit-tap-highlight-color:transparent] ${
-            compact ? "py-2 text-sm" : "py-2.5 text-base"
-          }`}
-        />
-      </div>
-    </form>
-  );
-}
 
 type SearchResultsProps = {
   query: string;
@@ -89,7 +36,7 @@ export function SearchResults({ query, products, error }: SearchResultsProps) {
           <h1 className="font-heading text-3xl md:text-4xl text-brand-olive-dark mb-4">
             Поиск
           </h1>
-          <SearchFormNative defaultQuery={query} className="max-w-xl" autoFocus />
+          <SearchForm defaultQuery={query} className="max-w-xl" autoFocus />
         </div>
 
         {!query ? (
