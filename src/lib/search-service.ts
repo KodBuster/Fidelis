@@ -5,9 +5,11 @@ import {
 } from "@/lib/advantshop/search";
 import { loadAdvantShopProductDetails } from "@/lib/advantshop/catalog";
 import {
-  findMatchingArtNo,
+  hasExactArtNoMatch,
+  looksLikeArtNoQuery,
   mergeAutocompleteResults,
   productMatchesArtQuery,
+  resolveModificationArtBase,
   searchCatalogByArtNo,
   searchCatalogProductsByArtNo,
 } from "@/lib/art-search";
@@ -199,6 +201,44 @@ function getStaticAutocomplete(query: string): SearchAutocompleteResult {
   return { products, categories };
 }
 
+function collectArtKeys(product: Product): string[] {
+  return [product.artNo, ...(product.offerArtNos ?? [])]
+    .map((value) => value?.trim().toLowerCase())
+    .filter((value): value is string => Boolean(value));
+}
+
+/** Narrow catalog candidates for art / modification lookup — never series-only (`191`). */
+function findArtLookupCandidates(catalog: Product[], query: string): Product[] {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return [];
+
+  const modificationBase = resolveModificationArtBase(query);
+  const prefixes = modificationBase
+    ? [normalized, modificationBase]
+    : [normalized];
+
+  return catalog.filter((product) =>
+    collectArtKeys(product).some((artNo) =>
+      prefixes.some(
+        (prefix) => artNo === prefix || artNo.startsWith(`${prefix}-`),
+      ),
+    ),
+  );
+}
+
+function sortProducts(products: Product[], sort: string): Product[] {
+  if (sort === "price-asc") {
+    return [...products].sort((a, b) => a.price - b.price);
+  }
+  if (sort === "price-desc") {
+    return [...products].sort((a, b) => b.price - a.price);
+  }
+  if (sort === "new") {
+    return [...products].sort((a, b) => Number(b.isNew) - Number(a.isNew));
+  }
+  return products;
+}
+
 async function searchModificationArtProducts(
   catalog: Product[],
   query: string,
@@ -209,22 +249,17 @@ async function searchModificationArtProducts(
   }
 
   const direct = searchCatalogProductsByArtNo(catalog, query);
-  if (
-    direct.some((product) =>
-      findMatchingArtNo(product, query)?.toLowerCase() === normalized,
-    )
-  ) {
+  if (direct.some((product) => hasExactArtNoMatch(product, query))) {
+    return direct.filter((product) => hasExactArtNoMatch(product, query));
+  }
+
+  // Partial includes on the full query (e.g. offer `191-009014-1` for `191-009014`)
+  if (direct.length) {
     return direct;
   }
 
-  const base = normalized.replace(/-\d+$/, "");
-  const candidates = catalog
-    .filter((product) =>
-      [product.artNo, ...(product.offerArtNos ?? [])].some((artNo) =>
-        artNo?.toLowerCase().startsWith(base),
-      ),
-    )
-    .slice(0, 8);
+  const candidates = findArtLookupCandidates(catalog, query).slice(0, 12);
+  if (!candidates.length) return [];
 
   const products: Product[] = [];
   for (const candidate of candidates) {
@@ -250,19 +285,22 @@ async function searchModificationArtInCatalog(
   }
 
   const direct = searchCatalogByArtNo(catalog, query, limit);
-  if (direct.products.some((product) => product.artNo?.toLowerCase() === normalized)) {
+  if (
+    direct.products.some((product) => {
+      const catalogProduct = catalog.find((item) => item.id === product.id);
+      return catalogProduct
+        ? hasExactArtNoMatch(catalogProduct, query)
+        : product.artNo?.toLowerCase() === normalized;
+    })
+  ) {
     return direct;
   }
 
-  const base = normalized.replace(/-\d+$/, "");
-  const candidates = catalog
-    .filter((product) =>
-      [product.artNo, ...(product.offerArtNos ?? [])].some((artNo) =>
-        artNo?.toLowerCase().startsWith(base),
-      ),
-    )
-    .slice(0, 8);
+  if (direct.products.length) {
+    return direct;
+  }
 
+  const candidates = findArtLookupCandidates(catalog, query).slice(0, 12);
   const products = [];
   for (const candidate of candidates) {
     const details = await loadAdvantShopProductDetails(candidate);
@@ -288,7 +326,48 @@ export async function getSearchAutocomplete(
 
   if (isAdvantShopConfigured()) {
     const catalog = await getCatalogProducts();
+    const artQuery = looksLikeArtNoQuery(trimmed);
     const localMatches = searchCatalogByArtNo(catalog, trimmed);
+    const hasExactLocal = localMatches.products.some((product) => {
+      const catalogProduct = catalog.find((item) => item.id === product.id);
+      return catalogProduct
+        ? hasExactArtNoMatch(catalogProduct, trimmed)
+        : product.artNo?.toLowerCase() === trimmed.toLowerCase();
+    });
+
+    const modificationMatches =
+      hasExactLocal || (!artQuery && localMatches.products.length)
+        ? { products: [], categories: [] }
+        : await searchModificationArtInCatalog(catalog, trimmed);
+
+    const artHits = mergeAutocompleteResults(localMatches, modificationMatches);
+
+    // Art-number queries: never mix in tokenized AdvantShop / broad text hits.
+    if (artQuery && artHits.products.length) {
+      return artHits;
+    }
+
+    if (artQuery) {
+      try {
+        const remote = await fetchAdvantShopSearchAutocomplete(trimmed);
+        const remoteFiltered = {
+          products: remote.products.filter((product) => {
+            const catalogProduct = catalog.find((item) => item.id === product.id);
+            return catalogProduct
+              ? productMatchesArtQuery(catalogProduct, trimmed)
+              : product.artNo
+                ? product.artNo.toLowerCase().includes(trimmed.toLowerCase())
+                : false;
+          }),
+          categories: [] as SearchAutocompleteResult["categories"],
+        };
+        if (remoteFiltered.products.length) return remoteFiltered;
+      } catch {
+        // fall through to empty art result
+      }
+      return { products: [], categories: [] };
+    }
+
     const textMatches = {
       products: searchCatalogByText(catalog, trimmed)
         .slice(0, 6)
@@ -304,26 +383,15 @@ export async function getSearchAutocomplete(
         })),
       categories: searchCatalogCategoriesByText(trimmed),
     };
-    const modificationMatches = localMatches.products.some(
-      (product) => product.artNo?.toLowerCase() === trimmed.toLowerCase(),
-    )
-      ? { products: [], categories: [] }
-      : await searchModificationArtInCatalog(catalog, trimmed);
 
     try {
       const remote = await fetchAdvantShopSearchAutocomplete(trimmed);
       return mergeAutocompleteResults(
-        mergeAutocompleteResults(
-          mergeAutocompleteResults(localMatches, textMatches),
-          modificationMatches,
-        ),
+        mergeAutocompleteResults(localMatches, textMatches),
         remote,
       );
     } catch (error) {
-      const fallback = mergeAutocompleteResults(
-        mergeAutocompleteResults(localMatches, textMatches),
-        modificationMatches,
-      );
+      const fallback = mergeAutocompleteResults(localMatches, textMatches);
       if (fallback.products.length || fallback.categories.length) {
         return fallback;
       }
@@ -352,9 +420,8 @@ export async function getSearchProducts(
       return searchStaticProducts(trimmed, sort);
     }
 
-    // Local-first: never depend on AdvantShop search for basic synonym/name hits.
+    const artQuery = looksLikeArtNoQuery(trimmed);
     const localMatches = searchCatalogProductsByArtNo(catalog, trimmed);
-    const textMatches = searchCatalogByText(catalog, trimmed);
 
     let modificationMatches: Product[] = [];
     try {
@@ -365,6 +432,36 @@ export async function getSearchProducts(
     } catch {
       modificationMatches = [];
     }
+
+    const artMerged = new Map<string, Product>();
+    for (const product of [...localMatches, ...modificationMatches]) {
+      artMerged.set(product.id, product);
+    }
+
+    if (artQuery && artMerged.size > 0) {
+      return sortProducts([...artMerged.values()], sort);
+    }
+
+    if (artQuery) {
+      try {
+        const remoteIds = await withTimeout(
+          getCachedAdvantShopSearchIds(trimmed, sort),
+          REMOTE_SEARCH_TIMEOUT_MS,
+        );
+        const remoteMatches = resolveCatalogByIds(catalog, remoteIds).filter(
+          (product) => productMatchesArtQuery(product, trimmed),
+        );
+        if (remoteMatches.length) {
+          return sortProducts(remoteMatches, sort);
+        }
+      } catch (error) {
+        console.error("[search] AdvantShop remote search failed:", error);
+      }
+      return [];
+    }
+
+    // Name / synonym search: local-first, then remote.
+    const textMatches = searchCatalogByText(catalog, trimmed);
 
     let remoteMatches: Product[] = [];
     try {
@@ -387,15 +484,7 @@ export async function getSearchProducts(
       merged.set(product.id, product);
     }
 
-    let products = [...merged.values()];
-    if (sort === "price-asc") {
-      products.sort((a, b) => a.price - b.price);
-    } else if (sort === "price-desc") {
-      products.sort((a, b) => b.price - a.price);
-    } else if (sort === "new") {
-      products.sort((a, b) => Number(b.isNew) - Number(a.isNew));
-    }
-    return products;
+    return sortProducts([...merged.values()], sort);
   }
 
   return searchStaticProducts(trimmed, sort);

@@ -10,6 +10,35 @@ export function looksLikeArtNoQuery(query: string): boolean {
   return ART_NO_QUERY_PATTERN.test(query.trim());
 }
 
+/**
+ * For SKUs like `191-009014` (product) / `191-009014-6` (modification):
+ * strip a trailing `-\d+` only when a product-level artNo (still with `-`) remains.
+ * Never reduce `191-009014` to `191`.
+ */
+export function resolveModificationArtBase(query: string): string | null {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized.includes("-")) return null;
+
+  const withoutTrailing = normalized.replace(/-\d+$/, "");
+  if (
+    withoutTrailing !== normalized &&
+    withoutTrailing.includes("-") &&
+    withoutTrailing.length > 0
+  ) {
+    return withoutTrailing;
+  }
+
+  return null;
+}
+
+export function hasExactArtNoMatch(product: Product, query: string): boolean {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return false;
+  return collectProductArtNos(product).some(
+    (artNo) => artNo.toLowerCase() === normalized,
+  );
+}
+
 function collectProductArtNos(product: Product): string[] {
   const artNos = new Set<string>();
 
