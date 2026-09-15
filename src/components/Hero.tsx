@@ -1,22 +1,37 @@
-import { HeroContent } from "./HeroContent";
-import { HeroMedia } from "./HeroMedia";
+import Image from "next/image";
+
+const JUNWEX_TICKET_URL =
+  "https://www.junwex-msk.ru/posetitelyam/e-ticket.html";
 
 export function Hero() {
   return (
-    <section className="relative bg-white border-b border-brand-sand">
-      <div className="relative mx-auto max-w-7xl lg:px-10">
-        <div className="grid lg:grid-cols-2 gap-4 lg:gap-12 items-center lg:min-h-[580px]">
-          <HeroContent className="order-2 lg:order-1 px-4 md:px-6 lg:px-10 pt-4 pb-8 lg:py-16" />
+    <section className="relative border-b border-brand-sand bg-white">
+      <h1 className="sr-only">
+        Синоним — ограненные синтетические алмазы в серебре
+      </h1>
+      <h2 className="sr-only">
+        JUNWEX Москва, 23–27 сентября, стенд A-101, павильон 57
+      </h2>
 
-          <div className="relative order-1 lg:order-2 flex justify-center lg:justify-end px-0 pt-0 pb-1 lg:px-0 lg:py-16">
-            <div className="relative w-full lg:max-w-lg">
-              <div className="relative aspect-[3/4] overflow-hidden rounded-none border-0 bg-black lg:rounded-2xl lg:border lg:border-brand-sand lg:shadow-lg">
-                <HeroMedia />
-              </div>
-            </div>
-          </div>
+      <a
+        href={JUNWEX_TICKET_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Получить пригласительный билет на JUNWEX Москва — стенд Синоним A-101, павильон 57"
+        className="group relative block w-full cursor-pointer touch-manipulation [-webkit-tap-highlight-color:transparent]"
+      >
+        <div className="relative aspect-[1920/601] w-full overflow-hidden bg-[#c8e6c9]">
+          <Image
+            src="/images/hero-junwex-banner.jpg"
+            alt="JUNWEX Москва, 23–27 сентября, ВДНХ. Стенд Синоним A-101, павильон 57. Получить пригласительный билет."
+            width={1920}
+            height={601}
+            priority
+            sizes="100vw"
+            className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-95 group-active:opacity-90"
+          />
         </div>
-      </div>
+      </a>
     </section>
   );
 }
