@@ -26,10 +26,10 @@ export function Hero() {
         {/* Mobile / tablet portrait: vertical 3:4 */}
         <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#c8e6c9] md:hidden">
           <Image
-            src="/images/hero-junwex-banner-mobile.png"
+            src="/images/hero-junwex-banner-mobile.jpg"
             alt={BANNER_ALT}
-            width={864}
-            height={1152}
+            width={4500}
+            height={6000}
             priority
             sizes="100vw"
             className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-95 group-active:opacity-90"
