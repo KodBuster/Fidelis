@@ -3,6 +3,9 @@ import Image from "next/image";
 const JUNWEX_TICKET_URL =
   "https://www.junwex-msk.ru/posetitelyam/e-ticket.html";
 
+const BANNER_ALT =
+  "JUNWEX Москва, 23–27 сентября, ВДНХ. Стенд Синоним A-101, павильон 57. Получить пригласительный билет.";
+
 export function Hero() {
   return (
     <section className="relative border-b border-brand-sand bg-white">
@@ -20,10 +23,24 @@ export function Hero() {
         aria-label="Получить пригласительный билет на JUNWEX Москва — стенд Синоним A-101, павильон 57"
         className="group relative block w-full cursor-pointer touch-manipulation [-webkit-tap-highlight-color:transparent]"
       >
-        <div className="relative aspect-[1920/601] w-full overflow-hidden bg-[#c8e6c9]">
+        {/* Mobile / tablet portrait: vertical 3:4 */}
+        <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#c8e6c9] md:hidden">
+          <Image
+            src="/images/hero-junwex-banner-mobile.png"
+            alt={BANNER_ALT}
+            width={864}
+            height={1152}
+            priority
+            sizes="100vw"
+            className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-95 group-active:opacity-90"
+          />
+        </div>
+
+        {/* Desktop / tablet landscape: horizontal banner */}
+        <div className="relative hidden aspect-[1920/601] w-full overflow-hidden bg-[#c8e6c9] md:block">
           <Image
             src="/images/hero-junwex-banner.jpg"
-            alt="JUNWEX Москва, 23–27 сентября, ВДНХ. Стенд Синоним A-101, павильон 57. Получить пригласительный билет."
+            alt={BANNER_ALT}
             width={1920}
             height={601}
             priority
