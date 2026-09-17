@@ -120,7 +120,20 @@ export function Footer() {
         </div>
 
         <div className="border-t border-brand-sand mt-10 pt-6 flex flex-col sm:flex-row justify-between gap-4 text-xs text-brand-muted">
-          <p>© 2026 Синоним. Все права защищены.</p>
+          <div className="flex flex-col gap-2 sm:gap-1">
+            <p>© 2026 Синоним. Все права защищены.</p>
+            <p>
+              Разработка Digital Агентство{" "}
+              <a
+                href="https://kodbuster.ru/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-text hover:text-brand-terracotta transition-colors"
+              >
+                KodBuster
+              </a>
+            </p>
+          </div>
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-brand-text transition-colors">
               Политика конфиденциальности
