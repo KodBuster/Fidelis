@@ -1,5 +1,9 @@
 import type { CategorySlug, Product, ProductDetails, ProductSizeOption, StoneVariant } from "@/lib/products";
-import { defaultRingBraceletSizeOptions, sortProductSizeOptions } from "@/lib/products";
+import {
+  categoryHasSizes,
+  defaultRingBraceletSizeOptions,
+  sortProductSizeOptions,
+} from "@/lib/products";
 import {
   formatDiamondWeightLabel,
   isDiamondWeightPropertyName,
@@ -611,11 +615,10 @@ function resolveCatalogSizeOptions(
   sizeOptions: ProductSizeOption[],
   category: CategorySlug
 ): ProductSizeOption[] | undefined {
-  const needsSizes =
-    category === "rings" || category === "bracelets" || sizeOptions.length > 0;
+  const needsSizes = categoryHasSizes(category) || sizeOptions.length > 0;
   if (!needsSizes) return undefined;
   if (sizeOptions.length) return sortProductSizeOptions(sizeOptions);
-  if (category === "rings" || category === "bracelets") {
+  if (categoryHasSizes(category)) {
     return defaultRingBraceletSizeOptions();
   }
   return undefined;
@@ -728,8 +731,7 @@ export function mapProductDetails(
       return { value: label, label };
     },
   );
-  const hasSizes =
-    category === "rings" || category === "bracelets" || allSizes.length > 0;
+  const hasSizes = categoryHasSizes(category) || allSizes.length > 0;
   const artNo = pickDefaultArtNo(item);
   const sizeArtNos = buildSizeArtNos(
     item,
@@ -739,12 +741,14 @@ export function mapProductDetails(
   const sizeStockAmounts = buildSizeStockAmounts(item, allSizes);
   const sizeWeightGrams = buildSizeWeightGrams(item, allSizes);
   const sizePrices = buildSizePrices(item, allSizes);
-  const sizeLengthMm =
-    category === "bracelets" ? buildSizeLengthMm(item, allSizes, properties) : undefined;
-  const lengthMmLabel =
-    category === "bracelets"
-      ? pickDefaultLengthMm(item, sizeLengthMm, properties)
-      : undefined;
+  const isBraceletCategory =
+    category === "bracelets" || category === "ankle-bracelets";
+  const sizeLengthMm = isBraceletCategory
+    ? buildSizeLengthMm(item, allSizes, properties)
+    : undefined;
+  const lengthMmLabel = isBraceletCategory
+    ? pickDefaultLengthMm(item, sizeLengthMm, properties)
+    : undefined;
   const legacySlug = item.urlPath;
   const setArtNos = resolveSetArtNos(properties);
   const { stockAmount, inStock } = getAdvantShopDetailsStockInfo(

@@ -1,4 +1,5 @@
 import {
+  categoryHasSizes,
   numericSizesFromOptions,
   PRICE_RANGES,
   type CategorySlug,
@@ -21,7 +22,7 @@ function getProductSizes(product: Product): number[] {
 }
 
 function productMatchesSize(product: Product, sizeParam: string): boolean {
-  if (product.category !== "rings" && product.category !== "bracelets") {
+  if (!categoryHasSizes(product.category)) {
     return false;
   }
 
@@ -131,5 +132,5 @@ export function hasCatalogFilterParams(params: URLSearchParams): boolean {
 }
 
 export function shouldShowSizeFilter(category?: CategorySlug): boolean {
-  return !category || category === "rings" || category === "bracelets";
+  return !category || categoryHasSizes(category);
 }

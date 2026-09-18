@@ -12,9 +12,12 @@ type PageGoal = {
 /** Соответствие URL → идентификатор JS-цели в Яндекс Метрике */
 const PAGE_GOALS: PageGoal[] = [
   { goal: "page_rings", match: (p) => p === "/shop/rings" },
-  { goal: "page_earrings", match: (p) => p === "/shop/earrings" },
-  { goal: "page_pendants", match: (p) => p === "/shop/pendants" },
+  { goal: "page_ankle_bracelets", match: (p) => p === "/shop/ankle-bracelets" },
   { goal: "page_bracelets", match: (p) => p === "/shop/bracelets" },
+  { goal: "page_necklaces", match: (p) => p === "/shop/necklaces" },
+  { goal: "page_pendants", match: (p) => p === "/shop/pendants" },
+  { goal: "page_earrings", match: (p) => p === "/shop/earrings" },
+  { goal: "page_cords", match: (p) => p === "/shop/cords" },
   { goal: "page_gifts", match: (p) => p === "/shop/gifts" },
   { goal: "page_about", match: (p) => p === "/about" },
   {

@@ -1,4 +1,5 @@
 import type { CategorySlug } from "@/lib/products";
+import { categoryHasSizes } from "@/lib/products";
 import type {
   AdvantShopCatalogProduct,
   AdvantShopOffer,
@@ -77,7 +78,7 @@ function productNeedsSizes(
   sizesCount: number,
 ): boolean {
   if (sizesCount > 0) return true;
-  return category === "rings" || category === "bracelets";
+  return Boolean(category && categoryHasSizes(category));
 }
 
 /**

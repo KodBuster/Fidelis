@@ -34,7 +34,8 @@ export async function Categories() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-16 md:mb-20">
           {categories.map((cat) => {
-            const isBracelets = cat.slug === "bracelets";
+            const isBracelets =
+              cat.slug === "bracelets" || cat.slug === "ankle-bracelets";
 
             return (
               <Link

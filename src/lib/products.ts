@@ -1,4 +1,21 @@
-export type CategorySlug = "rings" | "earrings" | "pendants" | "bracelets" | "gifts";
+export type CategorySlug =
+  | "rings"
+  | "earrings"
+  | "pendants"
+  | "necklaces"
+  | "bracelets"
+  | "ankle-bracelets"
+  | "cords"
+  | "gifts";
+
+/** Категории с выбором размера (кольца и браслеты). */
+export function categoryHasSizes(category: CategorySlug): boolean {
+  return (
+    category === "rings" ||
+    category === "bracelets" ||
+    category === "ankle-bracelets"
+  );
+}
 
 export type ProductSizeOption = {
   /** Ключ размера из AdvantShop, например «16.0+4». */
@@ -78,20 +95,35 @@ export const CATEGORIES: Record<
     titlePlural: "Кольца",
     description: "Кольца из серебра 925 с ограненными синтетическими алмазами",
   },
+  "ankle-bracelets": {
+    title: "Браслеты на ногу",
+    titlePlural: "Браслеты на ногу",
+    description: "Браслеты на ногу из серебра 925",
+  },
+  bracelets: {
+    title: "Браслеты на руку",
+    titlePlural: "Браслеты на руку",
+    description: "Браслеты на руку из серебра 925",
+  },
+  necklaces: {
+    title: "Колье",
+    titlePlural: "Колье",
+    description: "Колье из серебра с ограненными синтетическими алмазами",
+  },
+  pendants: {
+    title: "Подвески",
+    titlePlural: "Подвески",
+    description: "Подвески из серебра с ограненными синтетическими алмазами",
+  },
   earrings: {
     title: "Серьги",
     titlePlural: "Серьги",
     description: "Серьги-пусеты и подвесные модели с ограненными синтетическими алмазами",
   },
-  pendants: {
-    title: "Колье",
-    titlePlural: "Колье",
-    description: "Колье из серебра с ограненными синтетическими алмазами",
-  },
-  bracelets: {
-    title: "Браслеты",
-    titlePlural: "Браслеты",
-    description: "Теннисные и цепные браслеты с ограненными синтетическими алмазами",
+  cords: {
+    title: "Шнурки",
+    titlePlural: "Шнурки",
+    description: "Шнурки для подвесок и кулонов",
   },
   gifts: {
     title: "Подарки",
@@ -374,9 +406,15 @@ const DEFAULT_SIZE_OPTIONS = defaultRingBraceletSizeOptions();
 
 const CATEGORY_IMAGES: Record<CategorySlug, string[]> = {
   rings: ["/images/product-bracelet.webp", "/images/product-ring.webp"],
-  earrings: ["/images/product-earrings.webp"],
-  pendants: ["/images/product-necklace.webp"],
+  "ankle-bracelets": [
+    "/images/product-bracelet.webp",
+    "/images/product-ring.webp",
+  ],
   bracelets: ["/images/product-ring.webp", "/images/product-bracelet.webp"],
+  necklaces: ["/images/product-necklace.webp"],
+  pendants: ["/images/product-necklace.webp"],
+  earrings: ["/images/product-earrings.webp"],
+  cords: ["/images/product-necklace.webp", "/images/product-bracelet.webp"],
   gifts: ["/images/product-earrings.webp", "/images/product-necklace.webp"],
 };
 
@@ -402,7 +440,7 @@ export function getProductDetails(slug: string): ProductDetails | undefined {
     categoryImages[0] ?? product.image,
   ];
 
-  const hasSizes = product.category === "rings" || product.category === "bracelets";
+  const hasSizes = categoryHasSizes(product.category);
 
   return {
     ...product,

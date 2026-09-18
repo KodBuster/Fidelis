@@ -9,9 +9,12 @@ import {
 
 const NAV_ITEMS = [
   { label: "Кольца", href: "/shop/rings" },
+  { label: "Браслеты на ногу", href: "/shop/ankle-bracelets" },
+  { label: "Браслеты на руку", href: "/shop/bracelets" },
+  { label: "Колье", href: "/shop/necklaces" },
+  { label: "Подвески", href: "/shop/pendants" },
   { label: "Серьги", href: "/shop/earrings" },
-  { label: "Колье", href: "/shop/pendants" },
-  { label: "Браслеты", href: "/shop/bracelets" },
+  { label: "Шнурки", href: "/shop/cords" },
   { label: "Подарки", href: "/shop/gifts" },
   { label: "О бренде", href: "/about" },
   { label: "Блог", href: "/blog" },

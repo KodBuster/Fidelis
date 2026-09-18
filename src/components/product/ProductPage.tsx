@@ -111,7 +111,9 @@ export function ProductPage({
               Полезно перед покупкой
             </h2>
             <ul className="space-y-2 text-sm md:text-base">
-              {(product.category === "rings" || product.category === "bracelets") && (
+              {(product.category === "rings" ||
+                product.category === "bracelets" ||
+                product.category === "ankle-bracelets") && (
                 <li>
                   <Link href="/how-size-ring" className="text-brand-terracotta hover:underline">
                     Как определить размер кольца или браслета

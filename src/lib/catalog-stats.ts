@@ -23,9 +23,12 @@ export type CategoryStat = {
 
 const CATEGORY_IMAGES: Record<CategorySlug, string> = {
   rings: "/images/categories/rings.jpg",
-  earrings: "/images/categories/earrings.jpg",
-  pendants: "/images/categories/pendants.jpg",
+  "ankle-bracelets": "/images/categories/bracelets.jpg",
   bracelets: "/images/categories/bracelets.jpg",
+  necklaces: "/images/categories/pendants.jpg",
+  pendants: "/images/categories/pendants.jpg",
+  earrings: "/images/categories/earrings.jpg",
+  cords: "/images/product-necklace.webp",
   gifts: "/images/product-necklace.webp",
 };
 

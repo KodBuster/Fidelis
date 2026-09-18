@@ -1,5 +1,6 @@
 # Amvera deploy config — https://docs.amvera.ru/applications/environments/nodejs-server.html
 # Рекомендуемый тариф: Стандартный (2.5 ГБ RAM), регион: Москва
+# Репозиторий GitHub: https://github.com/KodBuster/Fidelis
 
 meta:
   environment: node
@@ -13,3 +14,5 @@ build:
 run:
   command: node scripts/start-server.mjs
   containerPort: 80
+  # Счётчик заказов (src/lib/order-sequence.ts) пишет в /data при AMVERA=1
+  persistenceMount: /data

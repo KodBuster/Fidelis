@@ -425,7 +425,8 @@ export async function loadAdvantShopProductDetails(
     ...(fetchedSizeDiamondWeights ?? {}),
   };
   const fetchedSizeLengthMm =
-    summary.category === "bracelets"
+    summary.category === "bracelets" ||
+    summary.category === "ankle-bracelets"
       ? await fetchLengthMmForSizes(
           Number(summary.id),
           details.sizeColorPicker?.sizes ?? getAvailableSizePickerSizes(details),
