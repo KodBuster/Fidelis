@@ -9,19 +9,18 @@ import {
   PENDING_ORDER_STORAGE_KEY,
   PENDING_PAYMENT_STORAGE_KEY,
   saveOrder,
-  SHOWROOM,
   type Order,
 } from "@/lib/checkout";
 import { formatPrice } from "@/lib/products";
 
-type PaymentStatus = "loading" | "succeeded" | "pending" | "canceled" | "error";
+type PageStatus = "loading" | "succeeded" | "pending" | "canceled" | "error";
 
 export function CheckoutSuccess() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { clearCart } = useCart();
   const [order, setOrder] = useState<Order | null>(null);
-  const [status, setStatus] = useState<PaymentStatus>("loading");
+  const [status, setStatus] = useState<PageStatus>("loading");
   const [error, setError] = useState<string | null>(null);
   const purchaseTrackedRef = useRef(false);
 
@@ -35,9 +34,9 @@ export function CheckoutSuccess() {
     const rawOrder = sessionStorage.getItem(PENDING_ORDER_STORAGE_KEY);
     const paymentId = sessionStorage.getItem(PENDING_PAYMENT_STORAGE_KEY);
 
-    if (!rawOrder || !paymentId) {
+    if (!rawOrder) {
       setStatus("error");
-      setError("Не найдены данные оплаты. Если деньги списались, свяжитесь с нами.");
+      setError("Не найдены данные заказа. Если заказ уже оформлен, свяжитесь с нами.");
       return;
     }
 
@@ -52,11 +51,26 @@ export function CheckoutSuccess() {
 
     if (parsedOrder.id !== orderId) {
       setStatus("error");
-      setError("Номер заказа не совпадает с данными оплаты.");
+      setError("Номер заказа не совпадает с сохранёнными данными.");
       return;
     }
 
     setOrder(parsedOrder);
+
+    // Invoice (and any order without a pending online payment): complete immediately.
+    if (!paymentId || parsedOrder.customer.paymentMethod === "invoice") {
+      const completedOrder: Order = {
+        ...parsedOrder,
+        paymentStatus: undefined,
+      };
+      saveOrder(completedOrder);
+      clearCart();
+      sessionStorage.removeItem(PENDING_ORDER_STORAGE_KEY);
+      sessionStorage.removeItem(PENDING_PAYMENT_STORAGE_KEY);
+      setOrder(completedOrder);
+      setStatus("succeeded");
+      return;
+    }
 
     let cancelled = false;
     let intervalId: number | undefined;
@@ -156,7 +170,7 @@ export function CheckoutSuccess() {
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-2xl px-4 md:px-6 lg:px-10 text-center">
           <h1 className="font-heading text-3xl text-brand-olive-dark mb-3">
-            Не удалось подтвердить оплату
+            Не удалось подтвердить заказ
           </h1>
           <p className="text-brand-muted mb-8">{error}</p>
           <Link
@@ -193,8 +207,6 @@ export function CheckoutSuccess() {
 
   if (!order) return null;
 
-  const isPickup = order.customer.deliveryMethod === "pickup";
-
   return (
     <section className="py-12 md:py-16">
       <div className="mx-auto max-w-2xl px-4 md:px-6 lg:px-10 text-center">
@@ -202,7 +214,7 @@ export function CheckoutSuccess() {
           ✓
         </div>
         <h1 className="font-heading text-3xl md:text-4xl text-brand-olive-dark mb-3">
-          Оплата прошла успешно
+          Заказ оформлен
         </h1>
         <p className="text-brand-muted mb-2">
           Номер заказа{" "}
@@ -213,35 +225,24 @@ export function CheckoutSuccess() {
         <p className="text-brand-muted mb-8">
           Мы свяжемся с вами по телефону{" "}
           <span className="text-brand-olive-dark">{order.customer.phone}</span>{" "}
-          для подтверждения
-          {isPickup ? " и согласования времени визита в шоурум" : " и уточнения доставки"}.
+          для подтверждения и уточнения доставки.
         </p>
 
         <div className="bg-brand-surface rounded-xl p-6 text-left shadow-sm mb-8 space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-brand-muted">Оплата</span>
-            <span className="text-brand-olive-dark">Онлайн · ЮKassa</span>
+            <span className="text-brand-olive-dark">Оплата по счету</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-brand-muted">Способ получения</span>
-            <span className="text-brand-olive-dark">
-              {isPickup ? "Самовывоз из шоурума" : "Доставка курьером"}
-            </span>
+            <span className="text-brand-olive-dark">СДЭК</span>
           </div>
-          {isPickup ? (
-            <p className="text-sm text-brand-muted">
-              {SHOWROOM.address}
-              <br />
-              {SHOWROOM.hours}
-            </p>
-          ) : (
-            <p className="text-sm text-brand-muted">
-              {order.customer.city}, {order.customer.address}
-              {order.customer.apartment && `, кв. ${order.customer.apartment}`}
-            </p>
-          )}
+          <p className="text-sm text-brand-muted">
+            {order.customer.city}, {order.customer.address}
+            {order.customer.apartment && `, кв. ${order.customer.apartment}`}
+          </p>
           <div className="flex justify-between pt-3 border-t border-brand-sand font-heading text-lg text-brand-olive-dark">
-            <span>Оплачено</span>
+            <span>К оплате</span>
             <span>{formatPrice(order.total)}</span>
           </div>
         </div>

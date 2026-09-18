@@ -16,11 +16,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: {
-    default: "Синоним — украшения с ограненными синтетическими алмазами",
+    default: "ФИДЕЛИС — украшения с ограненными синтетическими алмазами",
     template: "%s",
   },
   description:
-    "Ювелирные украшения из серебра 925 с ограненными синтетическими алмазами. Шоурум в Москве.",
+    "Ювелирные украшения из серебра 925 с ограненными синтетическими алмазами. Доставка СДЭК по России.",
   verification: getSiteVerification(),
   icons: {
     icon: [

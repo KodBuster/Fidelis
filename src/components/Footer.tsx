@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { MetrikaPhoneLink } from "@/components/analytics/MetrikaPhoneLink";
 import {
-  SHOWROOM,
   SITE_EMAIL,
   SITE_EMAIL_MAILTO,
   SITE_PHONE,
@@ -18,14 +17,10 @@ const FOOTER_LINKS = {
     { label: "Подвески", href: "/shop/pendants" },
     { label: "Серьги", href: "/shop/earrings" },
     { label: "Шнурки", href: "/shop/cords" },
-    { label: "Подарки", href: "/shop/gifts" },
   ],
   info: [
-    { label: "О бренде", href: "/about" },
     { label: "Сотрудничество", href: "/cooperation" },
-    { label: "Блог", href: "/blog" },
     { label: "Гид покупателя", href: "/guide" },
-    { label: "Шоурум", href: "/showroom" },
     { label: "Доставка и оплата", href: "/shipping" },
     { label: "Гарантия", href: "/warranty" },
   ],
@@ -40,7 +35,7 @@ export function Footer() {
             <Link href="/" className="inline-block mb-4 shrink-0">
               <Image
                 src="/images/logo_20260527190756.png"
-                alt="Синоним"
+                alt="ФИДЕЛИС"
                 width={1000}
                 height={150}
                 className="h-7 w-auto max-w-none object-contain brightness-0"
@@ -93,10 +88,6 @@ export function Footer() {
             <h4 className="text-brand-terracotta text-xs tracking-[0.2em] uppercase mb-4">
               Контакты
             </h4>
-            <p className="text-sm text-brand-text mb-2">Шоурум в Москве</p>
-            <p className="text-sm text-brand-muted mb-3 leading-relaxed">
-              {SHOWROOM.address}
-            </p>
             <MetrikaPhoneLink
               href={SITE_PHONE_TEL}
               className="block text-sm text-brand-terracotta hover:text-brand-terracotta-logo transition-colors mb-2"
@@ -109,22 +100,19 @@ export function Footer() {
             >
               {SITE_EMAIL}
             </a>
-            <p className="text-sm text-brand-muted mb-3">
-              {SHOWROOM.hours}
-            </p>
             <p className="text-sm text-brand-muted leading-relaxed">
-              ООО «СИНОНИМ»
+              ООО «ФИДЕЛИС»
               <br />
-              ИНН 7735173098
+              ИНН 6154152484
               <br />
-              ОГРН 1187746428484
+              ОГРН 1186196020152
             </p>
           </div>
         </div>
 
         <div className="border-t border-brand-sand mt-10 pt-6 flex flex-col sm:flex-row justify-between gap-4 text-xs text-brand-muted">
           <div className="flex flex-col gap-2 sm:gap-1">
-            <p>© 2026 Синоним. Все права защищены.</p>
+            <p>© 2026 ФИДЕЛИС. Все права защищены.</p>
             <p>
               Разработка Digital Агентство{" "}
               <a

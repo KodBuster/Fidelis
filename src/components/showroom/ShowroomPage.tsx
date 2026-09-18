@@ -1,4 +1,4 @@
-﻿import Image from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import { MetrikaMapLink } from "@/components/analytics/MetrikaMapLink";
 import { MetrikaPhoneLink } from "@/components/analytics/MetrikaPhoneLink";
@@ -20,7 +20,7 @@ export function ShowroomPage() {
         <div className="absolute inset-0">
           <Image
             src="/images/show_room_2.jpg"
-            alt="Интерьер ювелирного шоурума Синоним"
+            alt="Интерьер ювелирного шоурума ФИДЕЛИС"
             fill
             className="object-cover opacity-50"
             priority
@@ -34,7 +34,7 @@ export function ShowroomPage() {
             Москва
           </p>
           <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl text-brand-olive-dark mb-6 max-w-2xl leading-tight">
-            Шоурум Синоним
+            Шоурум ФИДЕЛИС
           </h1>
           <p className="text-brand-muted text-base md:text-lg max-w-xl leading-relaxed">
             Пространство, где можно увидеть сияние ограненных синтетических алмазов
@@ -51,7 +51,7 @@ export function ShowroomPage() {
                 Добро пожаловать
               </h2>
               <p>
-                Мы рады видеть вас в шоуруме «Синоним» — уютном ювелирном
+                Мы рады видеть вас в шоуруме «ФИДЕЛИС» — уютном ювелирном
                 пространстве в центре Москвы. Здесь можно рассмотреть кольца,
                 серьги, колье и браслеты с ограненными синтетическими алмазами,
                 оценить огранку и блеск камней при дневном свете и подобрать
@@ -156,7 +156,7 @@ export function ShowroomPage() {
 
           <div className="overflow-hidden rounded-2xl border border-brand-olive/15 shadow-lg">
             <iframe
-              title="Карта — шоурум Синоним, ул. Гиляровского 40"
+              title="Карта — шоурум ФИДЕЛИС, ул. Гиляровского 40"
               src={SHOWROOM_MAP_EMBED_URL}
               className="w-full h-[360px] md:h-[480px] border-0"
               allowFullScreen

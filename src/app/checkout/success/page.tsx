@@ -5,8 +5,8 @@ import { CheckoutSuccess } from "@/components/checkout/CheckoutSuccess";
 import { buildPageMetadata } from "@/lib/metadata";
 
 export const metadata = buildPageMetadata({
-  title: "Оплата заказа — Синоним",
-  description: "Подтверждение оплаты заказа в интернет-магазине Синоним",
+  title: "Оплата заказа — ФИДЕЛИС",
+  description: "Подтверждение оплаты заказа в интернет-магазине ФИДЕЛИС",
   path: "/checkout/success",
   noIndex: true,
 });

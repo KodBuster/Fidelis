@@ -86,7 +86,7 @@ export async function GET(request: Request) {
   let testSend: Awaited<ReturnType<typeof notifyMaxAdmins>> | undefined;
   if (url.searchParams.get("send") === "1") {
     testSend = await notifyMaxAdmins(
-      "🧪 Тест уведомлений «Синоним»\nЕсли видите это — доставка на ваш аккаунт работает."
+      "🧪 Тест уведомлений «ФИДЕЛИС»\nЕсли видите это — доставка на ваш аккаунт работает."
     );
   }
 

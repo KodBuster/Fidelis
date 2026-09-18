@@ -1,6 +1,6 @@
 import type { CartItem } from "@/lib/cart";
 import type { CheckoutFormData } from "@/lib/checkout";
-import { normalizePhone, SHOWROOM } from "@/lib/checkout";
+import { normalizePhone } from "@/lib/checkout";
 import { getProductBySlug, getProductDetails } from "@/lib/products-service";
 import { advantshopFetch } from "./client";
 import { isAdvantShopConfigured } from "./config";
@@ -108,7 +108,6 @@ function buildOrderPayload(
   orderItems: AdvantShopOrderItem[]
 ): AdvantShopOrderPayload {
   const { firstName, lastName } = splitCustomerName(input.customer.name);
-  const isPickup = input.customer.deliveryMethod === "pickup";
   const phone = normalizePhone(input.customer.phone);
 
   return {
@@ -117,15 +116,15 @@ function buildOrderPayload(
       LastName: lastName,
       Phone: phone,
       Country: "Россия",
-      City: isPickup ? "Москва" : input.customer.city.trim(),
-      Street: isPickup ? SHOWROOM.address : input.customer.address.trim(),
-      Apartment: isPickup ? undefined : input.customer.apartment.trim() || undefined,
+      City: input.customer.city.trim(),
+      Street: input.customer.address.trim(),
+      Apartment: input.customer.apartment.trim() || undefined,
     },
     Number: input.orderNumber,
-    OrderSource: process.env.ADVANTSHOP_ORDER_SOURCE?.trim() || "sinonim.ru",
+    OrderSource: process.env.ADVANTSHOP_ORDER_SOURCE?.trim() || "fidelis",
     Currency: "RUB",
     CustomerComment: buildCustomerComment(input.items, input.customer.comment),
-    ShippingName: isPickup ? "Самовывоз из шоурума" : "Доставка курьером",
+    ShippingName: "СДЭК",
     ShippingCost: input.deliveryFee,
     CheckOrderItemExist: true,
     CheckOrderItemAvailable: true,

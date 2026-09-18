@@ -1,1 +1,1 @@
-export const FAVORITES_STORAGE_KEY = "sinonim-favorites";
+export const FAVORITES_STORAGE_KEY = "fidelis-favorites";

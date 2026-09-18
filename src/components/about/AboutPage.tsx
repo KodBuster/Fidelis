@@ -1,4 +1,4 @@
-﻿import Image from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 
 const PILLARS = [
@@ -38,7 +38,7 @@ export function AboutPage() {
       <section className="py-10 md:py-14">
         <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-10">
           <p className="text-brand-terracotta text-sm tracking-[0.2em] uppercase mb-2">
-            Синоним
+            ФИДЕЛИС
           </p>
           <h1 className="font-heading text-3xl md:text-5xl text-brand-olive-dark mb-8 md:mb-10">
             О бренде
@@ -50,9 +50,9 @@ export function AboutPage() {
                 Не жди повода! Каждый день твой!
               </p>
               <p>
-                СИНОНИМ — это российский ювелирный бренд, создающий украшения
+                ФИДЕЛИС — это российский ювелирный бренд, создающий украшения
                 из серебра с ограненными синтетическими алмазами. Основанный на
-                стыке инновационных технологий и экспертизы, бренд СИНОНИМ
+                стыке инновационных технологий и экспертизы, бренд ФИДЕЛИС
                 делает премиальную красоту легкой, понятной и доступной,
                 стирая границы между торжественным выходом и повседневным
                 стилем. Серебряные украшения с ограненными синтетическими
@@ -61,17 +61,17 @@ export function AboutPage() {
                 повседневных джинсов с футболкой.
               </p>
               <p>
-                СИНОНИМ создан для тех, кто выбирает современные украшения и
+                ФИДЕЛИС создан для тех, кто выбирает современные украшения и
                 ценит честную подачу: металл, огранка и масса вставки в граммах
                 — без лишних обещаний.
               </p>
               <p>
-                Забудьте о трендах — выбирайте то, что созвучно вам. СИНОНИМ —
+                Забудьте о трендах — выбирайте то, что созвучно вам. ФИДЕЛИС —
                 это украшения вне времени, транслирующие чистый вкус. Это не
                 способ удивить толпу, это ваш личный диалог с собой.
               </p>
               <p className="font-heading text-xl md:text-2xl text-brand-olive-dark">
-                Синоним-Синоним твоей индивидуальности.
+                ФИДЕЛИС-ФИДЕЛИС твоей индивидуальности.
               </p>
             </div>
 
@@ -79,7 +79,7 @@ export function AboutPage() {
               <div className="absolute -inset-3 rounded-2xl bg-brand-surface blur-xl" />
               <Image
                 src="/images/product-ring.webp"
-                alt="Браслет Синоним с ограненными синтетическими алмазами"
+                alt="Браслет ФИДЕЛИС с ограненными синтетическими алмазами"
                 fill
                 className="object-contain rounded-2xl shadow-lg bg-white p-4 md:p-6"
                 sizes="(max-width: 1024px) 100vw, 40vw"
@@ -97,7 +97,7 @@ export function AboutPage() {
 
           <div className="max-w-3xl mx-auto text-center mb-10 md:mb-12">
             <p className="font-heading text-4xl md:text-5xl tracking-[0.15em] text-brand-olive-dark mb-4">
-              СИНОНИМ
+              ФИДЕЛИС
             </p>
             <p className="text-lg md:text-xl text-brand-text mb-3">
               Украшения из серебра с ограненными синтетическими алмазами

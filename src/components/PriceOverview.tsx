@@ -1,9 +1,7 @@
 import { getCategoryStats } from "@/lib/catalog-stats";
 
 export async function PriceOverview() {
-  const categories = (await getCategoryStats()).filter(
-    (category) => category.slug !== "gifts",
-  );
+  const categories = await getCategoryStats();
 
   if (categories.length === 0) return null;
 

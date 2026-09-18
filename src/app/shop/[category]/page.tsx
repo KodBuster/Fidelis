@@ -57,7 +57,7 @@ export async function generateMetadata({ params, searchParams }: PageProps) {
   const { titlePlural, description } = CATEGORIES[category];
 
   return buildPageMetadata({
-    title: `${titlePlural} — каталог Синоним`,
+    title: `${titlePlural} — каталог ФИДЕЛИС`,
     description,
     path: `/shop/${category}`,
     noIndex: hasCatalogFilterParams(filterParams),
@@ -105,7 +105,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
           ...(initialProducts.length > 0
             ? [
                 buildCatalogItemListJsonLd({
-                  name: `${categoryTitle} — каталог Синоним`,
+                  name: `${categoryTitle} — каталог ФИДЕЛИС`,
                   url: `${getSiteUrl()}/shop/${categorySlug}`,
                   products: initialProducts,
                 }),

@@ -40,10 +40,10 @@ export function HeroContent({ className = "" }: HeroContentProps) {
           Смотреть каталог
         </Link>
         <Link
-          href="/showroom"
+          href="/shipping"
           className="inline-flex items-center justify-center px-8 py-3.5 border border-brand-olive/25 text-brand-text hover:border-brand-terracotta hover:text-brand-terracotta text-sm tracking-widest uppercase transition-colors"
         >
-          Примерить в шоуруме
+          Доставка и оплата
         </Link>
       </div>
     </div>

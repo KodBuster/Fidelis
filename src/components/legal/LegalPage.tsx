@@ -56,11 +56,8 @@ export function LegalPage({
       <section className="pb-12 md:pb-16">
         <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-10 text-center">
           <p className="text-brand-muted text-sm mb-6">
-            По вопросам обработки данных и условий покупки свяжитесь с нами через{" "}
-            <Link href="/showroom" className="text-brand-terracotta hover:underline">
-              страницу шоурума
-            </Link>{" "}
-            или по телефону, указанному на сайте.
+            По вопросам обработки данных и условий покупки свяжитесь с нами по
+            телефону или email, указанным на сайте.
           </p>
           <Link
             href="/shop"

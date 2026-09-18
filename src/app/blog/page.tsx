@@ -5,9 +5,9 @@ import { buildPageMetadata } from "@/lib/metadata";
 import { BLOG_ARTICLES } from "@/lib/blog";
 
 export const metadata = buildPageMetadata({
-  title: "Блог — Синоним",
+  title: "Блог — ФИДЕЛИС",
   description:
-    "Статьи, новости и видео об ограненных синтетических алмазах и украшениях бренда Синоним.",
+    "Статьи, новости и видео об ограненных синтетических алмазах и украшениях бренда ФИДЕЛИС.",
   path: "/blog",
 });
 
@@ -19,7 +19,7 @@ export default function BlogHubPage() {
         <section className="py-10 md:py-14">
           <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-10">
             <p className="text-brand-terracotta text-sm tracking-[0.2em] uppercase mb-2">
-              Синоним
+              ФИДЕЛИС
             </p>
             <h1 className="font-heading text-3xl md:text-5xl text-brand-olive-dark mb-6">
               Блог

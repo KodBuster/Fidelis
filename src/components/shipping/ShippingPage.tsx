@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FaqSection } from "@/components/seo/FaqSection";
-import { SHOWROOM, SITE_PHONE, SITE_PHONE_TEL } from "@/lib/contacts";
+import { SITE_PHONE, SITE_PHONE_TEL } from "@/lib/contacts";
 import { DELIVERY_FEE, FREE_DELIVERY_THRESHOLD } from "@/lib/checkout";
 import { SHIPPING_FAQ_ITEMS } from "@/lib/shipping-faq";
 
@@ -10,28 +10,15 @@ const DELIVERY_OPTIONS = [
     text: "Доставляем заказы по России через службу СДЭК — до пункта выдачи или курьером до двери. Срок и стоимость рассчитываются при оформлении заказа в зависимости от города и выбранного тарифа.",
     note: `Бесплатная доставка при заказе от ${FREE_DELIVERY_THRESHOLD.toLocaleString("ru-RU")} ₽. При меньшей сумме — ${DELIVERY_FEE.toLocaleString("ru-RU")} ₽.`,
   },
-  {
-    title: "Самовывоз",
-    text: "Заберите заказ в шоуруме «Синоним» — бесплатно, без ожидания курьера. Перед визитом мы согласуем время, чтобы украшения были готовы к примерке и выдаче.",
-    note: `${SHOWROOM.address}. ${SHOWROOM.hours}.`,
-  },
 ];
 
 const PAYMENT_OPTIONS = [
   {
-    title: "В шоуруме",
+    title: "Оплата по счету",
     items: [
-      "Оплата при получении заказа в шоуруме",
-      "Наличными или банковской картой",
-      "Удобно, если хотите сначала примерить украшение",
-    ],
-  },
-  {
-    title: "На сайте",
-    items: [
-      "Банковской картой онлайн",
-      "По QR-коду через ЮKassa",
-      "Безопасная оплата — данные карты защищены платёжным сервисом",
+      "После оформления заказа менеджер выставит счёт",
+      "Оплата по реквизитам юридического лица",
+      "Отгрузка после поступления оплаты",
     ],
   },
 ];
@@ -42,15 +29,14 @@ export function ShippingPage() {
       <section className="py-10 md:py-14">
         <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-10">
           <p className="text-brand-terracotta text-sm tracking-[0.2em] uppercase mb-2">
-            Синоним
+            Фиделис
           </p>
           <h1 className="font-heading text-3xl md:text-5xl text-brand-olive-dark mb-6 md:mb-8">
             Доставка и оплата
           </h1>
           <p className="text-brand-text leading-relaxed max-w-3xl text-base md:text-lg">
-            Мы сделали покупку украшений простой и прозрачной: выберите удобный
-            способ получения заказа и оплатите так, как вам комфортнее — в
-            шоуруме или онлайн на сайте.
+            Доставляем заказы службой СДЭК по России. Оплата — по счёту после
+            подтверждения заказа менеджером.
           </p>
         </div>
       </section>
@@ -88,7 +74,7 @@ export function ShippingPage() {
             >
               {SITE_PHONE}
             </a>{" "}
-            для подтверждения деталей доставки или самовывоза.
+            для подтверждения деталей доставки СДЭК.
           </p>
         </div>
       </section>
@@ -123,42 +109,27 @@ export function ShippingPage() {
             ))}
           </div>
 
-          <p className="text-brand-muted text-sm md:text-base leading-relaxed max-w-3xl">
-            Онлайн-оплата на сайте проходит через платёжный сервис{" "}
-            <span className="text-brand-sand">ЮKassa</span> — вы можете
-            оплатить картой или по QR-коду в мобильном приложении банка.
-          </p>
-        </div>
-      </section>
-
-      <FaqSection
-        title="Частые вопросы о доставке и оплате"
-        subtitle="Сроки, стоимость и способы получения заказа"
-        items={SHIPPING_FAQ_ITEMS}
-      />
-
-      <section className="py-12 md:py-16">
-        <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-10 text-center">
-          <p className="text-brand-text leading-relaxed mb-8">
-            Остались вопросы по доставке или оплате? Позвоните нам или приезжайте
-            в шоурум — с радостью подскажем.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap gap-4">
             <Link
               href="/shop"
               className="inline-flex items-center justify-center px-8 py-3.5 bg-brand-terracotta hover:bg-brand-terracotta-logo text-white text-sm tracking-widest uppercase transition-colors"
             >
-              Перейти в каталог
+              В каталог
             </Link>
-            <Link
-              href="/showroom"
+            <a
+              href={SITE_PHONE_TEL}
               className="inline-flex items-center justify-center px-8 py-3.5 border border-brand-olive/30 text-brand-olive-dark hover:border-brand-olive text-sm tracking-widest uppercase transition-colors"
             >
-              Шоурум
-            </Link>
+              Позвонить
+            </a>
           </div>
         </div>
       </section>
+
+      <FaqSection
+        items={SHIPPING_FAQ_ITEMS}
+        title="Вопросы о доставке и оплате"
+      />
     </>
   );
 }

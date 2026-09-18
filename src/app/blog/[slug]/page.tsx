@@ -19,7 +19,7 @@ const ARTICLE_CONTENT: Record<
 > = {
   "osobennosti-brilliantov-novogo-pokoleniya": {
     intro:
-      "В украшениях Синоним вставки обозначаются как «ограненный синтетический алмаз». Масса указывается в граммах.",
+      "В украшениях ФИДЕЛИС вставки обозначаются как «ограненный синтетический алмаз». Масса указывается в граммах.",
     body: (
       <>
         <p>
@@ -32,7 +32,7 @@ const ARTICLE_CONTENT: Record<
           SEO-описанию и сопроводительным документам.
         </p>
         <p>
-          Для изделий с вставками от 0,1 г Синоним участвует в добровольной
+          Для изделий с вставками от 0,1 г ФИДЕЛИС участвует в добровольной
           аттестации качества — дополнительной проверке изделия независимой
           организацией.
         </p>
@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: PageProps) {
   if (!article) return {};
 
   return buildPageMetadata({
-    title: `${article.title} — Блог Синоним`,
+    title: `${article.title} — Блог ФИДЕЛИС`,
     description: article.description,
     path: `/blog/${slug}`,
     ogType: "article",

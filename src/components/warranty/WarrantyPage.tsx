@@ -23,7 +23,7 @@ export function WarrantyPage() {
       <section className="py-10 md:py-14">
         <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-10">
           <p className="text-brand-terracotta text-sm tracking-[0.2em] uppercase mb-2">
-            Синоним
+            ФИДЕЛИС
           </p>
           <h1 className="font-heading text-3xl md:text-5xl text-brand-olive-dark mb-6 md:mb-8">
             Гарантия
@@ -58,7 +58,7 @@ export function WarrantyPage() {
               <div className="absolute -inset-3 rounded-2xl bg-brand-surface blur-xl" />
               <Image
                 src="/images/warranty-certificate.png"
-                alt="Аттестат партии ювелирных изделий Синоним"
+                alt="Аттестат партии ювелирных изделий ФИДЕЛИС"
                 fill
                 className="object-contain object-top rounded-2xl shadow-lg bg-white"
                 sizes="(max-width: 1024px) 100vw, 45vw"
@@ -84,7 +84,7 @@ export function WarrantyPage() {
             Качество, которому можно доверять
           </h2>
           <p className="text-brand-muted leading-relaxed mb-8">
-            Ограненные синтетические алмазы в украшениях Синоним сопровождаются
+            Ограненные синтетические алмазы в украшениях ФИДЕЛИС сопровождаются
             информацией о типе вставки и массе в граммах. Аттестация и гарантия
             — наш способ быть максимально открытыми перед вами.
           </p>
@@ -96,10 +96,10 @@ export function WarrantyPage() {
               Смотреть каталог
             </Link>
             <Link
-              href="/about"
+              href="/cooperation"
               className="inline-flex items-center justify-center px-8 py-3.5 border border-brand-olive/25 text-brand-text hover:border-brand-terracotta hover:text-brand-terracotta text-sm tracking-widest uppercase transition-colors"
             >
-              О бренде
+              Сотрудничество
             </Link>
           </div>
         </div>

@@ -35,7 +35,7 @@ export function buildPageMetadata({
       title,
       description,
       url: canonical,
-      siteName: "Синоним",
+      siteName: "ФИДЕЛИС",
       locale: "ru_RU",
       type: ogType,
       images: [

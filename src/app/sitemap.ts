@@ -1,12 +1,15 @@
 import type { MetadataRoute } from "next";
 import { getCatalogProducts } from "@/lib/products-service";
-import { BLOG_ARTICLES } from "@/lib/blog";
 import { CATALOG_CATEGORY_SLUGS } from "@/lib/products";
 import { getSiteUrl } from "@/lib/site-url";
 
 export const revalidate = 300;
 
-const STATIC_PAGES: { path: string; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"]; priority: number }[] = [
+const STATIC_PAGES: {
+  path: string;
+  changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
+  priority: number;
+}[] = [
   { path: "", changeFrequency: "weekly", priority: 1 },
   { path: "/shop", changeFrequency: "daily", priority: 0.9 },
   { path: "/search", changeFrequency: "monthly", priority: 0.45 },
@@ -15,10 +18,7 @@ const STATIC_PAGES: { path: string; changeFrequency: MetadataRoute.Sitemap[numbe
     changeFrequency: "daily" as const,
     priority: 0.85,
   })),
-  { path: "/about", changeFrequency: "monthly", priority: 0.6 },
   { path: "/cooperation", changeFrequency: "monthly", priority: 0.55 },
-  { path: "/blog", changeFrequency: "weekly", priority: 0.65 },
-  { path: "/showroom", changeFrequency: "monthly", priority: 0.7 },
   { path: "/how-size-ring", changeFrequency: "yearly", priority: 0.5 },
   { path: "/warranty", changeFrequency: "yearly", priority: 0.5 },
   { path: "/shipping", changeFrequency: "yearly", priority: 0.5 },
@@ -55,12 +55,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("Failed to build product sitemap entries:", error);
   }
 
-  const blogEntries: MetadataRoute.Sitemap = BLOG_ARTICLES.map((article) => ({
-    url: `${siteUrl}/blog/${article.slug}`,
-    lastModified: new Date(article.dateModified),
-    changeFrequency: "monthly",
-    priority: 0.6,
-  }));
-
-  return [...staticEntries, ...productEntries, ...blogEntries];
+  return [...staticEntries, ...productEntries];
 }

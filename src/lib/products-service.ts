@@ -70,15 +70,6 @@ export async function getCatalogProducts(options?: {
 }): Promise<Product[]> {
   const sort = options?.sort ?? "default";
 
-  if (options?.category === "gifts") {
-    try {
-      return await getGiftCatalogProducts(sort);
-    } catch (error) {
-      console.error("Gift catalog unavailable:", error);
-      return pickGiftProducts(PRODUCTS, sort);
-    }
-  }
-
   if (isAdvantShopConfigured()) {
     try {
       return await getCachedAdvantShopCatalog(

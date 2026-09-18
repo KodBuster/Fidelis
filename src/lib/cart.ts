@@ -11,7 +11,7 @@ export type CartItem = {
   artNo?: string;
 };
 
-export const CART_STORAGE_KEY = "sinonim-cart";
+export const CART_STORAGE_KEY = "fidelis-cart";
 
 export function buildCartItemId(
   slug: string,

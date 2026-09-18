@@ -4,8 +4,8 @@ import { CartView } from "@/components/cart/CartView";
 import { buildPageMetadata } from "@/lib/metadata";
 
 export const metadata = buildPageMetadata({
-  title: "Корзина — Синоним",
-  description: "Ваша корзина покупок в интернет-магазине Синоним",
+  title: "Корзина — ФИДЕЛИС",
+  description: "Ваша корзина покупок в интернет-магазине ФИДЕЛИС",
   path: "/cart",
   noIndex: true,
 });

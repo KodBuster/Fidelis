@@ -14,7 +14,7 @@ export function buildOrganizationSameAs(): string[] {
   return [
     ...MESSENGERS.map((messenger) => messenger.href),
     SHOWROOM_MAP_LINK,
-    `${siteUrl}/showroom`,
+    siteUrl,
   ];
 }
 
@@ -25,11 +25,11 @@ export function buildOrganizationJsonLd(): Record<string, unknown> {
     "@context": "https://schema.org",
     "@type": "Organization",
     "@id": getOrganizationId(),
-    name: "Синоним",
+    name: "ФИДЕЛИС",
     url: siteUrl,
     logo: absoluteImageUrl("/images/logo_20260527190756.png"),
     description:
-      "Ювелирный бренд Синоним — украшения из серебра 925 с ограненными синтетическими алмазами.",
+      "Ювелирный бренд ФИДЕЛИС — украшения из серебра 925 с ограненными синтетическими алмазами.",
     telephone: SITE_PHONE_TEL.replace("tel:", ""),
     email: SITE_EMAIL,
     address: {

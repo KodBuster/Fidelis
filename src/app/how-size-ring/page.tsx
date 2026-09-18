@@ -11,7 +11,7 @@ import { SIZE_FAQ_ITEMS } from "@/lib/size-faq";
 import { buildFaqPageJsonLd } from "@/lib/warranty-faq";
 
 export const metadata = buildPageMetadata({
-  title: "Как определить размер — Синоним",
+  title: "Как определить размер — ФИДЕЛИС",
   description:
     "Как подобрать размер кольца и браслета: примерка в шоуруме, замеры дома, таблица российских размеров и полезные советы.",
   path: "/how-size-ring",

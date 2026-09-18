@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { FaqSection } from "@/components/seo/FaqSection";
 import {
-  SHOWROOM,
   SITE_PHONE,
   SITE_PHONE_TEL,
 } from "@/lib/contacts";
@@ -9,13 +8,9 @@ import { SIZE_FAQ_ITEMS } from "@/lib/size-faq";
 
 const METHODS = [
   {
-    title: "В шоуруме «Синоним»",
-    text: "Самый точный способ — примерить кольцо или браслет у нас в шоуруме. Консультант подберёт размер с помощью профессиональной кольцемерной палитры и учтёт ширину модели.",
-    highlight: true,
-  },
-  {
     title: "По готовому кольцу",
     text: "Измерьте внутренний диаметр кольца, которое вам уже подходит: приложите линейку к центру кольца и снимите расстояние между внутренними краями в миллиметрах. Полученное число — ваш размер.",
+    highlight: true,
   },
   {
     title: "Обмер пальца ниткой",
@@ -57,7 +52,7 @@ export function HowSizeRingPage() {
       <section className="py-10 md:py-14">
         <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-10">
           <p className="text-brand-terracotta text-sm tracking-[0.2em] uppercase mb-2">
-            Синоним
+            ФИДЕЛИС
           </p>
           <h1 className="font-heading text-3xl md:text-5xl text-brand-olive-dark mb-6 md:mb-8">
             Как определить размер
@@ -90,11 +85,6 @@ export function HowSizeRingPage() {
                   {method.title}
                 </h3>
                 <p className="text-brand-text leading-relaxed">{method.text}</p>
-                {method.highlight && (
-                  <p className="mt-4 text-sm text-brand-muted leading-relaxed">
-                    {SHOWROOM.address}. {SHOWROOM.hours}.
-                  </p>
-                )}
               </div>
             ))}
           </div>
@@ -202,8 +192,7 @@ export function HowSizeRingPage() {
             Нужна помощь с размером?
           </h2>
           <p className="text-brand-muted leading-relaxed mb-8">
-            Приезжайте в шоурум на бесплатную примерку или напишите нам —
-            подскажем по вашим замерам. Телефон{" "}
+            Напишите или позвоните нам — подскажем по вашим замерам. Телефон{" "}
             <a
               href={SITE_PHONE_TEL}
               className="text-brand-terracotta hover:text-white transition-colors"
@@ -214,10 +203,10 @@ export function HowSizeRingPage() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
-              href="/showroom"
+              href="/messengers"
               className="inline-flex items-center justify-center px-8 py-3.5 bg-brand-terracotta hover:bg-brand-terracotta-logo text-white text-sm tracking-widest uppercase transition-colors"
             >
-              Записаться в шоурум
+              Написать нам
             </Link>
             <Link
               href="/shop/rings"

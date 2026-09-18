@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { MetrikaPhoneLink } from "@/components/analytics/MetrikaPhoneLink";
 import {
   SITE_EMAIL,
@@ -11,8 +10,6 @@ const BENEFITS = [
   "Конкурентные цены",
   "Качество с гарантией",
   "Обновляемый ассортимент с фокусом на спрос",
-  "Бесплатное оборудование и упаковка",
-  "Аттестат на изделия суммарной каратностью от 0.5",
   "Маркетинговая поддержка в развитии продаж",
 ];
 
@@ -22,7 +19,7 @@ export function PartnershipPage() {
       <section className="py-10 md:py-14">
         <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-10">
           <p className="text-brand-terracotta text-sm tracking-[0.2em] uppercase mb-2">
-            Синоним
+            ФИДЕЛИС
           </p>
           <h1 className="font-heading text-3xl md:text-5xl text-brand-olive-dark mb-4 md:mb-6">
             Сотрудничество
@@ -71,8 +68,8 @@ export function PartnershipPage() {
               className="text-brand-terracotta hover:text-brand-terracotta-logo transition-colors"
             >
               {SITE_EMAIL}
-            </a>
-            , позвоните или приезжайте в шоурум в Москве.
+            </a>{" "}
+            или позвоните.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
@@ -87,12 +84,6 @@ export function PartnershipPage() {
             >
               {SITE_PHONE}
             </MetrikaPhoneLink>
-            <Link
-              href="/showroom"
-              className="inline-flex items-center justify-center px-8 py-3.5 border border-brand-olive/30 text-brand-olive-dark hover:border-brand-olive text-sm tracking-widest uppercase transition-colors"
-            >
-              Шоурум
-            </Link>
           </div>
         </div>
       </section>

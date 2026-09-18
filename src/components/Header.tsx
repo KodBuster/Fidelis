@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
@@ -23,9 +23,6 @@ const NAV_ITEMS = [
   { label: "Подвески", href: "/shop/pendants" },
   { label: "Серьги", href: "/shop/earrings" },
   { label: "Шнурки", href: "/shop/cords" },
-  { label: "Подарки", href: "/shop/gifts" },
-  { label: "О бренде", href: "/about" },
-  { label: "Блог", href: "/blog" },
 ];
 
 const iconButtonClass =
@@ -116,7 +113,7 @@ function Logo({ compact = false }: { compact?: boolean }) {
     >
       <Image
         src="/images/logo_20260527190756.png"
-        alt="Синоним"
+        alt="ФИДЕЛИС"
         width={1000}
         height={150}
         priority
@@ -160,9 +157,6 @@ export function Header() {
         <div className="flex gap-6">
           <Link href="/shipping" className="hover:text-brand-terracotta transition-colors">
             Доставка и оплата
-          </Link>
-          <Link href="/showroom" className="hover:text-brand-terracotta transition-colors">
-            Шоурум
           </Link>
           <Link href="/cooperation" className="hover:text-brand-terracotta transition-colors">
             Сотрудничество

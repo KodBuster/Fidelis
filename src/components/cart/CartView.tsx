@@ -160,7 +160,7 @@ export function CartView() {
               </Link>
 
               <p className="text-xs text-brand-muted leading-relaxed">
-                Бесплатная доставка при заказе от 30 000 ₽. Самовывоз из шоурума — бесплатно.
+                Бесплатная доставка при заказе от 30 000 ₽. Доставка СДЭК.
               </p>
             </div>
           </aside>

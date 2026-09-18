@@ -4,8 +4,8 @@ import { CheckoutForm } from "@/components/checkout/CheckoutForm";
 import { buildPageMetadata } from "@/lib/metadata";
 
 export const metadata = buildPageMetadata({
-  title: "Оформление заказа — Синоним",
-  description: "Оформление заказа в интернет-магазине Синоним",
+  title: "Оформление заказа — ФИДЕЛИС",
+  description: "Оформление заказа в интернет-магазине ФИДЕЛИС",
   path: "/checkout",
   noIndex: true,
 });

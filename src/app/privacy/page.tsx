@@ -4,9 +4,9 @@ import { PrivacyPage } from "@/components/legal/PrivacyPage";
 import { buildPageMetadata } from "@/lib/metadata";
 
 export const metadata = buildPageMetadata({
-  title: "Политика конфиденциальности — Синоним",
+  title: "Политика конфиденциальности — ФИДЕЛИС",
   description:
-    "Политика обработки персональных данных интернет-магазина Синоним: какие данные собираем, как используем и как защищаем.",
+    "Политика обработки персональных данных интернет-магазина ФИДЕЛИС: какие данные собираем, как используем и как защищаем.",
   path: "/privacy",
 });
 

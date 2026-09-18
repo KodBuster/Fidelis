@@ -9,7 +9,7 @@ export function buildWebSiteJsonLd(): Record<string, unknown> {
     "@type": "WebSite",
     "@id": getWebsiteId(),
     url: siteUrl,
-    name: "Синоним",
+    name: "ФИДЕЛИС",
     description:
       "Ювелирные украшения из серебра 925 с ограненными синтетическими алмазами. Каталог, шоурум в Москве, доставка по России.",
     inLanguage: "ru-RU",

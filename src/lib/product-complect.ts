@@ -69,7 +69,7 @@ export function getComplectSiblings(
 
   for (const artNo of setArtNos) {
     const found = catalog.find((item) => {
-      if (seenIds.has(item.id) || item.category === "gifts") return false;
+      if (seenIds.has(item.id)) return false;
       return productMatchesArtNo(item, artNo);
     });
     if (found) {

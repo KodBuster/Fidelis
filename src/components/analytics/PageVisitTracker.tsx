@@ -18,13 +18,6 @@ const PAGE_GOALS: PageGoal[] = [
   { goal: "page_pendants", match: (p) => p === "/shop/pendants" },
   { goal: "page_earrings", match: (p) => p === "/shop/earrings" },
   { goal: "page_cords", match: (p) => p === "/shop/cords" },
-  { goal: "page_gifts", match: (p) => p === "/shop/gifts" },
-  { goal: "page_about", match: (p) => p === "/about" },
-  {
-    goal: "page_blog",
-    match: (p) => p === "/blog" || p.startsWith("/blog/"),
-  },
-  { goal: "page_showroom", match: (p) => p === "/showroom" },
   { goal: "page_shipping", match: (p) => p === "/shipping" },
   {
     goal: "page_guide",

@@ -131,8 +131,8 @@ export function ProductPage({
                 </Link>
               </li>
               <li>
-                <Link href="/showroom" className="text-brand-terracotta hover:underline">
-                  Примерить в шоуруме в Москве
+                <Link href="/shipping" className="text-brand-terracotta hover:underline">
+                  Доставка СДЭК и оплата по счёту
                 </Link>
               </li>
             </ul>

@@ -4,13 +4,13 @@ const JUNWEX_TICKET_URL =
   "https://www.junwex-msk.ru/posetitelyam/e-ticket.html";
 
 const BANNER_ALT =
-  "JUNWEX Москва, 23–27 сентября, ВДНХ. Стенд Синоним A-101, павильон 57. Получить пригласительный билет.";
+  "JUNWEX Москва, 23–27 сентября, ВДНХ. Стенд ФИДЕЛИС A-101, павильон 57. Получить пригласительный билет.";
 
 export function Hero() {
   return (
     <section className="relative border-b border-brand-sand bg-white">
       <h1 className="sr-only">
-        Синоним — ограненные синтетические алмазы в серебре
+        ФИДЕЛИС — ограненные синтетические алмазы в серебре
       </h1>
       <h2 className="sr-only">
         JUNWEX Москва, 23–27 сентября, стенд A-101, павильон 57
@@ -20,7 +20,7 @@ export function Hero() {
         href={JUNWEX_TICKET_URL}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Получить пригласительный билет на JUNWEX Москва — стенд Синоним A-101, павильон 57"
+        aria-label="Получить пригласительный билет на JUNWEX Москва — стенд ФИДЕЛИС A-101, павильон 57"
         className="group relative block w-full cursor-pointer touch-manipulation [-webkit-tap-highlight-color:transparent]"
       >
         {/* Mobile / tablet portrait: vertical 3:4 */}

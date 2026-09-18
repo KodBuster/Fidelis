@@ -1,11 +1,6 @@
 import {
-  getGiftPeriodId,
-  pickGiftProducts,
-} from "@/lib/gift-products";
-import {
   CATALOG_CATEGORY_SLUGS,
   CATEGORIES,
-  PRODUCTS,
   formatPrice,
   type CategorySlug,
   type Product,
@@ -29,7 +24,6 @@ const CATEGORY_IMAGES: Record<CategorySlug, string> = {
   pendants: "/images/categories/pendants.jpg",
   earrings: "/images/categories/earrings.jpg",
   cords: "/images/product-necklace.webp",
-  gifts: "/images/product-necklace.webp",
 };
 
 function formatModelCount(count: number): string {
@@ -69,19 +63,6 @@ function buildCategoryStat(
   };
 }
 
-async function loadGiftProducts(catalogProducts: Product[]): Promise<Product[]> {
-  try {
-    const gifts = await getCatalogProducts({ category: "gifts" });
-    if (gifts.length > 0) return gifts;
-  } catch (error) {
-    console.error("Gift catalog unavailable for category stats:", error);
-  }
-
-  const periodId = getGiftPeriodId();
-  const sourceProducts = catalogProducts.length > 0 ? catalogProducts : PRODUCTS;
-  return pickGiftProducts(sourceProducts, "default", periodId);
-}
-
 export async function getCategoryStats(): Promise<CategoryStat[]> {
   let catalogProducts: Product[] = [];
 
@@ -91,14 +72,10 @@ export async function getCategoryStats(): Promise<CategoryStat[]> {
     console.error("Catalog unavailable for category stats:", error);
   }
 
-  const giftProducts = await loadGiftProducts(catalogProducts);
-
   return CATALOG_CATEGORY_SLUGS.map((slug) => {
-    const categoryProducts =
-      slug === "gifts"
-        ? giftProducts
-        : catalogProducts.filter((product) => product.category === slug);
-
+    const categoryProducts = catalogProducts.filter(
+      (product) => product.category === slug,
+    );
     return buildCategoryStat(slug, categoryProducts);
   });
 }

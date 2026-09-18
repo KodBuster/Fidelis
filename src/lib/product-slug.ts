@@ -47,7 +47,6 @@ const CATEGORY_FALLBACK: Record<CategorySlug, string> = {
   bracelets: "braslety-na-ruku",
   "ankle-bracelets": "braslety-na-nogu",
   cords: "shnurki",
-  gifts: "podarok",
 };
 
 function transliterate(value: string): string {

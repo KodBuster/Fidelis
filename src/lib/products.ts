@@ -5,8 +5,7 @@ export type CategorySlug =
   | "necklaces"
   | "bracelets"
   | "ankle-bracelets"
-  | "cords"
-  | "gifts";
+  | "cords";
 
 /** Категории с выбором размера (кольца и браслеты). */
 export function categoryHasSizes(category: CategorySlug): boolean {
@@ -124,11 +123,6 @@ export const CATEGORIES: Record<
     title: "Шнурки",
     titlePlural: "Шнурки",
     description: "Шнурки для подвесок и кулонов",
-  },
-  gifts: {
-    title: "Подарки",
-    titlePlural: "Подарки",
-    description: "Готовые подарочные решения до 30 000 ₽",
   },
 };
 
@@ -310,25 +304,6 @@ export const PRODUCTS: Product[] = [
     image: "/images/product-ring.webp",
     stoneWeight: 0.1,
   },
-  {
-    id: "17",
-    slug: "gift-set-mini",
-    name: "Подарочный набор Mini",
-    category: "gifts",
-    price: 15900,
-    image: "/images/product-earrings.webp",
-    stoneWeight: 0.1,
-  },
-  {
-    id: "18",
-    slug: "gift-set-classic",
-    name: "Подарочный набор Classic",
-    category: "gifts",
-    price: 29900,
-    image: "/images/product-necklace.webp",
-    stoneWeight: 0.2,
-    badge: "Хит",
-  },
 ];
 
 export function formatPrice(price: number): string {
@@ -415,7 +390,6 @@ const CATEGORY_IMAGES: Record<CategorySlug, string[]> = {
   pendants: ["/images/product-necklace.webp"],
   earrings: ["/images/product-earrings.webp"],
   cords: ["/images/product-necklace.webp", "/images/product-bracelet.webp"],
-  gifts: ["/images/product-earrings.webp", "/images/product-necklace.webp"],
 };
 
 export function getProductBySlug(slug: string): Product | undefined {

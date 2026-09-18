@@ -15,9 +15,6 @@ const NAV_ITEMS = [
   { label: "Подвески", href: "/shop/pendants" },
   { label: "Серьги", href: "/shop/earrings" },
   { label: "Шнурки", href: "/shop/cords" },
-  { label: "Подарки", href: "/shop/gifts" },
-  { label: "О бренде", href: "/about" },
-  { label: "Блог", href: "/blog" },
 ];
 
 const EXTRA_LINKS = [
@@ -26,7 +23,6 @@ const EXTRA_LINKS = [
   { label: "Избранное", href: "/favorites" },
   { label: "Корзина", href: "/cart" },
   { label: "Доставка и оплата", href: "/shipping" },
-  { label: "Шоурум", href: "/showroom" },
   { label: "Сотрудничество", href: "/cooperation" },
 ];
 

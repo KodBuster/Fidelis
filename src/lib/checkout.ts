@@ -2,9 +2,9 @@ import type { CartItem } from "@/lib/cart";
 
 export { SHOWROOM } from "@/lib/contacts";
 
-export type DeliveryMethod = "pickup" | "delivery";
+export type DeliveryMethod = "delivery";
 
-export type PaymentMethod = "yookassa" | "on_receipt";
+export type PaymentMethod = "invoice";
 
 export type CheckoutFormData = {
   name: string;
@@ -31,10 +31,10 @@ export type Order = {
   paymentStatus?: "pending" | "succeeded" | "canceled";
 };
 
-export const PENDING_ORDER_STORAGE_KEY = "sinonim-pending-order";
-export const PENDING_PAYMENT_STORAGE_KEY = "sinonim-pending-payment-id";
+export const PENDING_ORDER_STORAGE_KEY = "fidelis-pending-order";
+export const PENDING_PAYMENT_STORAGE_KEY = "fidelis-pending-payment-id";
 
-export const ORDERS_STORAGE_KEY = "sinonim-orders";
+export const ORDERS_STORAGE_KEY = "fidelis-orders";
 export const FREE_DELIVERY_THRESHOLD = 30_000;
 export const DELIVERY_FEE = 500;
 
@@ -42,7 +42,7 @@ export function getDeliveryFee(
   method: DeliveryMethod,
   subtotal: number
 ): number {
-  if (method === "pickup") return 0;
+  if (method !== "delivery") return 0;
   return subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
 }
 
@@ -97,10 +97,8 @@ export function validateCheckoutForm(data: CheckoutFormData): string | null {
 
   if (!isValidPhone(data.phone)) return "Укажите корректный номер телефона";
 
-  if (data.deliveryMethod === "delivery") {
-    if (!data.city.trim()) return "Укажите город";
-    if (!data.address.trim()) return "Укажите адрес доставки";
-  }
+  if (!data.city.trim()) return "Укажите город";
+  if (!data.address.trim()) return "Укажите адрес доставки";
 
   return null;
 }

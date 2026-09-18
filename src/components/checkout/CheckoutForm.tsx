@@ -19,11 +19,9 @@ import {
   PENDING_ORDER_STORAGE_KEY,
   PENDING_PAYMENT_STORAGE_KEY,
   saveOrder,
-  SHOWROOM,
   validateCheckoutForm,
   validatePersonalDataConsent,
   type CheckoutFormData,
-  type DeliveryMethod,
   type Order,
   type PaymentMethod,
 } from "@/lib/checkout";
@@ -33,8 +31,8 @@ import type { CartItem } from "@/lib/cart";
 const initialForm: CheckoutFormData = {
   name: "",
   phone: "",
-  deliveryMethod: "pickup",
-  paymentMethod: "on_receipt",
+  deliveryMethod: "delivery",
+  paymentMethod: "invoice",
   city: "Москва",
   address: "",
   apartment: "",
@@ -52,7 +50,6 @@ export function CheckoutForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
   const [previewItem, setPreviewItem] = useState<CartItem | null>(null);
-  const [yookassaEnabled, setYookassaEnabled] = useState(false);
   const [personalDataConsent, setPersonalDataConsent] = useState(false);
   const checkoutTrackedRef = useRef(false);
 
@@ -68,19 +65,6 @@ export function CheckoutForm() {
       router.replace("/cart");
     }
   }, [isReady, items.length, completedOrder, router]);
-
-  useEffect(() => {
-    fetch("/api/payments/yookassa/config")
-      .then((response) => response.json())
-      .then((data: { enabled?: boolean }) => {
-        const enabled = Boolean(data.enabled);
-        setYookassaEnabled(enabled);
-        if (enabled) {
-          setForm((prev) => ({ ...prev, paymentMethod: "yookassa" }));
-        }
-      })
-      .catch(() => setYookassaEnabled(false));
-  }, []);
 
   useEffect(() => {
     if (!isReady || items.length === 0 || checkoutTrackedRef.current) return;
@@ -99,14 +83,6 @@ export function CheckoutForm() {
 
   const handlePhoneChange = (value: string) => {
     updateField("phone", applyPhoneInputChange(form.phone, value));
-  };
-
-  const handleDeliveryMethod = (method: DeliveryMethod) => {
-    updateField("deliveryMethod", method);
-  };
-
-  const handlePaymentMethod = (method: PaymentMethod) => {
-    updateField("paymentMethod", method);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -232,8 +208,6 @@ export function CheckoutForm() {
   }
 
   if (completedOrder) {
-    const isPickup = completedOrder.customer.deliveryMethod === "pickup";
-
     return (
       <section className="py-12 md:py-16">
         <div className="mx-auto max-w-2xl px-4 md:px-6 lg:px-10 text-center">
@@ -254,30 +228,23 @@ export function CheckoutForm() {
             <span className="text-brand-olive-dark">
               {completedOrder.customer.phone}
             </span>{" "}
-            для подтверждения
-            {isPickup ? " и согласования времени визита в шоурум" : " и уточнения доставки"}.
+            для подтверждения и уточнения доставки.
           </p>
 
           <div className="bg-brand-surface rounded-xl p-6 text-left shadow-sm mb-8 space-y-3">
             <div className="flex justify-between text-sm">
               <span className="text-brand-muted">Способ получения</span>
-              <span className="text-brand-olive-dark">
-                {isPickup ? "Самовывоз из шоурума" : "Доставка курьером"}
-              </span>
+              <span className="text-brand-olive-dark">СДЭК</span>
             </div>
-            {isPickup ? (
-              <p className="text-sm text-brand-muted">
-                {SHOWROOM.address}
-                <br />
-                {SHOWROOM.hours}
-              </p>
-            ) : (
-              <p className="text-sm text-brand-muted">
-                {completedOrder.customer.city}, {completedOrder.customer.address}
-                {completedOrder.customer.apartment &&
-                  `, кв. ${completedOrder.customer.apartment}`}
-              </p>
-            )}
+            <p className="text-sm text-brand-muted">
+              {completedOrder.customer.city}, {completedOrder.customer.address}
+              {completedOrder.customer.apartment &&
+                `, кв. ${completedOrder.customer.apartment}`}
+            </p>
+            <div className="flex justify-between text-sm">
+              <span className="text-brand-muted">Оплата</span>
+              <span className="text-brand-olive-dark">Оплата по счету</span>
+            </div>
             <div className="flex justify-between pt-3 border-t border-brand-sand font-heading text-lg text-brand-olive-dark">
               <span>К оплате</span>
               <span>{formatPrice(completedOrder.total)}</span>
@@ -371,158 +338,82 @@ export function CheckoutForm() {
                   Способ получения
                 </h2>
 
-                <div className="grid sm:grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => handleDeliveryMethod("pickup")}
-                    className={`text-left p-4 rounded-xl border transition-colors ${
-                      form.deliveryMethod === "pickup"
-                        ? "border-brand-olive bg-brand-surface"
-                        : "border-brand-olive/20 hover:border-brand-olive/50"
-                    }`}
-                  >
-                    <p className="font-heading text-brand-olive-dark mb-1">
-                      Самовывоз
-                    </p>
-                    <p className="text-sm text-brand-muted">
-                      Бесплатно · {SHOWROOM.hours}
-                    </p>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => handleDeliveryMethod("delivery")}
-                    className={`text-left p-4 rounded-xl border transition-colors ${
-                      form.deliveryMethod === "delivery"
-                        ? "border-brand-olive bg-brand-surface"
-                        : "border-brand-olive/20 hover:border-brand-olive/50"
-                    }`}
-                  >
-                    <p className="font-heading text-brand-olive-dark mb-1">
-                      Доставка
-                    </p>
-                    <p className="text-sm text-brand-muted">
-                      {total >= FREE_DELIVERY_THRESHOLD
-                        ? "Бесплатно"
-                        : `от ${formatPrice(DELIVERY_FEE)} · бесплатно от ${formatPrice(FREE_DELIVERY_THRESHOLD)}`}
-                    </p>
-                  </button>
+                <div className="rounded-xl border border-brand-olive bg-brand-surface p-4">
+                  <p className="font-heading text-brand-olive-dark mb-1">СДЭК</p>
+                  <p className="text-sm text-brand-muted">
+                    {total >= FREE_DELIVERY_THRESHOLD
+                      ? "Бесплатно"
+                      : `от ${formatPrice(DELIVERY_FEE)} · бесплатно от ${formatPrice(FREE_DELIVERY_THRESHOLD)}`}
+                  </p>
                 </div>
 
-                {form.deliveryMethod === "pickup" ? (
-                  <div className="rounded-lg bg-brand-surface p-4 text-sm text-brand-muted space-y-1">
-                    <p className="font-medium text-brand-olive-dark">
-                      {SHOWROOM.title}
-                    </p>
-                    <p>{SHOWROOM.address}</p>
-                    <p>{SHOWROOM.hours}</p>
-                    <a
-                      href={`tel:${SHOWROOM.phone.replace(/\D/g, "")}`}
-                      className="inline-block text-brand-terracotta hover:text-brand-terracotta transition-colors"
+                <div className="space-y-4">
+                  <div>
+                    <label
+                      htmlFor="checkout-city"
+                      className="block text-xs tracking-[0.15em] uppercase text-brand-muted mb-2"
                     >
-                      {SHOWROOM.phone}
-                    </a>
+                      Город
+                    </label>
+                    <input
+                      id="checkout-city"
+                      type="text"
+                      autoComplete="address-level2"
+                      value={form.city}
+                      onChange={(e) => updateField("city", e.target.value)}
+                      className="w-full px-4 py-3 rounded-lg border border-brand-olive/20 bg-white text-brand-text focus:outline-none focus:border-brand-olive"
+                      required
+                    />
                   </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div>
-                      <label
-                        htmlFor="checkout-city"
-                        className="block text-xs tracking-[0.15em] uppercase text-brand-muted mb-2"
-                      >
-                        Город
-                      </label>
-                      <input
-                        id="checkout-city"
-                        type="text"
-                        autoComplete="address-level2"
-                        value={form.city}
-                        onChange={(e) => updateField("city", e.target.value)}
-                        className="w-full px-4 py-3 rounded-lg border border-brand-olive/20 bg-white text-brand-text focus:outline-none focus:border-brand-olive"
-                        required
-                      />
-                    </div>
 
-                    <div>
-                      <label
-                        htmlFor="checkout-address"
-                        className="block text-xs tracking-[0.15em] uppercase text-brand-muted mb-2"
-                      >
-                        Адрес
-                      </label>
-                      <input
-                        id="checkout-address"
-                        type="text"
-                        autoComplete="street-address"
-                        value={form.address}
-                        onChange={(e) => updateField("address", e.target.value)}
-                        placeholder="Улица, дом"
-                        className="w-full px-4 py-3 rounded-lg border border-brand-olive/20 bg-white text-brand-text placeholder:text-brand-muted/60 focus:outline-none focus:border-brand-olive"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="checkout-apartment"
-                        className="block text-xs tracking-[0.15em] uppercase text-brand-muted mb-2"
-                      >
-                        Квартира / офис
-                      </label>
-                      <input
-                        id="checkout-apartment"
-                        type="text"
-                        value={form.apartment}
-                        onChange={(e) => updateField("apartment", e.target.value)}
-                        placeholder="Необязательно"
-                        className="w-full px-4 py-3 rounded-lg border border-brand-olive/20 bg-white text-brand-text placeholder:text-brand-muted/60 focus:outline-none focus:border-brand-olive"
-                      />
-                    </div>
+                  <div>
+                    <label
+                      htmlFor="checkout-address"
+                      className="block text-xs tracking-[0.15em] uppercase text-brand-muted mb-2"
+                    >
+                      Адрес
+                    </label>
+                    <input
+                      id="checkout-address"
+                      type="text"
+                      autoComplete="street-address"
+                      value={form.address}
+                      onChange={(e) => updateField("address", e.target.value)}
+                      placeholder="Улица, дом"
+                      className="w-full px-4 py-3 rounded-lg border border-brand-olive/20 bg-white text-brand-text placeholder:text-brand-muted/60 focus:outline-none focus:border-brand-olive"
+                      required
+                    />
                   </div>
-                )}
+
+                  <div>
+                    <label
+                      htmlFor="checkout-apartment"
+                      className="block text-xs tracking-[0.15em] uppercase text-brand-muted mb-2"
+                    >
+                      Квартира / офис
+                    </label>
+                    <input
+                      id="checkout-apartment"
+                      type="text"
+                      value={form.apartment}
+                      onChange={(e) => updateField("apartment", e.target.value)}
+                      placeholder="Необязательно"
+                      className="w-full px-4 py-3 rounded-lg border border-brand-olive/20 bg-white text-brand-text placeholder:text-brand-muted/60 focus:outline-none focus:border-brand-olive"
+                    />
+                  </div>
+                </div>
 
                 <div>
                   <h3 className="font-heading text-lg text-brand-olive-dark mb-3">
                     Способ оплаты
                   </h3>
-                  <div className={`grid gap-3 ${yookassaEnabled ? "sm:grid-cols-2" : ""}`}>
-                    {yookassaEnabled && (
-                      <button
-                        type="button"
-                        onClick={() => handlePaymentMethod("yookassa")}
-                        className={`text-left p-4 rounded-xl border transition-colors ${
-                          form.paymentMethod === "yookassa"
-                            ? "border-brand-olive bg-brand-surface"
-                            : "border-brand-olive/20 hover:border-brand-olive/50"
-                        }`}
-                      >
-                        <p className="font-heading text-brand-olive-dark mb-1">
-                          Картой онлайн
-                        </p>
-                        <p className="text-sm text-brand-muted">
-                          Visa, Mastercard, Мир · ЮKassa
-                        </p>
-                      </button>
-                    )}
-
-                    <button
-                      type="button"
-                      onClick={() => handlePaymentMethod("on_receipt")}
-                      className={`text-left p-4 rounded-xl border transition-colors ${
-                        form.paymentMethod === "on_receipt"
-                          ? "border-brand-olive bg-brand-surface"
-                          : "border-brand-olive/20 hover:border-brand-olive/50"
-                      }`}
-                    >
-                      <p className="font-heading text-brand-olive-dark mb-1">
-                        При получении
-                      </p>
-                      <p className="text-sm text-brand-muted">
-                        {form.deliveryMethod === "pickup"
-                          ? "В шоуруме при примерке"
-                          : "Курьеру или по ссылке от менеджера"}
-                      </p>
-                    </button>
+                  <div className="rounded-xl border border-brand-olive bg-brand-surface p-4">
+                    <p className="font-heading text-brand-olive-dark mb-1">
+                      Оплата по счету
+                    </p>
+                    <p className="text-sm text-brand-muted">
+                      Счёт выставим после подтверждения заказа
+                    </p>
                   </div>
                 </div>
 
@@ -538,7 +429,7 @@ export function CheckoutForm() {
                     rows={3}
                     value={form.comment}
                     onChange={(e) => updateField("comment", e.target.value)}
-                    placeholder="Пожелания по доставке или примерке"
+                    placeholder="Пожелания по доставке"
                     className="w-full px-4 py-3 rounded-lg border border-brand-olive/20 bg-white text-brand-text placeholder:text-brand-muted/60 focus:outline-none focus:border-brand-olive resize-none"
                   />
                 </div>
@@ -658,11 +549,7 @@ export function CheckoutForm() {
                     <span>{formatPrice(total)}</span>
                   </div>
                   <div className="flex justify-between text-brand-muted">
-                    <span>
-                      {form.deliveryMethod === "pickup"
-                        ? "Самовывоз"
-                        : "Доставка"}
-                    </span>
+                    <span>СДЭК</span>
                     <span>
                       {deliveryFee === 0 ? "Бесплатно" : formatPrice(deliveryFee)}
                     </span>
@@ -679,11 +566,7 @@ export function CheckoutForm() {
                   disabled={isSubmitting || !personalDataConsent}
                   className="w-full px-6 py-3.5 bg-brand-terracotta hover:bg-brand-terracotta-logo disabled:opacity-60 text-white text-sm tracking-widest uppercase transition-colors"
                 >
-                  {isSubmitting
-                    ? "Отправка…"
-                    : form.paymentMethod === "yookassa"
-                      ? "Перейти к оплате"
-                      : "Подтвердить заказ"}
+                  {isSubmitting ? "Отправка…" : "Оформить заказ"}
                 </button>
 
                 <Link
@@ -694,9 +577,7 @@ export function CheckoutForm() {
                 </Link>
 
                 <p className="text-xs text-brand-muted leading-relaxed">
-                  {form.paymentMethod === "yookassa"
-                    ? "После подтверждения вы перейдёте на защищённую страницу оплаты ЮKassa."
-                    : "Оплата при получении или по ссылке после подтверждения менеджером."}{" "}
+                  После оформления менеджер подтвердит заказ и выставит счёт.
                   Данные используются только для обработки заказа.
                 </p>
               </div>

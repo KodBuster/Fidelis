@@ -6,9 +6,9 @@ import { buildPageMetadata } from "@/lib/metadata";
 import { buildShowroomJsonLd } from "@/lib/showroom-schema";
 
 export const metadata = buildPageMetadata({
-  title: "Шоурум — Синоним",
+  title: "Шоурум — ФИДЕЛИС",
   description:
-    "Шоурум Синоним в Москве: 129110, ул. Гиляровского 40, офис 13. Примерьте украшения с ограненными синтетическими алмазами.",
+    "Шоурум ФИДЕЛИС в Москве: 129110, ул. Гиляровского 40, офис 13. Примерьте украшения с ограненными синтетическими алмазами.",
   path: "/showroom",
   ogImage: "/images/show_room_2.jpg",
 });

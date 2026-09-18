@@ -11,8 +11,6 @@ import {
   type PaymentMethod,
 } from "@/lib/checkout";
 import { allocateNextOrderNumber } from "@/lib/order-sequence";
-import { createYooKassaPayment } from "@/lib/yookassa/client";
-import { isYooKassaConfigured } from "@/lib/yookassa/config";
 
 type CreateOrderRequest = {
   customer: CheckoutFormData;
@@ -46,7 +44,8 @@ export async function POST(request: Request) {
     address: body.customer.address?.trim() ?? "",
     apartment: body.customer.apartment?.trim() ?? "",
     comment: body.customer.comment?.trim() ?? "",
-    paymentMethod: body.customer.paymentMethod ?? "on_receipt",
+    deliveryMethod: "delivery",
+    paymentMethod: "invoice",
   };
 
   const validationError = validateCheckoutForm(customer);
@@ -61,13 +60,6 @@ export async function POST(request: Request) {
   const deliveryFee = getDeliveryFee(customer.deliveryMethod, subtotal);
   const total = subtotal + deliveryFee;
   const paymentMethod: PaymentMethod = customer.paymentMethod;
-
-  if (paymentMethod === "yookassa" && !isYooKassaConfigured()) {
-    return NextResponse.json(
-      { error: "Онлайн-оплата временно недоступна" },
-      { status: 503 },
-    );
-  }
 
   if (!isAdvantShopConfigured()) {
     return NextResponse.json(
@@ -100,34 +92,14 @@ export async function POST(request: Request) {
     // Публичный номер: то, что вернул AdvantShop (обычно совпадает с отправленным 1, 2, 3…)
     const orderId = advantshop.advantshopOrderNumber;
 
-    const response: Record<string, unknown> = {
+    return NextResponse.json({
       id: orderId,
       advantshopOrderId: advantshop.advantshopOrderId,
       advantshopOrderNumber: orderId,
       deliveryFee,
       total,
       paymentMethod,
-    };
-
-    if (paymentMethod === "yookassa") {
-      const payment = await createYooKassaPayment({
-        orderId,
-        amount: total,
-        description: `Заказ ${orderId} — Синоним`,
-        customerPhone: customer.phone,
-      });
-
-      const paymentUrl = payment.confirmation?.confirmation_url;
-      if (!paymentUrl) {
-        throw new Error("ЮKassa не вернула ссылку на оплату");
-      }
-
-      response.paymentId = payment.id;
-      response.paymentUrl = paymentUrl;
-      response.paymentStatus = payment.status;
-    }
-
-    return NextResponse.json(response);
+    });
   } catch (error) {
     console.error("Order/payment error:", error);
     const raw =

@@ -8,9 +8,7 @@ import {
 import { getCategoryStats } from "@/lib/catalog-stats";
 
 export async function Categories() {
-  const categories = (await getCategoryStats()).filter(
-    (category) => category.slug !== "gifts",
-  );
+  const categories = await getCategoryStats();
 
   return (
     <section className="py-14 md:py-20">

@@ -9,7 +9,7 @@ export type BlogArticle = {
 export const BLOG_ARTICLES: BlogArticle[] = [
   {
     slug: "osobennosti-brilliantov-novogo-pokoleniya",
-    title: "Ограненные синтетические алмазы в украшениях Синоним",
+    title: "Ограненные синтетические алмазы в украшениях ФИДЕЛИС",
     description:
       "Как обозначаются вставки, в каких единицах указывается масса и что означает добровольная аттестация качества.",
     datePublished: "2026-08-05",

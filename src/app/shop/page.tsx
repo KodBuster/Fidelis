@@ -34,7 +34,7 @@ export async function generateMetadata({ searchParams }: PageProps) {
   const filtered = hasCatalogFilterParams(query);
 
   return buildPageMetadata({
-    title: "Каталог — Синоним",
+    title: "Каталог — ФИДЕЛИС",
     description:
       "Каталог украшений из серебра 925 с ограненными синтетическими алмазами. Кольца, серьги, колье, браслеты, подарки.",
     path: "/shop",
@@ -71,7 +71,7 @@ export default async function ShopPage({ searchParams }: PageProps) {
           ...(initialProducts.length > 0
             ? [
                 buildCatalogItemListJsonLd({
-                  name: "Каталог украшений Синоним",
+                  name: "Каталог украшений ФИДЕЛИС",
                   url: `${getSiteUrl()}/shop`,
                   products: initialProducts,
                 }),

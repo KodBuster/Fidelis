@@ -4,9 +4,9 @@ import { PartnershipPage } from "@/components/partnership/PartnershipPage";
 import { buildPageMetadata } from "@/lib/metadata";
 
 export const metadata = buildPageMetadata({
-  title: "Сотрудничество — Синоним",
+  title: "Сотрудничество — ФИДЕЛИС",
   description:
-    "Сотрудничество с брендом Синоним: конкурентные цены, гарантия качества, обновляемый ассортимент и маркетинговая поддержка продаж.",
+    "Сотрудничество с брендом ФИДЕЛИС: конкурентные цены, гарантия качества, обновляемый ассортимент и маркетинговая поддержка продаж.",
   path: "/cooperation",
 });
 

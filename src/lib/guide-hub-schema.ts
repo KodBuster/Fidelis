@@ -10,7 +10,7 @@ export function buildGuideHubJsonLd(): Record<string, unknown>[] {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
       "@id": `${guideUrl}#collection`,
-      name: "Гид покупателя — Синоним",
+      name: "Гид покупателя — ФИДЕЛИС",
       description:
         "Полезные статьи об ограненных синтетических алмазах, уходе за серебром и выборе подарка.",
       url: guideUrl,

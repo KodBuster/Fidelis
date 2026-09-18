@@ -4,7 +4,7 @@ import { getSiteUrl } from "@/lib/site-url";
 export function buildGuideAuthor(): Record<string, unknown> {
   return {
     "@type": "Organization",
-    name: "Команда Синоним",
+    name: "Команда ФИДЕЛИС",
     url: getSiteUrl(),
     memberOf: {
       "@id": getOrganizationId(),

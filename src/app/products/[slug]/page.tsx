@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: PageProps) {
   const canonicalSlug = product.slug;
 
   return buildPageMetadata({
-    title: `${product.name} — купить в Синоним`,
+    title: `${product.name} — купить в ФИДЕЛИС`,
     description: buildProductMetaDescription(product),
     path: `/products/${canonicalSlug}`,
     ogImage: product.images[0] ?? product.image,

@@ -21,20 +21,12 @@ function formatTimestamp(iso?: string): string {
   });
 }
 
-function paymentLabel(order: Order): string {
-  if (order.customer.paymentMethod === "yookassa") {
-    if (order.paymentStatus === "succeeded") return "💳 Онлайн (ЮKassa) — оплачено";
-    if (order.paymentStatus === "pending") return "💳 Онлайн (ЮKassa) — ожидает оплаты";
-    return "💳 Онлайн (ЮKassa)";
-  }
-  return "💵 При получении";
+function paymentLabel(_order: Order): string {
+  return "📄 Оплата по счету";
 }
 
-function deliveryLabel(order: Order): string {
-  if (order.customer.deliveryMethod === "pickup") {
-    return "🏪 Самовывоз (шоурум)";
-  }
-  return "🚚 Доставка курьером";
+function deliveryLabel(_order: Order): string {
+  return "🚚 СДЭК";
 }
 
 function formatOrderItems(order: Order): string {
@@ -57,7 +49,7 @@ export function formatPurchaseMaxMessage(order: Order): string {
   const c = order.customer;
   const orderNo = order.advantshopOrderNumber ?? order.id;
   const lines: string[] = [
-    "💎 Новый заказ на сайте «Синоним»",
+    "💎 Новый заказ на сайте «ФИДЕЛИС»",
     "",
     `🧾 Номер: ${orderNo}`,
     `💰 Сумма: ${formatPrice(order.total)}`,
@@ -66,16 +58,12 @@ export function formatPurchaseMaxMessage(order: Order): string {
     "",
     `👤 Имя: ${escapePlain(c.name) || "—"}`,
     `📞 Телефон: ${escapePlain(c.phone) || "—"}`,
+    `🏙 Город: ${escapePlain(c.city) || "—"}`,
+    `📍 Адрес: ${escapePlain(c.address) || "—"}`,
   ];
 
-  if (c.deliveryMethod === "delivery") {
-    lines.push(`🏙 Город: ${escapePlain(c.city) || "—"}`);
-    lines.push(`📍 Адрес: ${escapePlain(c.address) || "—"}`);
-    if (c.apartment?.trim()) {
-      lines.push(`🏠 Кв./офис: ${escapePlain(c.apartment)}`);
-    }
-  } else {
-    lines.push("🏙 Город: Москва (шоурум)");
+  if (c.apartment?.trim()) {
+    lines.push(`🏠 Кв./офис: ${escapePlain(c.apartment)}`);
   }
 
   if (c.comment?.trim()) {

@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -7,7 +7,7 @@ import { buildPageMetadata } from "@/lib/metadata";
 import { GUIDE_ARTICLES } from "@/lib/guides";
 
 export const metadata = buildPageMetadata({
-  title: "Гид покупателя — Синоним",
+  title: "Гид покупателя — ФИДЕЛИС",
   description:
     "Полезные статьи об ограненных синтетических алмазах, уходе за серебром и выборе подарка.",
   path: "/guide",
@@ -22,7 +22,7 @@ export default function GuideHubPage() {
         <section className="py-10 md:py-14">
           <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-10">
             <p className="text-brand-terracotta text-sm tracking-[0.2em] uppercase mb-2">
-              Синоним
+              ФИДЕЛИС
             </p>
             <h1 className="font-heading text-3xl md:text-5xl text-brand-olive-dark mb-6">
               Гид покупателя

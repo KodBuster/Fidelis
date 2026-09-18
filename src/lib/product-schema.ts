@@ -105,7 +105,7 @@ export function buildProductJsonLd(
       additionalProperty: buildProductAdditionalProperties(product),
       brand: {
         "@type": "Brand",
-        name: "Синоним",
+        name: "ФИДЕЛИС",
       },
       offers: {
         "@type": "Offer",

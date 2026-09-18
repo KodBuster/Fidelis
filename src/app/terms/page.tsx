@@ -4,9 +4,9 @@ import { TermsPage } from "@/components/legal/TermsPage";
 import { buildPageMetadata } from "@/lib/metadata";
 
 export const metadata = buildPageMetadata({
-  title: "Публичная оферта — Синоним",
+  title: "Публичная оферта — ФИДЕЛИС",
   description:
-    "Условия покупки украшений Синоним: оформление заказа, оплата, доставка, гарантия и возврат.",
+    "Условия покупки украшений ФИДЕЛИС: оформление заказа, оплата, доставка, гарантия и возврат.",
   path: "/terms",
 });
 
