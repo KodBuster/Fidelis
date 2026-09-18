@@ -11,7 +11,7 @@ export function buildWebSiteJsonLd(): Record<string, unknown> {
     url: siteUrl,
     name: "ФИДЕЛИС",
     description:
-      "Ювелирные украшения из серебра 925 с ограненными синтетическими алмазами. Каталог, шоурум в Москве, доставка по России.",
+      "Ювелирные украшения из серебра 925 с выразительными вставками. Доставка СДЭК по России.",
     inLanguage: "ru-RU",
     publisher: {
       "@id": getOrganizationId(),

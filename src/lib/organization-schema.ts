@@ -1,3 +1,4 @@
+import { BRAND_LOGO_SRC } from "@/lib/brand";
 import {
   MESSENGERS,
   SHOWROOM_MAP_LINK,
@@ -27,9 +28,9 @@ export function buildOrganizationJsonLd(): Record<string, unknown> {
     "@id": getOrganizationId(),
     name: "ФИДЕЛИС",
     url: siteUrl,
-    logo: absoluteImageUrl("/images/logo_20260527190756.png"),
+    logo: absoluteImageUrl(BRAND_LOGO_SRC),
     description:
-      "Ювелирный бренд ФИДЕЛИС — украшения из серебра 925 с ограненными синтетическими алмазами.",
+      "Ювелирный бренд ФИДЕЛИС — украшения из серебра 925 с выразительными вставками.",
     telephone: SITE_PHONE_TEL.replace("tel:", ""),
     email: SITE_EMAIL,
     address: {

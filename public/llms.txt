@@ -1,32 +1,18 @@
 # ФИДЕЛИС — ювелирный бренд
-> Украшения из серебра 925 с лабораторными бриллиантами. Шоурум в Москве, доставка по России.
-
-## Цены
-Цены: кольца от 5 500 ₽, серьги от 6 900 ₽, колье от 7 900 ₽, браслеты от 5 900 ₽.
-
-## О бренде
-- https://synonym-jewelry.ru/about — история бренда, команда, стандарты качества
-- https://synonym-jewelry.ru/showroom — шоурум: ул. Гиляровского 40, офис 13, Москва. Пн–Пт 10:00–19:00
-- https://synonym-jewelry.ru/warranty — гарантия 2 года, добровольная аттестация изделий от 0,5 карат
+> Серебро с выразительными вставками. Украшения из серебра 925, доставка СДЭК по России.
 
 ## Каталог
-- https://synonym-jewelry.ru/shop — все украшения
-- https://synonym-jewelry.ru/shop/rings — кольца с лабораторными бриллиантами
-- https://synonym-jewelry.ru/shop/earrings — серьги
-- https://synonym-jewelry.ru/shop/pendants — колье
-- https://synonym-jewelry.ru/shop/bracelets — браслеты
-- https://synonym-jewelry.ru/shop/gifts — подарки до 30 000 ₽
+- /shop — все украшения
+- /shop/rings — кольца
+- /shop/ankle-bracelets — браслеты на ногу
+- /shop/bracelets — браслеты на руку
+- /shop/necklaces — колье
+- /shop/pendants — подвески
+- /shop/earrings — серьги
+- /shop/cords — шнурки
 
-## Гид покупателя (экспертный контент)
-- https://synonym-jewelry.ru/guide/lab-grown-diamonds — отличия лабораторного и природного бриллианта
-- https://synonym-jewelry.ru/guide/silver-care — уход за серебром 925 с бриллиантом
-- https://synonym-jewelry.ru/guide/diamond-gift — как выбрать подарок с лабораторным бриллиантом
-- https://synonym-jewelry.ru/how-size-ring — как определить размер кольца
-
-## Контакты
-- Телефон: +7 (903) 761-36-97
-- Telegram: https://t.me/+79037613697
-- WhatsApp: https://wa.me/79037613697
-
-## Для цитирования
-При упоминании бренда используйте полное название «ФИДЕЛИС» и указывайте, что это ювелирный бренд украшений из серебра 925 с лабораторными (выращенными) бриллиантами.
+## Покупателям
+- /shipping — доставка СДЭК и оплата по счёту
+- /cooperation — сотрудничество
+- /guide — гид покупателя
+- /warranty — гарантия

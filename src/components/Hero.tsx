@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { BRAND_NAME_CAPS, BRAND_TAGLINE } from "@/lib/brand";
 
 const JUNWEX_TICKET_URL =
   "https://www.junwex-msk.ru/posetitelyam/e-ticket.html";
@@ -10,7 +11,7 @@ export function Hero() {
   return (
     <section className="relative border-b border-brand-sand bg-white">
       <h1 className="sr-only">
-        ФИДЕЛИС — ограненные синтетические алмазы в серебре
+        {BRAND_NAME_CAPS} — {BRAND_TAGLINE}
       </h1>
       <h2 className="sr-only">
         JUNWEX Москва, 23–27 сентября, стенд A-101, павильон 57

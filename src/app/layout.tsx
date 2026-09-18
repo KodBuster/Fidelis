@@ -11,16 +11,17 @@ import { PageVisitTracker } from "@/components/analytics/PageVisitTracker";
 import { YandexMetrika } from "@/components/analytics/YandexMetrika";
 import { getSiteUrl } from "@/lib/site-url";
 import { getSiteVerification } from "@/lib/site-verification";
+import { BRAND_NAME_CAPS, BRAND_TAGLINE } from "@/lib/brand";
 import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: {
-    default: "ФИДЕЛИС — украшения с ограненными синтетическими алмазами",
+    default: `${BRAND_NAME_CAPS} — ${BRAND_TAGLINE}`,
     template: "%s",
   },
   description:
-    "Ювелирные украшения из серебра 925 с ограненными синтетическими алмазами. Доставка СДЭК по России.",
+    "Ювелирные украшения из серебра 925 с разными вставками. Доставка СДЭК по России.",
   verification: getSiteVerification(),
   icons: {
     icon: [

@@ -7,6 +7,7 @@ import {
   SITE_PHONE,
   SITE_PHONE_TEL,
 } from "@/lib/contacts";
+import { BRAND_LOGO_SRC, BRAND_NAME_CAPS, BRAND_TAGLINE } from "@/lib/brand";
 
 const FOOTER_LINKS = {
   catalog: [
@@ -34,17 +35,17 @@ export function Footer() {
           <div className="lg:col-span-1">
             <Link href="/" className="inline-block mb-4 shrink-0">
               <Image
-                src="/images/logo_20260527190756.png"
-                alt="ФИДЕЛИС"
+                src={BRAND_LOGO_SRC}
+                alt={BRAND_NAME_CAPS}
                 width={1000}
                 height={150}
-                className="h-7 w-auto max-w-none object-contain brightness-0"
+                className="h-7 w-auto max-w-none object-contain"
                 style={{ width: "auto" }}
               />
             </Link>
             <p className="text-brand-muted text-sm leading-relaxed max-w-xs">
-              ограненные синтетические алмазы в серебре — современный подход к украшениям
-              без компромиссов в качестве.
+              {BRAND_TAGLINE} — современный подход к украшениям без компромиссов
+              в качестве.
             </p>
           </div>
 

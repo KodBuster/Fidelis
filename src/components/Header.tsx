@@ -14,6 +14,7 @@ import {
   SITE_PHONE,
   SITE_PHONE_TEL,
 } from "@/lib/contacts";
+import { BRAND_LOGO_SRC, BRAND_NAME_CAPS, BRAND_TAGLINE } from "@/lib/brand";
 
 const NAV_ITEMS = [
   { label: "Кольца", href: "/shop/rings" },
@@ -112,18 +113,18 @@ function Logo({ compact = false }: { compact?: boolean }) {
       }`}
     >
       <Image
-        src="/images/logo_20260527190756.png"
-        alt="ФИДЕЛИС"
+        src={BRAND_LOGO_SRC}
+        alt={BRAND_NAME_CAPS}
         width={1000}
         height={150}
         priority
-        className={`logo-header-olive block max-w-none object-contain ${
-          compact ? "h-5 w-[6.5rem] sm:w-28" : "h-7 w-36 md:h-8 md:w-40"
+        className={`block max-w-none object-contain ${
+          compact ? "h-5 w-[6.5rem] sm:w-28" : "h-7 w-36 md:h-8 md:w-44"
         }`}
       />
       {!compact && (
         <span className="hidden sm:block text-[10px] md:text-xs text-brand-muted tracking-wide mt-1 text-center md:text-left">
-          ограненные синтетические алмазы в серебре
+          {BRAND_TAGLINE}
         </span>
       )}
     </Link>
