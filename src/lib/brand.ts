@@ -2,6 +2,8 @@
 export const BRAND_NAME = "Фиделис";
 export const BRAND_NAME_CAPS = "ФИДЕЛИС";
 export const BRAND_LOGO_SRC = "/images/fidelis_logo.jpg";
+/** Светлый логотип для тёмного фона (подвал). */
+export const BRAND_LOGO_LIGHT_SRC = "/images/fidelis_logo_light.png";
 
 /**
  * Короткая фраза бренда.
