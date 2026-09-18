@@ -107,7 +107,7 @@ function IconPhone() {
 /**
  * Expandable messenger FAB — same interaction model as Шародувы FabContacts:
  * real <button> toggle, channel items are native <a href>, closed items
- * use pointer-events:none. Mango stays off on mobile so it cannot steal taps.
+ * use pointer-events:none.
  */
 export function MessengerFab() {
   const pathname = usePathname();

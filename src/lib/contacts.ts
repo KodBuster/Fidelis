@@ -1,6 +1,6 @@
 export const SITE_PHONE = "+7 495 585-10-99";
 export const SITE_PHONE_TEL = "tel:+74955851099";
-export const SITE_EMAIL = "sales@synonym-jewelry.ru";
+export const SITE_EMAIL = "mail@fidelis.ru";
 export const SITE_EMAIL_MAILTO = `mailto:${SITE_EMAIL}`;
 
 const PHONE_DIGITS = "79037613697";

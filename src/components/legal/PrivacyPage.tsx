@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { LegalPage } from "@/components/legal/LegalPage";
 
 const UPDATED_AT = "1 августа 2026 г.";
-const CONTACT_EMAIL = "kanunnikov@synonym-jewelry.ru";
+const CONTACT_EMAIL = "mail@fidelis.ru";
 const LEGAL_ADDRESS =
   "129110, г. Москва, вн. тер. г. муниципальный округ Мещанский, ул. Гиляровского, д. 40";
 

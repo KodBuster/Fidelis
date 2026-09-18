@@ -33,13 +33,13 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-10 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div className="lg:col-span-1">
-            <Link href="/" className="inline-block mb-4 shrink-0">
+            <Link href="/" className="mb-4 inline-block shrink-0 rounded-sm bg-[#F7F3EE] px-3 py-2">
               <Image
                 src={BRAND_LOGO_SRC}
                 alt={BRAND_NAME_CAPS}
                 width={1000}
                 height={150}
-                className="h-7 w-auto max-w-none object-contain brightness-0 invert"
+                className="h-7 w-auto max-w-none object-contain"
                 style={{ width: "auto" }}
               />
             </Link>
