@@ -17,7 +17,12 @@ const initCalls = METRIKA_IDS.map(
   (id) => `ym(${id}, 'init', ${INIT_OPTIONS});`
 ).join("\n");
 
+/** Скрипт Метрики. Пока METRIKA_IDS пуст — ничего не грузим. */
 export function YandexMetrika() {
+  if (METRIKA_IDS.length === 0 || !METRIKA_ID) {
+    return null;
+  }
+
   return (
     <>
       <Script

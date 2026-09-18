@@ -2,15 +2,14 @@ import type { CartItem } from "@/lib/cart";
 import type { Order } from "@/lib/checkout";
 import type { CategorySlug } from "@/lib/products";
 
-/** Основной счётчик Метрики */
-export const METRIKA_ID = 110000084;
-/** Все счётчики: события и цели уходят в каждый */
-export const METRIKA_IDS = [METRIKA_ID, 111384290] as const;
-export const METRIKA_READY_EVENT = "sinonim:metrika-ready";
+/** Основной счётчик Метрики (0 / пустой список — счётчики Fidelis ещё не подключены) */
+export const METRIKA_IDS: readonly number[] = [];
+export const METRIKA_ID = METRIKA_IDS[0] ?? 0;
+export const METRIKA_READY_EVENT = "fidelis:metrika-ready";
 
-const BRAND = "Синоним";
-const TRACKED_PURCHASES_KEY = "sinonim-metrika-purchases";
-const TRACKED_ORDERS_KEY = "sinonim-metrika-orders";
+const BRAND = "Fidelis";
+const TRACKED_PURCHASES_KEY = "fidelis-metrika-purchases";
+const TRACKED_ORDERS_KEY = "fidelis-metrika-orders";
 const METRIKA_WAIT_MS = 15_000;
 
 type EcommerceProduct = {
