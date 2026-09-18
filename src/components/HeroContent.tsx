@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BRAND_TAGLINE, BRAND_TAGLINE_CAP } from "@/lib/brand";
+import { BRAND_TAGLINE_CAP } from "@/lib/brand";
 
 type HeroContentProps = {
   className?: string;
@@ -12,7 +12,7 @@ export function HeroContent({ className = "" }: HeroContentProps) {
         className="hero-unroll hidden lg:block text-brand-terracotta text-sm tracking-[0.25em] uppercase mb-4"
         style={{ animationDelay: "0ms" }}
       >
-        серебро 925 · камни на выбор
+        только серебро 925
       </p>
       <h1
         className="hero-unroll font-heading text-4xl md:text-5xl lg:text-6xl leading-[1.1] mb-6 text-brand-olive-dark"
@@ -24,8 +24,8 @@ export function HeroContent({ className = "" }: HeroContentProps) {
         className="hero-unroll text-brand-muted text-base md:text-lg max-w-md leading-relaxed mb-8"
         style={{ animationDelay: "240ms" }}
       >
-        Украшения из серебра с разными вставками — сдержанный блеск, удобная
-        повседневная носка и характер, который выбираете вы.
+        Кольца, серьги, колье и браслеты из серебра — со вставками и без.
+        Сдержанный блеск и удобная повседневная носка.
       </p>
       <div
         className="hero-unroll flex flex-wrap gap-4"

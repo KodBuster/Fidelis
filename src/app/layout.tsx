@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     template: "%s",
   },
   description:
-    "Ювелирные украшения из серебра 925 с разными вставками. Доставка СДЭК по России.",
+    "Ювелирные украшения из серебра 925 — со вставками и без. Доставка СДЭК по России.",
   verification: getSiteVerification(),
   icons: {
     icon: [

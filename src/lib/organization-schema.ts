@@ -30,7 +30,7 @@ export function buildOrganizationJsonLd(): Record<string, unknown> {
     url: siteUrl,
     logo: absoluteImageUrl(BRAND_LOGO_SRC),
     description:
-      "Ювелирный бренд ФИДЕЛИС — украшения из серебра 925 с выразительными вставками.",
+      "Ювелирный бренд ФИДЕЛИС — украшения из серебра 925 со вставками и без.",
     telephone: SITE_PHONE_TEL.replace("tel:", ""),
     email: SITE_EMAIL,
     address: {

@@ -14,7 +14,7 @@ export const revalidate = 300;
 export const metadata = buildPageMetadata({
   title: `${BRAND_NAME_CAPS} — ${BRAND_TAGLINE}`,
   description:
-    "Ювелирные украшения из серебра 925 с разными вставками. Доставка СДЭК по России.",
+    "Ювелирные украшения из серебра 925 — со вставками и без. Доставка СДЭК по России.",
   path: "/",
 });
 
