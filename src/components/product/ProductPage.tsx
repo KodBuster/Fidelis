@@ -127,7 +127,7 @@ export function ProductPage({
               </li>
               <li>
                 <Link href="/guide/lab-grown-diamonds" className="text-brand-terracotta hover:underline">
-                  Об ограненных синтетических алмазах
+                  Об украшениях из серебра
                 </Link>
               </li>
               <li>

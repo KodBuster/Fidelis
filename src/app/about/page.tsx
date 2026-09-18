@@ -8,7 +8,7 @@ import { buildOrganizationJsonLd } from "@/lib/organization-schema";
 export const metadata = buildPageMetadata({
   title: "О бренде — ФИДЕЛИС",
   description:
-    "Бренд ФИДЕЛИС — украшения из серебра с ограненными синтетическими алмазами. Качество без компромиссов.",
+    "Бренд ФИДЕЛИС — украшения из серебра 925. Качество без компромиссов.",
   path: "/about",
 });
 

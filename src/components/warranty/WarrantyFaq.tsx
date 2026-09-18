@@ -5,7 +5,7 @@ export function WarrantyFaq() {
   return (
     <FaqSection
       title="Отвечаем на вопросы"
-      subtitle="Об ограненных синтетических алмазах, качестве и гарантии"
+      subtitle="О серебре 925, качестве и гарантии"
       items={WARRANTY_FAQ_ITEMS}
     />
   );

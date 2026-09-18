@@ -1,10 +1,10 @@
-/** Терминология вставок по ПП РФ №657 от 30.05.2026 */
-export const SYNTHETIC_DIAMOND = "ограненный синтетический алмаз";
-export const SYNTHETIC_DIAMONDS = "ограненные синтетические алмазы";
-export const SYNTHETIC_DIAMOND_CAP = "Ограненный синтетический алмаз";
-export const SYNTHETIC_DIAMONDS_CAP = "Ограненные синтетические алмазы";
-export const WITH_SYNTHETIC_DIAMOND = "с ограненным синтетическим алмазом";
-export const WITH_SYNTHETIC_DIAMONDS = "с ограненными синтетическими алмазами";
+/** Подписи вставок на витрине (без привязки к типу камня). */
+export const SYNTHETIC_DIAMOND = "вставка";
+export const SYNTHETIC_DIAMONDS = "вставки";
+export const SYNTHETIC_DIAMOND_CAP = "Вставка";
+export const SYNTHETIC_DIAMONDS_CAP = "Вставки";
+export const WITH_SYNTHETIC_DIAMOND = "со вставкой";
+export const WITH_SYNTHETIC_DIAMONDS = "со вставками";
 export const INSERT_WEIGHT_LABEL = "Масса вставки";
 
 /** 1 карат = 0,2 г */
@@ -21,7 +21,7 @@ export function formatInsertMassLabel(caratWeight: number): string {
 }
 
 /**
- * Масса ограненного синтетического алмаза из названия товара, например «0,512 г».
+ * Масса вставки из названия товара, например «0,512 г».
  */
 export function extractInsertMassFromName(name: string): string | null {
   const match = name.match(/(\d+[.,]\d+)\s*г(?:р(?:амм)?\.?)?/i);

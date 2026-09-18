@@ -693,7 +693,7 @@ export function mapProductDetails(
   const description = normalizeProductDescription(
     item.description ||
       item.briefDescription ||
-      `${item.name} - украшение из серебра 925 пробы с ограненным синтетическим алмазом.`,
+      `${item.name} - украшение из серебра 925 пробы.`,
   );
 
   const rawImages = collectImages(item.photos);
@@ -775,9 +775,7 @@ export function mapProductDetails(
     isNew: Boolean(item.newProduct),
     description,
     images: images.length ? images : [fallbackImage],
-    cut:
-      parseProperty(properties, ["огранк", "cut", "brilliant", "гранен"]) ??
-      "Круглая (57 граней)",
+    cut: parseProperty(properties, ["огранк", "cut", "brilliant", "гранен"]) ?? "",
     color: parseProperty(properties, ["цвет", "color"]) ?? "2",
     clarity: parseProperty(properties, ["чистот", "clarity"]) ?? "5",
     metal:

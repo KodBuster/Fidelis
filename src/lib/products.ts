@@ -92,7 +92,7 @@ export const CATEGORIES: Record<
   rings: {
     title: "Кольца",
     titlePlural: "Кольца",
-    description: "Кольца из серебра 925 с ограненными синтетическими алмазами",
+    description: "Кольца из серебра 925",
   },
   "ankle-bracelets": {
     title: "Браслеты на ногу",
@@ -107,17 +107,17 @@ export const CATEGORIES: Record<
   necklaces: {
     title: "Колье",
     titlePlural: "Колье",
-    description: "Колье из серебра с ограненными синтетическими алмазами",
+    description: "Колье из серебра 925",
   },
   pendants: {
     title: "Подвески",
     titlePlural: "Подвески",
-    description: "Подвески из серебра с ограненными синтетическими алмазами",
+    description: "Подвески из серебра 925",
   },
   earrings: {
     title: "Серьги",
     titlePlural: "Серьги",
-    description: "Серьги-пусеты и подвесные модели с ограненными синтетическими алмазами",
+    description: "Серьги-пусеты и подвесные модели из серебра 925",
   },
   cords: {
     title: "Шнурки",
@@ -420,11 +420,11 @@ export function getProductDetails(slug: string): ProductDetails | undefined {
     ...product,
     description:
       product.description ??
-      `${product.name} — украшение из серебра 925 пробы с ограненным синтетическим алмазом. Огранка круглая brillant. Идеально для повседневной носки и особых моментов.`,
+      `${product.name} — украшение из серебра 925 пробы. Идеально для повседневной носки и особых моментов.`,
     images,
     color: product.color ?? "2",
     clarity: product.clarity ?? "5",
-    cut: product.cut ?? "Круглая (57 граней)",
+    cut: product.cut ?? "",
     metal: product.metal ?? "Серебро 925, родиевое покрытие",
     sizeOptions: sortProductSizeOptions(
       product.sizeOptions ?? (hasSizes ? [...DEFAULT_SIZE_OPTIONS] : []),

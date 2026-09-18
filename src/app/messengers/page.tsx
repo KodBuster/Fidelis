@@ -7,7 +7,7 @@ import { buildPageMetadata } from "@/lib/metadata";
 export const metadata: Metadata = buildPageMetadata({
   title: "Написать нам — ФИДЕЛИС",
   description:
-    "Свяжитесь с ФИДЕЛИС в MAX, Telegram или по телефону. Консультация по украшениям с ограненными синтетическими алмазами.",
+    "Свяжитесь с ФИДЕЛИС в MAX, Telegram или по телефону. Консультация по украшениям из серебра 925.",
   path: "/messengers",
   noIndex: true,
 });

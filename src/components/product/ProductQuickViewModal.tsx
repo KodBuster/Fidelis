@@ -10,7 +10,6 @@ import {
   extractInsertMassFromName,
   formatInsertMassLabel,
   INSERT_WEIGHT_LABEL,
-  SYNTHETIC_DIAMOND_CAP,
 } from "@/lib/synthetic-diamond-labels";
 import { CATEGORIES, formatPrice, type ProductDetails } from "@/lib/products";
 
@@ -236,20 +235,18 @@ export function ProductQuickViewModal({
                       <dt className="text-brand-muted">Металл</dt>
                       <dd className="text-brand-text text-right">{product.metal}</dd>
                     </div>
-                    <div className="flex justify-between gap-4 border-b border-brand-sand pb-3">
-                      <dt className="text-brand-muted">Тип вставки</dt>
-                      <dd className="text-brand-text text-right">{SYNTHETIC_DIAMOND_CAP}</dd>
-                    </div>
                     {insertMass && (
                       <div className="flex justify-between gap-4 border-b border-brand-sand pb-3">
                         <dt className="text-brand-muted">{INSERT_WEIGHT_LABEL}</dt>
                         <dd className="text-brand-text text-right">{insertMass}</dd>
                       </div>
                     )}
-                    <div className="flex justify-between gap-4">
-                      <dt className="text-brand-muted">Огранка</dt>
-                      <dd className="text-brand-text text-right">{product.cut}</dd>
-                    </div>
+                    {product.cut?.trim() ? (
+                      <div className="flex justify-between gap-4">
+                        <dt className="text-brand-muted">Огранка</dt>
+                        <dd className="text-brand-text text-right">{product.cut}</dd>
+                      </div>
+                    ) : null}
                   </dl>
                 )}
 

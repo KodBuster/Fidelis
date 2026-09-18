@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
@@ -123,7 +123,7 @@ export function CatalogView({
     : "Все украшения";
   const pageDescription = category
     ? CATEGORIES[category].description
-    : "Каталог украшений из серебра 925 с ограненными синтетическими алмазами";
+    : "Каталог украшений из серебра 925";
 
   return (
     <section className="py-8 md:py-12">

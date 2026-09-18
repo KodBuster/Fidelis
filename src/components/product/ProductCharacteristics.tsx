@@ -4,7 +4,6 @@ import {
   extractInsertMassFromName,
   formatInsertMassLabel,
   INSERT_WEIGHT_LABEL,
-  SYNTHETIC_DIAMOND_CAP,
 } from "@/lib/synthetic-diamond-labels";
 import { getProductCaratWeight } from "@/lib/product-weight";
 import type { ProductDetails } from "@/lib/products";
@@ -18,7 +17,9 @@ export function ProductCharacteristics({ product }: ProductCharacteristicsProps)
   const { selectedSize } = useProductSelection();
   const insertMass =
     extractInsertMassFromName(product.name) ??
-    formatInsertMassLabel(getProductCaratWeight(product, selectedSize));
+    (product.stoneWeight > 0
+      ? formatInsertMassLabel(getProductCaratWeight(product, selectedSize))
+      : null);
 
   return (
     <div className="bg-brand-surface rounded-xl p-6 md:p-8">
@@ -30,20 +31,18 @@ export function ProductCharacteristics({ product }: ProductCharacteristicsProps)
           <dt className="text-brand-muted">Металл</dt>
           <dd className="text-brand-text text-right">{product.metal}</dd>
         </div>
-        <div className="flex justify-between gap-4 border-b border-brand-sand pb-3">
-          <dt className="text-brand-muted">Тип вставки</dt>
-          <dd className="text-brand-text text-right">{SYNTHETIC_DIAMOND_CAP}</dd>
-        </div>
-        <div className="flex justify-between gap-4 border-b border-brand-sand pb-3">
-          <dt className="text-brand-muted">Огранка</dt>
-          <dd className="text-brand-text text-right">{product.cut}</dd>
-        </div>
-        <div className="flex justify-between gap-4">
-          <dt className="text-brand-muted">{INSERT_WEIGHT_LABEL}</dt>
-          <dd className="text-brand-text text-right">
-            {insertMass || "—"}
-          </dd>
-        </div>
+        {product.cut?.trim() ? (
+          <div className="flex justify-between gap-4 border-b border-brand-sand pb-3">
+            <dt className="text-brand-muted">Огранка</dt>
+            <dd className="text-brand-text text-right">{product.cut}</dd>
+          </div>
+        ) : null}
+        {insertMass ? (
+          <div className="flex justify-between gap-4">
+            <dt className="text-brand-muted">{INSERT_WEIGHT_LABEL}</dt>
+            <dd className="text-brand-text text-right">{insertMass}</dd>
+          </div>
+        ) : null}
       </dl>
     </div>
   );

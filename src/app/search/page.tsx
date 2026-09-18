@@ -19,7 +19,7 @@ export async function generateMetadata({
   const baseMetadata = buildPageMetadata({
     title: hasQuery ? `Поиск: ${query} — ФИДЕЛИС` : "Поиск — ФИДЕЛИС",
     description:
-      "Поиск украшений из серебра 925 с ограненными синтетическими алмазами в каталоге ФИДЕЛИС.",
+      "Поиск украшений из серебра 925 в каталоге ФИДЕЛИС.",
     path: "/search",
     noIndex: hasQuery,
     robotsFollow: hasQuery,

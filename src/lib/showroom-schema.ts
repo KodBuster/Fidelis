@@ -19,7 +19,7 @@ export function buildShowroomJsonLd(): Record<string, unknown> {
     "@id": getShowroomId(),
     name: SHOWROOM.title,
     description:
-      "Шоурум ювелирного бренда ФИДЕЛИС в Москве. Примерка украшений из серебра 925 с ограненными синтетическими алмазами.",
+      "Шоурум ювелирного бренда ФИДЕЛИС в Москве. Примерка украшений из серебра 925.",
     url: `${siteUrl}/showroom`,
     image: absoluteImageUrl("/images/show_room_2.jpg"),
     telephone: phone,

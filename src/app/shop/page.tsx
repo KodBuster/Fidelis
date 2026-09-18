@@ -36,7 +36,7 @@ export async function generateMetadata({ searchParams }: PageProps) {
   return buildPageMetadata({
     title: "Каталог — ФИДЕЛИС",
     description:
-      "Каталог украшений из серебра 925 с ограненными синтетическими алмазами. Кольца, серьги, колье, браслеты, подарки.",
+      "Каталог украшений из серебра 925. Кольца, серьги, колье, браслеты, подарки.",
     path: "/shop",
     noIndex: filtered,
     robotsFollow: filtered,

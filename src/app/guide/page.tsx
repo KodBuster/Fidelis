@@ -9,7 +9,7 @@ import { GUIDE_ARTICLES } from "@/lib/guides";
 export const metadata = buildPageMetadata({
   title: "Гид покупателя — ФИДЕЛИС",
   description:
-    "Полезные статьи об ограненных синтетических алмазах, уходе за серебром и выборе подарка.",
+    "Полезные статьи об украшениях из серебра, уходе за серебром и выборе подарка.",
   path: "/guide",
 });
 
@@ -28,7 +28,7 @@ export default function GuideHubPage() {
               Гид покупателя
             </h1>
             <p className="text-brand-text leading-relaxed text-base md:text-lg">
-              Ответы на частые вопросы об ограненных синтетических алмазах, уходе за
+              Ответы на частые вопросы об украшениях из серебра, уходе за
               украшениями и выборе подарка.
             </p>
           </div>

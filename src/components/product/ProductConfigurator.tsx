@@ -6,7 +6,7 @@ import { CompareButton } from "@/components/compare/CompareButton";
 import { FavoriteButton } from "@/components/favorites/FavoriteButton";
 import { useCart } from "@/context/CartContext";
 import { trackAddToCart } from "@/lib/analytics/metrika";
-import { formatInsertMassLabel, SYNTHETIC_DIAMOND_CAP } from "@/lib/synthetic-diamond-labels";
+import { formatInsertMassLabel } from "@/lib/synthetic-diamond-labels";
 import { formatPrice, type ProductDetails } from "@/lib/products";
 import { useProductSelection } from "./ProductSelectionContext";
 
@@ -87,7 +87,6 @@ export function ProductConfigurator({ product }: ProductConfiguratorProps) {
             </span>
           )}
         </div>
-        <p className="text-sm text-brand-muted">{SYNTHETIC_DIAMOND_CAP}</p>
         {product.inStock === false ? (
           <p className="mt-2 text-sm font-medium text-brand-terracotta">
             Скоро будет

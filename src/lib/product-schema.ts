@@ -6,38 +6,42 @@ import { getSiteUrl } from "@/lib/site-url";
 import {
   formatInsertMassLabel,
   INSERT_WEIGHT_LABEL,
-  SYNTHETIC_DIAMOND_CAP,
-  WITH_SYNTHETIC_DIAMOND,
 } from "@/lib/synthetic-diamond-labels";
 
 function buildProductSchemaName(product: ProductDetails): string {
-  const mass = formatInsertMassLabel(getProductCaratWeight(product));
   const metal = product.metal?.trim() || "Серебро 925";
-
-  return `${product.name} ${WITH_SYNTHETIC_DIAMOND}, ${mass} — ${metal}`;
+  return `${product.name} — ${metal}`;
 }
 
 function buildProductAdditionalProperties(
   product: ProductDetails,
 ): Record<string, unknown>[] {
-  const mass = formatInsertMassLabel(getProductCaratWeight(product));
   const properties: Record<string, unknown>[] = [
     {
       "@type": "PropertyValue",
-      name: "Тип вставки",
-      value: SYNTHETIC_DIAMOND_CAP,
+      name: "Металл",
+      value: product.metal?.trim() || "Серебро 925",
     },
-    {
-      "@type": "PropertyValue",
-      name: INSERT_WEIGHT_LABEL,
-      value: mass,
-    },
-    {
+  ];
+
+  if (product.cut?.trim()) {
+    properties.push({
       "@type": "PropertyValue",
       name: "Огранка",
       value: product.cut,
-    },
-  ];
+    });
+  }
+
+  if (product.diamondWeightLabel || product.stoneWeight > 0) {
+    const mass =
+      product.diamondWeightLabel?.trim() ||
+      formatInsertMassLabel(getProductCaratWeight(product));
+    properties.push({
+      "@type": "PropertyValue",
+      name: INSERT_WEIGHT_LABEL,
+      value: mass,
+    });
+  }
 
   if (product.weightGrams) {
     properties.push({

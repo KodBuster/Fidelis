@@ -7,7 +7,7 @@ import { BLOG_ARTICLES } from "@/lib/blog";
 export const metadata = buildPageMetadata({
   title: "Блог — ФИДЕЛИС",
   description:
-    "Статьи, новости и видео об ограненных синтетических алмазах и украшениях бренда ФИДЕЛИС.",
+    "Статьи, новости и видео об украшениях из серебра бренда ФИДЕЛИС.",
   path: "/blog",
 });
 
@@ -25,7 +25,7 @@ export default function BlogHubPage() {
               Блог
             </h1>
             <p className="text-brand-text leading-relaxed text-base md:text-lg">
-              Статьи, новости и видеоролики о товарах и ограненных синтетических алмазах
+              Статьи, новости и видеоролики о товарах и украшениях из серебра
               и ювелирных трендах.
             </p>
           </div>

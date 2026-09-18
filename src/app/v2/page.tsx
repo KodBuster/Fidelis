@@ -8,7 +8,7 @@ import { buildPageMetadata } from "@/lib/metadata";
 export const metadata = buildPageMetadata({
   title: "ФИДЕЛИС — вариант с видео",
   description:
-    "Украшения с ограненными синтетическими алмазами в серебре 925. Альтернативная главная страница.",
+    "Украшения из серебра 925 в серебре 925. Альтернативная главная страница.",
   path: "/v2",
   noIndex: true,
 });
