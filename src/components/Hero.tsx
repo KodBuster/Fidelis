@@ -9,7 +9,7 @@ const BANNER_ALT =
 
 export function Hero() {
   return (
-    <section className="relative border-b border-brand-sand bg-white">
+    <section className="relative border-b border-brand-sand bg-brand-page">
       <h1 className="sr-only">
         {BRAND_NAME_CAPS} — {BRAND_TAGLINE}
       </h1>

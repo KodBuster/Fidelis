@@ -1,18 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --color-olive: #525252;
-  --color-olive-logo: #4a5335;
-  --color-olive-dark: #141414;
-  --color-sand: #e8e8e8;
-  --color-terracotta: #d47750;
-  --color-terracotta-logo: #c96a4a;
+  /* Палитра 1 — классика ювелирки к бордовому логотипу */
+  --color-page: #f7f3ee;
+  --color-olive: #c4a574;
+  --color-olive-logo: #8b1e3f;
+  --color-olive-dark: #2a2422;
+  --color-sand: #e5ddd3;
+  --color-terracotta: #8b1e3f;
+  --color-terracotta-logo: #6e1530;
   --color-surface: #ffffff;
-  --color-text: #2c2c2c;
-  --color-text-muted: #737373;
+  --color-text: #2a2422;
+  --color-text-muted: #8a8178;
 }
 
 @theme inline {
+  --color-brand-page: var(--color-page);
   --color-brand-olive: var(--color-olive);
   --color-brand-olive-logo: var(--color-olive-logo);
   --color-brand-olive-dark: var(--color-olive-dark);
@@ -28,13 +31,13 @@
 
 html {
   min-height: 100%;
-  background-color: #ffffff;
+  background-color: var(--color-page);
 }
 
 body {
   position: relative;
   min-height: 100%;
-  background: #ffffff;
+  background: var(--color-page);
   color: var(--color-text);
   font-family: var(--font-body);
 }
@@ -47,10 +50,10 @@ body {
   font-family: var(--font-body);
 }
 
-/* Header logo: real <img> (iOS-safe). Tint to brand olive #4a5335. */
+/* Header logo tint → бордо #8B1E3F (если исходник не в цвете бренда). */
 .logo-header-olive {
-  filter: brightness(0) saturate(100%) invert(30%) sepia(18%) saturate(720%)
-    hue-rotate(39deg) brightness(92%) contrast(88%);
+  filter: brightness(0) saturate(100%) invert(14%) sepia(64%) saturate(2800%)
+    hue-rotate(325deg) brightness(85%) contrast(95%);
 }
 
 @keyframes hero-unroll {
@@ -265,8 +268,8 @@ body.mango-chat-open .messenger-fab {
   border: none;
   cursor: pointer;
   color: #fff;
-  background: var(--color-brand-terracotta, #d47750);
-  box-shadow: 0 12px 28px -10px rgba(212, 119, 80, 0.55);
+  background: var(--color-brand-terracotta, #8b1e3f);
+  box-shadow: 0 12px 28px -10px rgba(139, 30, 63, 0.45);
   display: grid;
   place-items: center;
   touch-action: manipulation;
@@ -274,7 +277,7 @@ body.mango-chat-open .messenger-fab {
   transition: transform 0.25s ease, background 0.2s ease;
 }
 .messenger-fab-main:hover {
-  background: var(--color-brand-terracotta-logo, #c96a4a);
+  background: var(--color-brand-terracotta-logo, #6e1530);
   transform: scale(1.05);
 }
 .messenger-fab-main:active {
