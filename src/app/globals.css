@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  /* Палитра 1 — классика ювелирки к бордовому логотипу */
-  --color-page: #f7f3ee;
-  --color-olive: #c4a574;
-  --color-olive-logo: #8b1e3f;
-  --color-olive-dark: #2a2422;
-  --color-sand: #e5ddd3;
-  --color-terracotta: #8b1e3f;
-  --color-terracotta-logo: #6e1530;
+  /* Палитра 2 — холодное серебро к бордовому логотипу */
+  --color-page: #f4f5f7;
+  --color-olive: #a8b0b8;
+  --color-olive-logo: #7a1f3d;
+  --color-olive-dark: #1c1f24;
+  --color-sand: #dce0e5;
+  --color-terracotta: #7a1f3d;
+  --color-terracotta-logo: #5c1630;
   --color-surface: #ffffff;
-  --color-text: #2a2422;
-  --color-text-muted: #8a8178;
+  --color-text: #1c1f24;
+  --color-text-muted: #3d4a55;
 }
 
 @theme inline {
@@ -50,10 +50,10 @@ body {
   font-family: var(--font-body);
 }
 
-/* Header logo tint → бордо #8B1E3F (если исходник не в цвете бренда). */
+/* Header logo tint → бордо #7A1F3D (если исходник не в цвете бренда). */
 .logo-header-olive {
-  filter: brightness(0) saturate(100%) invert(14%) sepia(64%) saturate(2800%)
-    hue-rotate(325deg) brightness(85%) contrast(95%);
+  filter: brightness(0) saturate(100%) invert(14%) sepia(55%) saturate(2600%)
+    hue-rotate(325deg) brightness(80%) contrast(95%);
 }
 
 @keyframes hero-unroll {
@@ -210,8 +210,8 @@ body {
   border: none;
   cursor: pointer;
   color: #fff;
-  background: var(--color-brand-terracotta, #8b1e3f);
-  box-shadow: 0 12px 28px -10px rgba(139, 30, 63, 0.45);
+  background: var(--color-brand-terracotta, #7a1f3d);
+  box-shadow: 0 12px 28px -10px rgba(122, 31, 61, 0.45);
   display: grid;
   place-items: center;
   touch-action: manipulation;
@@ -219,7 +219,7 @@ body {
   transition: transform 0.25s ease, background 0.2s ease;
 }
 .messenger-fab-main:hover {
-  background: var(--color-brand-terracotta-logo, #6e1530);
+  background: var(--color-brand-terracotta-logo, #5c1630);
   transform: scale(1.05);
 }
 .messenger-fab-main:active {

@@ -29,7 +29,7 @@ const FOOTER_LINKS = {
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-brand-olive/35 bg-brand-olive-dark text-[#F7F3EE]">
+    <footer className="mt-auto border-t border-brand-olive/35 bg-brand-olive-dark text-[#F4F5F7]">
       <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-10 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div className="lg:col-span-1">
@@ -43,7 +43,7 @@ export function Footer() {
                 style={{ width: "auto" }}
               />
             </Link>
-            <p className="text-sm leading-relaxed max-w-xs text-[#F7F3EE]/65">
+            <p className="text-sm leading-relaxed max-w-xs text-[#F4F5F7]/65">
               {BRAND_TAGLINE} — современный подход к украшениям без компромиссов
               в качестве.
             </p>
@@ -58,7 +58,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-[#F7F3EE]/85 hover:text-brand-olive transition-colors"
+                    className="text-sm text-[#F4F5F7]/85 hover:text-brand-olive transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -76,7 +76,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-[#F7F3EE]/85 hover:text-brand-olive transition-colors"
+                    className="text-sm text-[#F4F5F7]/85 hover:text-brand-olive transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -91,17 +91,17 @@ export function Footer() {
             </h4>
             <MetrikaPhoneLink
               href={SITE_PHONE_TEL}
-              className="block text-sm text-brand-olive hover:text-[#F7F3EE] transition-colors mb-2"
+              className="block text-sm text-brand-olive hover:text-[#F4F5F7] transition-colors mb-2"
             >
               {SITE_PHONE}
             </MetrikaPhoneLink>
             <a
               href={SITE_EMAIL_MAILTO}
-              className="block text-sm text-brand-olive hover:text-[#F7F3EE] transition-colors mb-4"
+              className="block text-sm text-brand-olive hover:text-[#F4F5F7] transition-colors mb-4"
             >
               {SITE_EMAIL}
             </a>
-            <p className="text-sm leading-relaxed text-[#F7F3EE]/65">
+            <p className="text-sm leading-relaxed text-[#F4F5F7]/65">
               ООО «ФИДЕЛИС»
               <br />
               ИНН 6154152484
@@ -111,7 +111,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 mt-10 pt-6 flex flex-col sm:flex-row justify-between gap-4 text-xs text-[#F7F3EE]/55">
+        <div className="border-t border-white/10 mt-10 pt-6 flex flex-col sm:flex-row justify-between gap-4 text-xs text-[#F4F5F7]/55">
           <div className="flex flex-col gap-2 sm:gap-1">
             <p>© 2026 ФИДЕЛИС. Все права защищены.</p>
             <p>
@@ -120,7 +120,7 @@ export function Footer() {
                 href="https://kodbuster.ru/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#F7F3EE]/85 hover:text-brand-olive transition-colors"
+                className="text-[#F4F5F7]/85 hover:text-brand-olive transition-colors"
               >
                 KodBuster
               </a>

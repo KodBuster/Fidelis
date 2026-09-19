@@ -9,10 +9,10 @@ const { data, info } = await sharp(src)
   .raw()
   .toBuffer({ resolveWithObject: true });
 
-// Ivory for dark footer (#F7F3EE) — high contrast on #2A2422
-const TR = 247;
-const TG = 243;
-const TB = 238;
+// Cool silver for dark footer (#A8B0B8)
+const TR = 168;
+const TG = 176;
+const TB = 184;
 
 for (let i = 0; i < data.length; i += 4) {
   const r = data[i];
