@@ -177,7 +177,7 @@ export function TermsPage() {
           content: (
             <>
               <p>
-                <strong>ООО ФИДЕЛИС</strong> (ИНН 6154152484)
+                <strong>ООО «ТЕРРА»</strong> (ИНН 6154152484)
               </p>
               <p>Юридический адрес: {LEGAL_ADDRESS}</p>
               <p>Адрес осуществления деятельности: {ACTIVITY_ADDRESS}</p>

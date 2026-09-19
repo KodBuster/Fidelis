@@ -102,7 +102,7 @@ export function Footer() {
               {SITE_EMAIL}
             </a>
             <p className="text-sm leading-relaxed text-[#F4F5F7]/65">
-              ООО «ФИДЕЛИС»
+              ООО «ТЕРРА»
               <br />
               ИНН 6154152484
               <br />
