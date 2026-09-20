@@ -10,15 +10,6 @@ import {
 import { BRAND_LOGO_LIGHT_SRC, BRAND_NAME_CAPS, BRAND_TAGLINE } from "@/lib/brand";
 
 const FOOTER_LINKS = {
-  catalog: [
-    { label: "Кольца", href: "/shop/rings" },
-    { label: "Браслеты на ногу", href: "/shop/ankle-bracelets" },
-    { label: "Браслеты на руку", href: "/shop/bracelets" },
-    { label: "Колье", href: "/shop/necklaces" },
-    { label: "Подвески", href: "/shop/pendants" },
-    { label: "Серьги", href: "/shop/earrings" },
-    { label: "Шнурки", href: "/shop/cords" },
-  ],
   info: [
     { label: "Сотрудничество", href: "/cooperation" },
     { label: "Гид покупателя", href: "/guide" },
@@ -31,8 +22,8 @@ export function Footer() {
   return (
     <footer className="mt-auto border-t border-brand-olive/35 bg-brand-olive-dark text-[#F4F5F7]">
       <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-10 py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          <div className="lg:col-span-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div>
             <Link href="/" className="mb-4 inline-block shrink-0">
               <Image
                 src={BRAND_LOGO_LIGHT_SRC}
@@ -47,24 +38,6 @@ export function Footer() {
               {BRAND_TAGLINE} — современный подход к украшениям без компромиссов
               в качестве.
             </p>
-          </div>
-
-          <div>
-            <h4 className="text-brand-olive text-xs tracking-[0.2em] uppercase mb-4">
-              Каталог
-            </h4>
-            <ul className="space-y-2.5">
-              {FOOTER_LINKS.catalog.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-[#F4F5F7]/85 hover:text-brand-olive transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
           </div>
 
           <div>
