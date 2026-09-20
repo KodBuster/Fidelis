@@ -4,6 +4,10 @@ import { BRAND_NAME_CAPS, BRAND_TAGLINE } from "@/lib/brand";
 
 const BANNER_ALT = `${BRAND_NAME_CAPS} — ${BRAND_TAGLINE}`;
 
+/** Versioned paths: /images/* is Cache-Control immutable (1y). */
+const HERO_BANNER_MOBILE = "/images/hero-fidelis-banner-mobile-v2.jpg";
+const HERO_BANNER_DESKTOP = "/images/hero-fidelis-banner-v2.jpg";
+
 export function Hero() {
   return (
     <section className="relative border-b border-brand-sand bg-brand-page">
@@ -18,7 +22,7 @@ export function Hero() {
       >
         <div className="relative aspect-[3/4] w-full overflow-hidden bg-brand-page md:hidden">
           <Image
-            src="/images/hero-fidelis-banner-mobile.jpg"
+            src={HERO_BANNER_MOBILE}
             alt={BANNER_ALT}
             width={1536}
             height={2048}
@@ -30,7 +34,7 @@ export function Hero() {
 
         <div className="relative hidden aspect-[16/9] w-full overflow-hidden bg-brand-page md:block">
           <Image
-            src="/images/hero-fidelis-banner.jpg"
+            src={HERO_BANNER_DESKTOP}
             alt={BANNER_ALT}
             width={1376}
             height={768}
