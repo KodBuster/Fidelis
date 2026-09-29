@@ -5,6 +5,7 @@ import {
   type CategorySlug,
   type Product,
 } from "@/lib/products";
+import { isAdvantShopConfigured } from "@/lib/advantshop/config";
 import { getCatalogProducts } from "@/lib/products-service";
 
 export type CategoryStat = {
@@ -38,10 +39,31 @@ function formatModelCount(count: number): string {
 }
 
 function getMinPrice(products: Product[]): number {
-  return products.reduce(
-    (min, product) => Math.min(min, product.price),
-    Number.POSITIVE_INFINITY,
+  return products.reduce((min, product) => {
+    if (
+      typeof product.price !== "number" ||
+      !Number.isFinite(product.price) ||
+      product.price <= 0
+    ) {
+      return min;
+    }
+    return Math.min(min, product.price);
+  }, Number.POSITIVE_INFINITY);
+}
+
+function pickCategoryCover(products: Product[], slug: CategorySlug): string {
+  const withImage = products.find(
+    (product) =>
+      product.image &&
+      !product.image.includes("nophoto") &&
+      product.inStock !== false,
   );
+  if (withImage?.image) return withImage.image;
+
+  const anyImage = products.find(
+    (product) => product.image && !product.image.includes("nophoto"),
+  );
+  return anyImage?.image ?? CATEGORY_IMAGES[slug];
 }
 
 function buildCategoryStat(
@@ -60,13 +82,31 @@ function buildCategoryStat(
         ? `от ${formatPrice(minPrice)}`
         : "Уточняйте цену",
     href: `/shop/${slug}`,
-    image: CATEGORY_IMAGES[slug],
+    image: pickCategoryCover(categoryProducts, slug),
   };
 }
 
-export async function getCategoryStats(): Promise<CategoryStat[]> {
-  let catalogProducts: Product[] = [];
+async function loadProductsForCategory(slug: CategorySlug): Promise<Product[]> {
+  try {
+    return await getCatalogProducts({ category: slug });
+  } catch (error) {
+    console.error(`Catalog unavailable for category "${slug}":`, error);
+    return [];
+  }
+}
 
+export async function getCategoryStats(): Promise<CategoryStat[]> {
+  if (isAdvantShopConfigured()) {
+    const lists = await Promise.all(
+      CATALOG_CATEGORY_SLUGS.map((slug) => loadProductsForCategory(slug)),
+    );
+
+    return CATALOG_CATEGORY_SLUGS.map((slug, index) =>
+      buildCategoryStat(slug, lists[index] ?? []),
+    );
+  }
+
+  let catalogProducts: Product[] = [];
   try {
     catalogProducts = await getCatalogProducts();
   } catch (error) {
