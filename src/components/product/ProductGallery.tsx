@@ -731,7 +731,7 @@ function ProductGalleryModalFooter({
 }: ProductGalleryModalFooterProps) {
   const [added, setAdded] = useState(false);
   const { addItem } = useCart();
-  const { selectedSize, selectedSizeLabel, artNo, price: selectedPrice, diamondWeight, diamondWeightLabel } =
+  const { selectedSize, selectedSizeLabel, artNo, productPrice, diamondWeight } =
     useProductSelection();
   const cartStoneLabel = formatInsertMassLabel(diamondWeight);
 
@@ -749,7 +749,7 @@ function ProductGalleryModalFooter({
       productSlug: slug,
       name,
       image: productImage,
-      price: selectedPrice,
+      price: productPrice,
       stoneWeight: diamondWeight,
       stoneLabel: cartStoneLabel,
       size: selectedSize,
@@ -758,7 +758,7 @@ function ProductGalleryModalFooter({
     trackAddToCart({
       id: artNo ?? slug,
       name,
-      price: selectedPrice,
+      price: productPrice,
       category,
       variant: variant || undefined,
     });
@@ -770,9 +770,14 @@ function ProductGalleryModalFooter({
     <div className="flex shrink-0 gap-3 border-t border-brand-sand pt-4 md:gap-4">
       <ModalThumbColumnSpacer visible={slides.length > 1} />
       <div className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-4">
-        <p className="font-heading text-2xl md:text-3xl text-brand-olive-dark">
-          {formatPrice(selectedPrice)}
-        </p>
+        <div>
+          <p className="text-[10px] tracking-[0.15em] uppercase text-brand-muted mb-0.5">
+            Цена изделия
+          </p>
+          <p className="font-heading text-2xl md:text-3xl text-brand-olive-dark">
+            {formatPrice(productPrice)}
+          </p>
+        </div>
 
         <div className="flex items-center gap-3">
           <button

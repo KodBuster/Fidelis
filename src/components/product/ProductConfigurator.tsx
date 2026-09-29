@@ -10,7 +10,12 @@ import { formatInsertMassLabel } from "@/lib/synthetic-diamond-labels";
 import { formatPrice, type ProductDetails } from "@/lib/products";
 import { useProductSelection } from "./ProductSelectionContext";
 
-function formatWeightGrams(value: string): string {
+function formatWeightGrams(value: string | number): string {
+  if (typeof value === "number") {
+    return `${value.toLocaleString("ru-RU", {
+      maximumFractionDigits: 3,
+    })} гр.`;
+  }
   const trimmed = value.trim().replace(/\s*г(?:р)?\.?\s*$/i, "");
   return `${trimmed} гр.`;
 }
@@ -20,12 +25,21 @@ type ProductConfiguratorProps = {
 };
 
 export function ProductConfigurator({ product }: ProductConfiguratorProps) {
-  const defaultVariant = product.stoneVariants.find(
-    (variant) => Math.abs(variant.weight - product.stoneWeight) < 0.001,
-  ) ?? product.stoneVariants[0];
+  const defaultVariant =
+    product.stoneVariants.find(
+      (variant) => Math.abs(variant.weight - product.stoneWeight) < 0.001,
+    ) ?? product.stoneVariants[0];
 
-  const { selectedSize, setSelectedSize, selectedSizeLabel, artNo, price, diamondWeight } =
-    useProductSelection();
+  const {
+    selectedSize,
+    setSelectedSize,
+    selectedSizeLabel,
+    artNo,
+    pricePerGram,
+    productPrice,
+    weightGrams,
+    diamondWeight,
+  } = useProductSelection();
   const cartStoneLabel = formatInsertMassLabel(diamondWeight);
   const [added, setAdded] = useState(false);
   const { addItem } = useCart();
@@ -57,7 +71,7 @@ export function ProductConfigurator({ product }: ProductConfiguratorProps) {
       productSlug: product.slug,
       name: product.name,
       image: product.image,
-      price,
+      price: productPrice,
       stoneWeight: diamondWeight,
       stoneLabel: cartStoneLabel,
       size: selectedSize,
@@ -66,7 +80,7 @@ export function ProductConfigurator({ product }: ProductConfiguratorProps) {
     trackAddToCart({
       id: artNo ?? product.slug,
       name: product.name,
-      price,
+      price: productPrice,
       category: product.category,
       variant: variant || undefined,
     });
@@ -77,24 +91,41 @@ export function ProductConfigurator({ product }: ProductConfiguratorProps) {
   return (
     <div className="space-y-6">
       <div>
-        <div className="flex flex-wrap items-center gap-3 mb-2">
-          <p className="font-heading text-3xl md:text-4xl text-brand-olive-dark">
-            {formatPrice(price)}
-          </p>
-          {product.badge && (
-            <span className="px-2.5 py-1 bg-brand-terracotta text-white text-[10px] tracking-widest uppercase">
-              {product.badge}
-            </span>
-          )}
+        <div className="mb-3 space-y-3">
+          <div>
+            <p className="text-xs tracking-[0.15em] uppercase text-brand-muted mb-1">
+              Цена изделия
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="font-heading text-3xl md:text-4xl text-brand-olive-dark">
+                {formatPrice(productPrice)}
+              </p>
+              {product.badge && (
+                <span className="px-2.5 py-1 bg-brand-terracotta text-white text-[10px] tracking-widest uppercase">
+                  {product.badge}
+                </span>
+              )}
+            </div>
+          </div>
+          <div>
+            <p className="text-xs tracking-[0.15em] uppercase text-brand-muted mb-1">
+              Цена за грамм
+            </p>
+            <p className="font-heading text-xl md:text-2xl text-brand-olive-dark">
+              {formatPrice(pricePerGram)}
+              <span className="ml-1 text-sm font-body text-brand-muted">/ г</span>
+            </p>
+          </div>
         </div>
         {product.inStock === false ? (
           <p className="mt-2 text-sm font-medium text-brand-terracotta">
             Скоро будет
           </p>
         ) : null}
-        {displayWeightGrams ? (
+        {displayWeightGrams || weightGrams ? (
           <p className="mt-1 text-sm text-brand-muted">
-            Вес изделия: {formatWeightGrams(displayWeightGrams)}
+            Вес изделия:{" "}
+            {formatWeightGrams(displayWeightGrams ?? weightGrams ?? "")}
           </p>
         ) : null}
         {artNo ? (
@@ -145,7 +176,10 @@ export function ProductConfigurator({ product }: ProductConfiguratorProps) {
               })}
             </div>
             <p className="mt-2 text-xs text-brand-muted">
-              <a href="/how-size-ring" className="text-brand-terracotta hover:underline">
+              <a
+                href="/how-size-ring"
+                className="text-brand-terracotta hover:underline"
+              >
                 Как определить размер →
               </a>
             </p>
@@ -153,27 +187,19 @@ export function ProductConfigurator({ product }: ProductConfiguratorProps) {
         )}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3">
-        <button
-          type="button"
-          data-add-to-cart
-          onClick={handleAddToCart}
-          disabled={!canBuy}
-          className="flex-1 px-6 py-3.5 bg-brand-terracotta hover:bg-brand-terracotta-logo disabled:cursor-not-allowed disabled:opacity-50 text-white text-sm tracking-widest uppercase transition-colors"
-        >
-          {product.inStock === false || !selectedSizeAvailable
-            ? "Скоро будет"
-            : added
-              ? "Добавлено ✓"
-              : "В корзину"}
-        </button>
-        <button
-          type="button"
-          className="flex-1 px-6 py-3.5 border border-brand-olive text-brand-olive-dark hover:bg-brand-terracotta hover:text-white text-sm tracking-widest uppercase transition-colors"
-        >
-          Примерить в шоуруме
-        </button>
-      </div>
+      <button
+        type="button"
+        data-add-to-cart
+        onClick={handleAddToCart}
+        disabled={!canBuy}
+        className="w-full px-6 py-3.5 bg-brand-terracotta hover:bg-brand-terracotta-logo disabled:cursor-not-allowed disabled:opacity-50 text-white text-sm tracking-widest uppercase transition-colors"
+      >
+        {product.inStock === false || !selectedSizeAvailable
+          ? "Скоро будет"
+          : added
+            ? "Добавлено ✓"
+            : "В корзину"}
+      </button>
 
       <div className="flex flex-col sm:flex-row gap-3">
         <FavoriteButton slug={product.slug} variant="text" className="flex-1" />

@@ -385,6 +385,43 @@ export function getProductSizePrice(
   return product.price;
 }
 
+/** Число граммов из подписи веса AdvantShop («3,66», «3.66 г»). */
+export function parseWeightGramsValue(
+  value?: string | null,
+): number | undefined {
+  if (!value?.trim()) return undefined;
+  const match = value.replace(/\s/g, "").match(/(\d+(?:[.,]\d+)?)/);
+  if (!match?.[1]) return undefined;
+  const parsed = Number.parseFloat(match[1].replace(",", "."));
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
+}
+
+export function getProductWeightGrams(
+  product: Pick<ProductDetails, "weightGrams" | "sizeWeightGrams">,
+  sizeValue: string | null,
+): number | undefined {
+  const raw =
+    (sizeValue && product.sizeWeightGrams?.[sizeValue]) || product.weightGrams;
+  return parseWeightGramsValue(raw);
+}
+
+/**
+ * Цена изделия = цена за грамм × вес.
+ * Если вес неизвестен — возвращает цену за грамм (как есть в AdvantShop).
+ */
+export function getProductTotalPrice(
+  product: Pick<
+    ProductDetails,
+    "price" | "sizePrices" | "weightGrams" | "sizeWeightGrams"
+  >,
+  sizeValue: string | null,
+): number {
+  const pricePerGram = getProductSizePrice(product, sizeValue);
+  const weight = getProductWeightGrams(product, sizeValue);
+  if (!weight) return pricePerGram;
+  return Math.round(pricePerGram * weight);
+}
+
 const DEFAULT_SIZE_OPTIONS = defaultRingBraceletSizeOptions();
 
 const CATEGORY_IMAGES: Record<CategorySlug, string[]> = {

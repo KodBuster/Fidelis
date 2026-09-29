@@ -13,6 +13,8 @@ import { usePathname, useSearchParams } from "next/navigation";
 import {
   getProductSizeLabel,
   getProductSizePrice,
+  getProductTotalPrice,
+  getProductWeightGrams,
   type ProductDetails,
 } from "@/lib/products";
 import {
@@ -26,6 +28,12 @@ type ProductSelectionContextValue = {
   selectedSizeLabel: string | null;
   sizeHref: (size: string) => string;
   artNo?: string;
+  /** Цена за грамм из AdvantShop. */
+  pricePerGram: number;
+  /** Цена изделия = цена за грамм × вес. */
+  productPrice: number;
+  weightGrams?: number;
+  /** @deprecated используйте pricePerGram / productPrice */
   price: number;
   diamondWeight: number;
   diamondWeightLabel: string;
@@ -107,19 +115,23 @@ export function ProductSelectionProvider({
     [pathname],
   );
 
-  const value = useMemo(
-    () => ({
+  const value = useMemo(() => {
+    const pricePerGram = getProductSizePrice(product, selectedSize);
+    const productPrice = getProductTotalPrice(product, selectedSize);
+    return {
       selectedSize,
       setSelectedSize,
       selectedSizeLabel: getProductSizeLabel(product, selectedSize) ?? null,
       sizeHref,
       artNo: resolveArtNo(product, selectedSize),
-      price: getProductSizePrice(product, selectedSize),
+      pricePerGram,
+      productPrice,
+      weightGrams: getProductWeightGrams(product, selectedSize),
+      price: pricePerGram,
       diamondWeight: getProductCaratWeight(product, selectedSize),
       diamondWeightLabel: getProductCaratWeightLabel(product, selectedSize),
-    }),
-    [product, selectedSize, setSelectedSize, sizeHref],
-  );
+    };
+  }, [product, selectedSize, setSelectedSize, sizeHref]);
 
   return (
     <ProductSelectionContext.Provider value={value}>
