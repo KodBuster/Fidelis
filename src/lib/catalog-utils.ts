@@ -11,6 +11,7 @@ export type CatalogFilters = {
   priceRanges: string[];
   sizes: string[];
   complectsOnly: boolean;
+  manufacturer?: string;
   sort: string;
 };
 
@@ -60,6 +61,13 @@ export function filterProducts(
     result = result.filter((product) => Boolean(product.setArtNos?.length));
   }
 
+  if (filters.manufacturer?.trim()) {
+    const target = filters.manufacturer.trim().toLowerCase();
+    result = result.filter(
+      (product) => product.manufacturer?.trim().toLowerCase() === target,
+    );
+  }
+
   switch (filters.sort) {
     case "price-asc":
       result.sort((a, b) => a.price - b.price);
@@ -86,6 +94,7 @@ export function parseFiltersFromSearchParams(
     priceRanges: params.getAll("price"),
     sizes: params.getAll("size"),
     complectsOnly: params.get("complect") === "1",
+    manufacturer: params.get("manufacturer") ?? undefined,
     sort: params.get("sort") ?? "default",
   };
 }
@@ -103,6 +112,9 @@ export function buildFilterQuery(
   if (next.complectsOnly) {
     query.set("complect", "1");
   }
+  if (next.manufacturer?.trim()) {
+    query.set("manufacturer", next.manufacturer.trim());
+  }
   if (next.sort && next.sort !== "default") {
     query.set("sort", next.sort);
   }
@@ -118,7 +130,8 @@ export function countActiveFilters(filters: CatalogFilters): number {
   return (
     filters.priceRanges.length +
     filters.sizes.length +
-    (filters.complectsOnly ? 1 : 0)
+    (filters.complectsOnly ? 1 : 0) +
+    (filters.manufacturer?.trim() ? 1 : 0)
   );
 }
 
@@ -127,6 +140,7 @@ export function hasCatalogFilterParams(params: URLSearchParams): boolean {
     params.has("price") ||
     params.has("size") ||
     params.has("complect") ||
+    params.has("manufacturer") ||
     (params.has("sort") && params.get("sort") !== "default")
   );
 }

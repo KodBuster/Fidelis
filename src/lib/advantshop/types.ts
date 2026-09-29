@@ -131,6 +131,10 @@ export type AdvantShopProductDetails = {
   sizeColorPicker?: {
     sizes?: { id: number; name: string }[];
   };
+  brand?: {
+    name?: string | null;
+    urlPath?: string | null;
+  } | null;
 };
 
 export type AdvantShopPropertyGroup = {

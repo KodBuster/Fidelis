@@ -145,12 +145,14 @@ export type AdvantShopStockInfo = {
   offerArtNos?: string[];
   /** Цена для каталога: оффер в наличии, не «Главная» с нулевым остатком. */
   listPrice?: number;
+  /** Производитель / бренд с карточки AdvantShop. */
+  manufacturer?: string;
 };
 
 export function getAdvantShopDetailsStockInfo(
   item: Pick<
     AdvantShopProductDetails,
-    "amount" | "offers" | "sizeColorPicker" | "artNo"
+    "amount" | "offers" | "sizeColorPicker" | "artNo" | "brand"
   >,
   category?: CategorySlug,
 ): AdvantShopStockInfo {
@@ -168,5 +170,6 @@ export function getAdvantShopDetailsStockInfo(
     stockAmount: getAdvantShopStockAmount(item),
     inStock: isAdvantShopDetailsInStock(item, category),
     offerArtNos: [...offerArtNos],
+    manufacturer: item.brand?.name?.trim() || undefined,
   };
 }

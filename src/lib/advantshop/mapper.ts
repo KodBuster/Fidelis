@@ -676,6 +676,7 @@ export function mapCatalogProduct(
     sizeOptions: resolveCatalogSizeOptions(sizeOptions, category),
     artNo,
     offerArtNos,
+    manufacturer: stock?.manufacturer,
     setArtNos: setArtNos?.length ? setArtNos : undefined,
     stockAmount,
     inStock,
@@ -795,6 +796,7 @@ export function mapProductDetails(
     lengthMmLabel,
     sizeLengthMm,
     setArtNos: setArtNos.length ? setArtNos : undefined,
+    manufacturer: item.brand?.name?.trim() || undefined,
     stockAmount,
     inStock,
   };

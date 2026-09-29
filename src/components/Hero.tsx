@@ -1,41 +1,34 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BRAND_NAME_CAPS, BRAND_TAGLINE } from "@/lib/brand";
+import {
+  STOREFRONT_COLLECTIONS,
+  filterProductsByManufacturer,
+} from "@/lib/collections";
+import { getCatalogProducts } from "@/lib/products-service";
+import type { Product } from "@/lib/products";
 
-const COLLECTIONS = [
-  {
-    title: "Коллекция 1",
-    href: "/shop?collection=1",
-    image: "/images/product-ring.webp",
-  },
-  {
-    title: "Коллекция 2",
-    href: "/shop?collection=2",
-    image: "/images/product-earrings.webp",
-  },
-  {
-    title: "Коллекция 3",
-    href: "/shop?collection=3",
-    image: "/images/product-necklace.webp",
-  },
-  {
-    title: "Коллекция 4",
-    href: "/shop?collection=4",
-    image: "/images/product-bracelet.webp",
-  },
-  {
-    title: "Коллекция 5",
-    href: "/shop?collection=5",
-    image: "/images/product-ring.webp",
-  },
-  {
-    title: "Коллекция 6",
-    href: "/shop?collection=6",
-    image: "/images/product-earrings.webp",
-  },
-] as const;
+export async function Hero() {
+  let catalog: Product[] = [];
+  try {
+    catalog = await getCatalogProducts();
+  } catch (error) {
+    console.error("Hero collections catalog unavailable:", error);
+  }
 
-export function Hero() {
+  const collections = STOREFRONT_COLLECTIONS.map((collection) => {
+    const products = collection.manufacturer
+      ? filterProductsByManufacturer(catalog, collection.manufacturer)
+      : [];
+    const cover = products[0]?.image ?? collection.fallbackImage;
+
+    return {
+      ...collection,
+      image: cover,
+      count: products.length,
+    };
+  });
+
   return (
     <section className="relative border-b border-brand-sand bg-brand-page">
       <h1 className="sr-only">
@@ -53,9 +46,9 @@ export function Hero() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
-          {COLLECTIONS.map((collection, index) => (
+          {collections.map((collection, index) => (
             <Link
-              key={collection.title}
+              key={collection.id}
               href={collection.href}
               className="group relative aspect-[4/5] overflow-hidden rounded-xl bg-brand-surface shadow-sm transition-shadow hover:shadow-md touch-manipulation cursor-pointer"
             >
@@ -68,9 +61,21 @@ export function Hero() {
                 sizes="(max-width: 768px) 50vw, 33vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-brand-olive-dark/70 via-brand-olive-dark/10 to-transparent" />
-              <h3 className="absolute bottom-0 left-0 right-0 p-3 md:p-5 font-heading text-base md:text-xl text-[#F4F5F7]">
-                {collection.title}
-              </h3>
+              <div className="absolute bottom-0 left-0 right-0 p-3 md:p-5">
+                <h3 className="font-heading text-base md:text-xl text-[#F4F5F7]">
+                  {collection.title}
+                </h3>
+                {collection.manufacturer && collection.count > 0 ? (
+                  <p className="mt-1 text-xs text-[#F4F5F7]/75">
+                    {collection.count}{" "}
+                    {collection.count === 1
+                      ? "модель"
+                      : collection.count < 5
+                        ? "модели"
+                        : "моделей"}
+                  </p>
+                ) : null}
+              </div>
             </Link>
           ))}
         </div>

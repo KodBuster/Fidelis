@@ -5,6 +5,7 @@ const COMPLECT_CATEGORY_ORDER: CategorySlug[] = [
   "rings",
   "earrings",
   "pendants",
+  "chain-pendants",
   "necklaces",
   "bracelets",
   "ankle-bracelets",

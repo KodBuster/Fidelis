@@ -24,6 +24,7 @@ const CATEGORY_IMAGES: Record<CategorySlug, string> = {
   pendants: "/images/categories/pendants.jpg",
   earrings: "/images/categories/earrings.jpg",
   cords: "/images/product-necklace.webp",
+  "chain-pendants": "/images/categories/pendants.jpg",
 };
 
 function formatModelCount(count: number): string {

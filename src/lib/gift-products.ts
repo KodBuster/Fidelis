@@ -9,6 +9,7 @@ export const GIFT_SOURCE_CATEGORIES: CategorySlug[] = [
   "rings",
   "earrings",
   "pendants",
+  "chain-pendants",
   "necklaces",
   "bracelets",
   "ankle-bracelets",

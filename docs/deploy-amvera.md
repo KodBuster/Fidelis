@@ -31,7 +31,7 @@ git push origin main
 
 | Переменная | Значение | Тип |
 | --- | --- | --- |
-| `ADVANTSHOP_BASE_URL` | `https://s4.advantme.ru/442301-dfcc` | обычная |
+| `ADVANTSHOP_BASE_URL` | `http://443046-pkrq.on-advantshop.net` | обычная |
 | `ADVANTSHOP_SERVER_API_KEY` | ключ вкладки «API» | **секрет** |
 | `ADVANTSHOP_CLIENT_API_KEY` | ключ «API с авторизацией» | **секрет** |
 | `ADVANTSHOP_CATEGORY_MAP` | см. ниже | обычная |
@@ -44,7 +44,7 @@ git push origin main
 `ADVANTSHOP_CATEGORY_MAP` (без кавычек и пробелов вокруг `:` / `,`):
 
 ```
-rings:koltsa,ankle-bracelets:braslety-na-nogu,bracelets:braslety-na-ruku,necklaces:kole,pendants:podveski,earrings:sergi,cords:shnurki
+rings:koltso,ankle-bracelets:braslety-na-nogu,bracelets:braslet,necklaces:kole,pendants:podveski,chain-pendants:kulon-na-tsepi,earrings:sergi,cords:shnurki
 ```
 
 Ключи API — из локального `.env.local` (в git не коммитить).

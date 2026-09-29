@@ -5,7 +5,8 @@ export type CategorySlug =
   | "necklaces"
   | "bracelets"
   | "ankle-bracelets"
-  | "cords";
+  | "cords"
+  | "chain-pendants";
 
 /** Категории с выбором размера (кольца и браслеты). */
 export function categoryHasSizes(category: CategorySlug): boolean {
@@ -44,6 +45,8 @@ export type Product = {
   offerArtNos?: string[];
   sizeArtNos?: Record<string, string>;
   urlPath?: string;
+  /** Производитель / бренд AdvantShop (поле brand.name). */
+  manufacturer?: string;
   /** Артикулы комплекта из свойства AdvantShop «Set» (stocks.csv). */
   setArtNos?: string[];
   /** Суммарный остаток; undefined — данных нет. */
@@ -100,9 +103,9 @@ export const CATEGORIES: Record<
     description: "Браслеты на ногу из серебра 925",
   },
   bracelets: {
-    title: "Браслеты на руку",
-    titlePlural: "Браслеты на руку",
-    description: "Браслеты на руку из серебра 925",
+    title: "Браслеты",
+    titlePlural: "Браслеты",
+    description: "Браслеты из серебра 925",
   },
   necklaces: {
     title: "Колье",
@@ -123,6 +126,11 @@ export const CATEGORIES: Record<
     title: "Шнурки",
     titlePlural: "Шнурки",
     description: "Шнурки для подвесок и кулонов",
+  },
+  "chain-pendants": {
+    title: "Кулон на цепи",
+    titlePlural: "Кулоны на цепи",
+    description: "Кулоны на цепи из серебра 925",
   },
 };
 
@@ -390,6 +398,7 @@ const CATEGORY_IMAGES: Record<CategorySlug, string[]> = {
   pendants: ["/images/product-necklace.webp"],
   earrings: ["/images/product-earrings.webp"],
   cords: ["/images/product-necklace.webp", "/images/product-bracelet.webp"],
+  "chain-pendants": ["/images/product-necklace.webp"],
 };
 
 export function getProductBySlug(slug: string): Product | undefined {

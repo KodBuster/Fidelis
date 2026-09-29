@@ -16,6 +16,7 @@ const PAGE_GOALS: PageGoal[] = [
   { goal: "page_bracelets", match: (p) => p === "/shop/bracelets" },
   { goal: "page_necklaces", match: (p) => p === "/shop/necklaces" },
   { goal: "page_pendants", match: (p) => p === "/shop/pendants" },
+  { goal: "page_chain_pendants", match: (p) => p === "/shop/chain-pendants" },
   { goal: "page_earrings", match: (p) => p === "/shop/earrings" },
   { goal: "page_cords", match: (p) => p === "/shop/cords" },
   { goal: "page_shipping", match: (p) => p === "/shipping" },

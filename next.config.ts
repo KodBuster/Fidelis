@@ -22,6 +22,18 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "http",
+        hostname: "**.on-advantshop.net",
+      },
+      {
+        protocol: "http",
+        hostname: "443046-pkrq.on-advantshop.net",
+      },
+      {
+        protocol: "https",
+        hostname: "443046-pkrq.on-advantshop.net",
+      },
+      {
+        protocol: "http",
         hostname: "synonym-925.ru",
       },
       {
