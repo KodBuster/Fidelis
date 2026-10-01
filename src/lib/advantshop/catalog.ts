@@ -5,7 +5,14 @@ import { parseDiamondWeightNumber } from "@/lib/product-weight";
 import { parseSetArtNosFromProperties } from "@/lib/product-complect";
 import { advantshopClientFetch, advantshopFetch } from "./client";
 import { getCategoryUrlMap, CATALOG_REVALIDATE_SECONDS } from "./config";
-import { mapCatalogProduct, mapProductDetails, parseDiamondWeightLabelFromProperties, parseLengthMmLabelFromProperties, pickOfferPrice } from "./mapper";
+import {
+  mapCatalogProduct,
+  mapProductDetails,
+  parseDiamondWeightLabelFromProperties,
+  parseLengthMmLabelFromProperties,
+  parseWeightGramsLabelFromProperties,
+  pickOfferPrice,
+} from "./mapper";
 import {
   getAdvantShopDetailsStockInfo,
   getAvailableSizePickerSizes,
@@ -254,13 +261,20 @@ async function fetchProductStockInfo(
   category: CategorySlug,
 ): Promise<AdvantShopStockInfo | undefined> {
   try {
-    const details = await advantshopClientFetch<AdvantShopProductDetails>(
-      `/api/products/${productId}`,
-    );
+    const [details, properties] = await Promise.all([
+      advantshopClientFetch<AdvantShopProductDetails>(
+        `/api/products/${productId}`,
+      ),
+      fetchProductProperties(productId),
+    ]);
     const stock = getAdvantShopDetailsStockInfo(details, category);
     const listPrice = pickOfferPrice(details.offers);
+    // В этом магазине weight оффера часто 0 — вес берём из «Вес, гр.».
+    const weightGrams =
+      stock.weightGrams ?? parseWeightGramsLabelFromProperties(properties);
     return {
       ...stock,
+      weightGrams,
       listPrice: listPrice > 0 ? listPrice : undefined,
     };
   } catch (error) {

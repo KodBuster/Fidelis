@@ -407,7 +407,10 @@ export function parseDiamondWeightLabelFromProperties(
   return collectDiamondWeightEntries(properties)[0]?.label;
 }
 
-function parseWeightGrams(properties: AdvantShopProperty[]): string | undefined {
+/** Вес изделия (г) из свойств AdvantShop («Вес, гр.»). */
+export function parseWeightGramsLabelFromProperties(
+  properties: AdvantShopProperty[],
+): string | undefined {
   const fromProperty = parseProperty(properties, [
     "вес, гр.",
     "вес, гр",
@@ -496,7 +499,7 @@ function pickDefaultWeightGrams(
     .find(Boolean);
   if (fromOffer) return fromOffer;
 
-  return parseWeightGrams(properties);
+  return parseWeightGramsLabelFromProperties(properties);
 }
 
 function parseProperty(
