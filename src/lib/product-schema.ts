@@ -1,12 +1,11 @@
 import { buildProductMetaDescription } from "@/lib/product-metadata";
-import { getProductCaratWeight } from "@/lib/product-weight";
-import { CATEGORIES, type ProductDetails } from "@/lib/products";
+import {
+  CATEGORIES,
+  getProductTotalPrice,
+  type ProductDetails,
+} from "@/lib/products";
 import { absoluteImageUrl } from "@/lib/seo-images";
 import { getSiteUrl } from "@/lib/site-url";
-import {
-  formatInsertMassLabel,
-  INSERT_WEIGHT_LABEL,
-} from "@/lib/synthetic-diamond-labels";
 
 function buildProductSchemaName(product: ProductDetails): string {
   const metal = product.metal?.trim() || "Серебро 925";
@@ -32,17 +31,6 @@ function buildProductAdditionalProperties(
     });
   }
 
-  if (product.diamondWeightLabel || product.stoneWeight > 0) {
-    const mass =
-      product.diamondWeightLabel?.trim() ||
-      formatInsertMassLabel(getProductCaratWeight(product));
-    properties.push({
-      "@type": "PropertyValue",
-      name: INSERT_WEIGHT_LABEL,
-      value: mass,
-    });
-  }
-
   if (product.weightGrams) {
     properties.push({
       "@type": "PropertyValue",
@@ -65,6 +53,7 @@ export function buildProductJsonLd(
   const images = product.images.map(absoluteImageUrl);
   const schemaName = buildProductSchemaName(product);
   const material = product.metal?.trim() || "Серебро 925";
+  const offerPrice = getProductTotalPrice(product, null);
 
   return [
     {
@@ -115,7 +104,7 @@ export function buildProductJsonLd(
         "@type": "Offer",
         url: productUrl,
         priceCurrency: "RUB",
-        price: product.price,
+        price: offerPrice,
         availability:
           product.inStock === false
             ? "https://schema.org/OutOfStock"

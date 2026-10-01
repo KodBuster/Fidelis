@@ -147,6 +147,8 @@ export type AdvantShopStockInfo = {
   listPrice?: number;
   /** Производитель / бренд с карточки AdvantShop. */
   manufacturer?: string;
+  /** Вес изделия (г) с оффера / карточки. */
+  weightGrams?: string;
 };
 
 export function getAdvantShopDetailsStockInfo(
@@ -171,5 +173,25 @@ export function getAdvantShopDetailsStockInfo(
     inStock: isAdvantShopDetailsInStock(item, category),
     offerArtNos: [...offerArtNos],
     manufacturer: item.brand?.name?.trim() || undefined,
+    weightGrams: pickWeightGramsFromDetails(item),
   };
+}
+
+function pickWeightGramsFromDetails(
+  item: Pick<AdvantShopProductDetails, "offers">,
+): string | undefined {
+  const offers = item.offers ?? [];
+  const main = offers.find((offer) => offer.isMain);
+  const candidates = [main, ...offers];
+  for (const offer of candidates) {
+    const weight = offer?.weight;
+    if (weight == null) continue;
+    const num =
+      typeof weight === "number"
+        ? weight
+        : Number(String(weight).trim().replace(",", "."));
+    if (!Number.isFinite(num) || num <= 0) continue;
+    return String(num).replace(".", ",");
+  }
+  return undefined;
 }

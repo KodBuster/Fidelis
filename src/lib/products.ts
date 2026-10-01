@@ -47,6 +47,8 @@ export type Product = {
   urlPath?: string;
   /** Производитель / бренд AdvantShop (поле brand.name). */
   manufacturer?: string;
+  /** Вес изделия (г) — для расчёта цены изделия из цены за грамм. */
+  weightGrams?: string;
   /** Артикулы комплекта из свойства AdvantShop «Set» (stocks.csv). */
   setArtNos?: string[];
   /** Суммарный остаток; undefined — данных нет. */
@@ -420,6 +422,22 @@ export function getProductTotalPrice(
   const weight = getProductWeightGrams(product, sizeValue);
   if (!weight) return pricePerGram;
   return Math.round(pricePerGram * weight);
+}
+
+/** Цена изделия для карточек каталога (цена AdvantShop = за грамм). */
+export function getCatalogProductTotalPrice(
+  product: Pick<Product, "price" | "weightGrams">,
+): number {
+  if (
+    typeof product.price !== "number" ||
+    !Number.isFinite(product.price) ||
+    product.price <= 0
+  ) {
+    return 0;
+  }
+  const weight = parseWeightGramsValue(product.weightGrams);
+  if (!weight) return Math.round(product.price);
+  return Math.round(product.price * weight);
 }
 
 const DEFAULT_SIZE_OPTIONS = defaultRingBraceletSizeOptions();

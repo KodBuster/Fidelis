@@ -1,4 +1,9 @@
-import { CATEGORIES, formatPrice, type ProductDetails } from "@/lib/products";
+import {
+  CATEGORIES,
+  formatPrice,
+  getProductTotalPrice,
+  type ProductDetails,
+} from "@/lib/products";
 
 const MAX_META_DESCRIPTION_LENGTH = 160;
 
@@ -17,7 +22,7 @@ function truncateMetaDescription(text: string): string {
 
 export function buildProductMetaDescription(product: ProductDetails): string {
   const category = CATEGORIES[product.category].title.toLowerCase();
-  const price = formatPrice(product.price);
+  const price = formatPrice(getProductTotalPrice(product, null));
 
   const description = [
     `${product.name} — ${category} из серебра 925.`,

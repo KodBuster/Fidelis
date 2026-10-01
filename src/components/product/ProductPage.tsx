@@ -1,7 +1,11 @@
 ﻿import { Suspense } from "react";
 import Link from "next/link";
 import { ProductViewTracker } from "@/components/analytics/ProductViewTracker";
-import { CATEGORIES, type ProductDetails } from "@/lib/products";
+import {
+  CATEGORIES,
+  getProductTotalPrice,
+  type ProductDetails,
+} from "@/lib/products";
 import type { Product } from "@/lib/products";
 import { getProductCaratWeight } from "@/lib/product-weight";
 import { formatInsertMassLabel } from "@/lib/synthetic-diamond-labels";
@@ -34,12 +38,13 @@ export function ProductPage({
     ...(product.offerArtNos ?? []),
   ]);
   const cartStoneLabel = insertMass;
+  const displayPrice = getProductTotalPrice(product, null);
   return (
     <section className="py-8 md:py-12">
       <ProductViewTracker
         id={product.artNo ?? product.slug}
         name={product.name}
-        price={product.price}
+        price={displayPrice}
         category={product.category}
         variant={insertMass}
       />
@@ -104,38 +109,6 @@ export function ProductPage({
             <ProductDescription product={product} />
 
             <ProductCharacteristics product={product} />
-          </div>
-
-          <div className="rounded-xl border border-brand-olive/15 bg-brand-surface p-6 md:p-8">
-            <h2 className="font-heading text-xl text-brand-olive-dark mb-4">
-              Полезно перед покупкой
-            </h2>
-            <ul className="space-y-2 text-sm md:text-base">
-              {(product.category === "rings" ||
-                product.category === "bracelets" ||
-                product.category === "ankle-bracelets") && (
-                <li>
-                  <Link href="/how-size-ring" className="text-brand-terracotta hover:underline">
-                    Как определить размер кольца или браслета
-                  </Link>
-                </li>
-              )}
-              <li>
-                <Link href="/warranty" className="text-brand-terracotta hover:underline">
-                  Гарантия и сертификация
-                </Link>
-              </li>
-              <li>
-                <Link href="/guide/lab-grown-diamonds" className="text-brand-terracotta hover:underline">
-                  Об украшениях из серебра
-                </Link>
-              </li>
-              <li>
-                <Link href="/shipping" className="text-brand-terracotta hover:underline">
-                  Доставка СДЭК и оплата по счёту
-                </Link>
-              </li>
-            </ul>
           </div>
           </ProductSelectionProvider>
         </Suspense>

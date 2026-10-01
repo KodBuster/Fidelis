@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CompareButton } from "@/components/compare/CompareButton";
 import { FavoriteButton } from "@/components/favorites/FavoriteButton";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { formatPrice, type Product } from "@/lib/products";
+import { formatPrice, getCatalogProductTotalPrice, type Product } from "@/lib/products";
 
 type ProductCardProps = {
   product: Product;
@@ -60,7 +60,7 @@ export function ProductCard({
           <p className="mt-1 text-xs text-brand-muted">Арт. {product.artNo}</p>
         ) : null}
         <p className="mt-1.5 font-heading text-brand-olive-dark text-lg">
-          {formatPrice(product.price)}
+          {formatPrice(getCatalogProductTotalPrice(product))}
         </p>
       </Link>
     </article>

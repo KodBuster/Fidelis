@@ -1,4 +1,5 @@
 import type { Product } from "@/lib/products";
+import { getCatalogProductTotalPrice } from "@/lib/products";
 import type {
   SearchAutocompleteProduct,
   SearchAutocompleteResult,
@@ -88,7 +89,7 @@ export function mapProductToAutocomplete(
     id: product.id,
     slug: product.slug,
     name: product.name,
-    price: product.price,
+    price: getCatalogProductTotalPrice(product),
     image: product.image,
     artNo: matchedArtNo ?? product.artNo,
     href: `/products/${product.slug}`,

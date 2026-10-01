@@ -7,6 +7,7 @@ import { loadAdvantShopProductDetails } from "@/lib/advantshop/catalog";
 import {
   hasExactArtNoMatch,
   looksLikeArtNoQuery,
+  mapProductToAutocomplete,
   mergeAutocompleteResults,
   productMatchesArtQuery,
   resolveModificationArtBase,
@@ -196,16 +197,9 @@ function getStaticAutocomplete(query: string): SearchAutocompleteResult {
       href: `/shop/${slug}`,
     }));
 
-  const products = searchStaticProducts(normalized).slice(0, 6).map((product) => ({
-    type: "product" as const,
-    id: product.id,
-    slug: product.slug,
-    name: product.name,
-    price: product.price,
-    image: product.image,
-    artNo: product.artNo,
-    href: `/products/${product.slug}`,
-  }));
+  const products = searchStaticProducts(normalized).slice(0, 6).map((product) =>
+    mapProductToAutocomplete(product),
+  );
 
   return { products, categories };
 }
@@ -380,16 +374,7 @@ export async function getSearchAutocomplete(
     const textMatches = {
       products: searchCatalogByText(catalog, trimmed)
         .slice(0, 6)
-        .map((product) => ({
-          type: "product" as const,
-          id: product.id,
-          slug: product.slug,
-          name: product.name,
-          price: product.price,
-          image: product.image,
-          artNo: product.artNo,
-          href: `/products/${product.slug}`,
-        })),
+        .map((product) => mapProductToAutocomplete(product)),
       categories: searchCatalogCategoriesByText(trimmed),
     };
 

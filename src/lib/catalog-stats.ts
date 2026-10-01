@@ -2,6 +2,7 @@ import {
   CATALOG_CATEGORY_SLUGS,
   CATEGORIES,
   formatPrice,
+  getCatalogProductTotalPrice,
   type CategorySlug,
   type Product,
 } from "@/lib/products";
@@ -38,16 +39,12 @@ function formatModelCount(count: number): string {
   return `${count} моделей`;
 }
 
-function getMinPrice(products: Product[]): number {
+/** Минимальная цена изделия (цена за грамм × вес). */
+function getMinProductPrice(products: Product[]): number {
   return products.reduce((min, product) => {
-    if (
-      typeof product.price !== "number" ||
-      !Number.isFinite(product.price) ||
-      product.price <= 0
-    ) {
-      return min;
-    }
-    return Math.min(min, product.price);
+    const total = getCatalogProductTotalPrice(product);
+    if (total <= 0) return min;
+    return Math.min(min, total);
   }, Number.POSITIVE_INFINITY);
 }
 
@@ -71,7 +68,7 @@ function buildCategoryStat(
   categoryProducts: Product[],
 ): CategoryStat {
   const count = categoryProducts.length;
-  const minPrice = getMinPrice(categoryProducts);
+  const minPrice = getMinProductPrice(categoryProducts);
 
   return {
     slug,

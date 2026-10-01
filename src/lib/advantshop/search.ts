@@ -3,6 +3,7 @@ import type {
   SearchAutocompleteCategory,
   SearchAutocompleteResult,
 } from "@/lib/search-types";
+import { mapProductToAutocomplete } from "@/lib/art-search";
 import { advantshopClientFetch } from "./client";
 import {
   fetchAdvantShopProducts,
@@ -115,16 +116,7 @@ export async function fetchAdvantShopSearchAutocomplete(
     catalog,
     productIds,
     MAX_AUTOCOMPLETE_PRODUCTS,
-  ).map((product) => ({
-    type: "product" as const,
-    id: product.id,
-    slug: product.slug,
-    name: product.name,
-    price: product.price,
-    image: product.image,
-    artNo: product.artNo,
-    href: `/products/${product.slug}`,
-  }));
+  ).map((product) => mapProductToAutocomplete(product));
 
   return { products, categories };
 }

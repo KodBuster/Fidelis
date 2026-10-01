@@ -5,13 +5,12 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { CartItem } from "@/lib/cart";
-import { getProductCaratWeight } from "@/lib/product-weight";
 import {
-  extractInsertMassFromName,
-  formatInsertMassLabel,
-  INSERT_WEIGHT_LABEL,
-} from "@/lib/synthetic-diamond-labels";
-import { CATEGORIES, formatPrice, type ProductDetails } from "@/lib/products";
+  CATEGORIES,
+  formatPrice,
+  getProductTotalPrice,
+  type ProductDetails,
+} from "@/lib/products";
 
 type ProductQuickViewModalProps = {
   cartItem: CartItem | null;
@@ -104,10 +103,9 @@ export function ProductQuickViewModal({
   const categoryTitle = product
     ? CATEGORIES[product.category].title
     : null;
-  const insertMass = product
-    ? extractInsertMassFromName(product.name) ??
-      formatInsertMassLabel(getProductCaratWeight(product, cartItem.size))
-    : null;
+  const displayPrice = product
+    ? getProductTotalPrice(product, cartItem.size)
+    : cartItem.price;
 
   return createPortal(
     <div
@@ -216,7 +214,7 @@ export function ProductQuickViewModal({
                 </h2>
 
                 <p className="font-heading text-2xl text-brand-olive-dark">
-                  {formatPrice(product?.price ?? cartItem.price)}
+                  {formatPrice(displayPrice)}
                 </p>
 
                 <div className="rounded-xl border border-brand-olive/15 bg-white p-4 text-sm space-y-2">
@@ -235,12 +233,6 @@ export function ProductQuickViewModal({
                       <dt className="text-brand-muted">Металл</dt>
                       <dd className="text-brand-text text-right">{product.metal}</dd>
                     </div>
-                    {insertMass && (
-                      <div className="flex justify-between gap-4 border-b border-brand-sand pb-3">
-                        <dt className="text-brand-muted">{INSERT_WEIGHT_LABEL}</dt>
-                        <dd className="text-brand-text text-right">{insertMass}</dd>
-                      </div>
-                    )}
                     {product.cut?.trim() ? (
                       <div className="flex justify-between gap-4">
                         <dt className="text-brand-muted">Огранка</dt>

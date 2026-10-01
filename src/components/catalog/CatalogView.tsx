@@ -120,14 +120,18 @@ export function CatalogView({
 
   const pageTitle = category
     ? CATEGORIES[category].titlePlural
-    : filters.manufacturer
-      ? filters.manufacturer
-      : "Все украшения";
+    : filters.manufacturer?.toLowerCase() === "prosecco"
+      ? "БРЮТ"
+      : filters.manufacturer
+        ? filters.manufacturer
+        : "Все украшения";
   const pageDescription = category
     ? CATEGORIES[category].description
-    : filters.manufacturer
-      ? `Коллекция ${filters.manufacturer}: украшения из серебра 925`
-      : "Каталог украшений из серебра 925";
+    : filters.manufacturer?.toLowerCase() === "prosecco"
+      ? "Коллекция БРЮТ: украшения из серебра 925"
+      : filters.manufacturer
+        ? `Коллекция ${filters.manufacturer}: украшения из серебра 925`
+        : "Каталог украшений из серебра 925";
 
   return (
     <section className="py-8 md:py-12">

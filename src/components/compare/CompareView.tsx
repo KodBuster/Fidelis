@@ -8,6 +8,7 @@ import { MAX_COMPARE_ITEMS } from "@/lib/compare";
 import {
   CATEGORIES,
   formatPrice,
+  getProductTotalPrice,
   type ProductDetails,
 } from "@/lib/products";
 
@@ -31,7 +32,11 @@ function buildRows(products: ProductDetails[]): CompareRow[] {
 
   return [
     {
-      label: "Цена",
+      label: "Цена изделия",
+      values: products.map((p) => formatPrice(getProductTotalPrice(p, null))),
+    },
+    {
+      label: "Цена за грамм",
       values: products.map((p) => formatPrice(p.price)),
     },
     {
