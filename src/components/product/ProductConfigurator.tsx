@@ -107,15 +107,17 @@ export function ProductConfigurator({ product }: ProductConfiguratorProps) {
               )}
             </div>
           </div>
-          <div>
-            <p className="text-xs tracking-[0.15em] uppercase text-brand-muted mb-1">
-              Цена за грамм
-            </p>
-            <p className="font-heading text-xl md:text-2xl text-brand-olive-dark">
-              {formatPrice(pricePerGram)}
-              <span className="ml-1 text-sm font-body text-brand-muted">/ г</span>
-            </p>
-          </div>
+          {product.category !== "cords" ? (
+            <div>
+              <p className="text-xs tracking-[0.15em] uppercase text-brand-muted mb-1">
+                Цена за грамм
+              </p>
+              <p className="font-heading text-xl md:text-2xl text-brand-olive-dark">
+                {formatPrice(pricePerGram)}
+                <span className="ml-1 text-sm font-body text-brand-muted">/ г</span>
+              </p>
+            </div>
+          ) : null}
         </div>
         {product.inStock === false ? (
           <p className="mt-2 text-sm font-medium text-brand-terracotta">

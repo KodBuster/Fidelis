@@ -409,24 +409,28 @@ export function getProductWeightGrams(
 
 /**
  * Цена изделия = цена за грамм × вес.
- * Если вес неизвестен — возвращает цену за грамм (как есть в AdvantShop).
+ * Для категории «Шнурки» цена AdvantShop уже за изделие — вес не умножаем.
+ * Если вес неизвестен — возвращает цену AdvantShop как есть.
  */
 export function getProductTotalPrice(
   product: Pick<
     ProductDetails,
-    "price" | "sizePrices" | "weightGrams" | "sizeWeightGrams"
+    "price" | "sizePrices" | "weightGrams" | "sizeWeightGrams" | "category"
   >,
   sizeValue: string | null,
 ): number {
-  const pricePerGram = getProductSizePrice(product, sizeValue);
+  const unitPrice = getProductSizePrice(product, sizeValue);
+  if (product.category === "cords") {
+    return Math.round(unitPrice);
+  }
   const weight = getProductWeightGrams(product, sizeValue);
-  if (!weight) return pricePerGram;
-  return Math.round(pricePerGram * weight);
+  if (!weight) return unitPrice;
+  return Math.round(unitPrice * weight);
 }
 
-/** Цена изделия для карточек каталога (цена AdvantShop = за грамм). */
+/** Цена изделия для карточек каталога (обычно AdvantShop = за грамм; шнурки — за изделие). */
 export function getCatalogProductTotalPrice(
-  product: Pick<Product, "price" | "weightGrams">,
+  product: Pick<Product, "price" | "weightGrams" | "category">,
 ): number {
   if (
     typeof product.price !== "number" ||
@@ -434,6 +438,9 @@ export function getCatalogProductTotalPrice(
     product.price <= 0
   ) {
     return 0;
+  }
+  if (product.category === "cords") {
+    return Math.round(product.price);
   }
   const weight = parseWeightGramsValue(product.weightGrams);
   if (!weight) return Math.round(product.price);
