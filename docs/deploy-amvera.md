@@ -11,7 +11,11 @@
 
 Сборка: `amvera.yaml` → `npm ci --include=dev && npm run build`, артефакт `amvera-bundle` → `/`, запуск: `node amvera-bundle/server.js`, порт **80**.
 
-В UI Amvera часто можно указать **только один** ключ artifacts — используй `amvera-bundle` → `/` (не `*` и не `.next`). Тариф не ниже **Стандартный** (2.5 ГБ).
+В UI Amvera:
+- **artifacts:** один ключ `amvera-bundle` → `/`
+- **command:** `node amvera-bundle/server.js` (не `sh -c ...` — shell в runtime нет)
+- тариф не ниже **Стандартный** (2.5 ГБ)
+- env: `HOSTNAME=0.0.0.0`, `PORT=80`
 
 ---
 

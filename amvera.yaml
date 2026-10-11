@@ -17,8 +17,8 @@ build:
     "amvera-bundle": /
 
 run:
-  # cwd = amvera-bundle — корректные пути к .next/static и public
-  command: sh -c "cd amvera-bundle && exec node server.js"
+  # Без sh -c: в runtime Amvera shell часто недоступен → CrashLoopBackOff.
+  command: node amvera-bundle/server.js
   containerPort: 80
   # Счётчик заказов (src/lib/order-sequence.ts) пишет в /data при AMVERA=1
   persistenceMount: /data
