@@ -4,6 +4,7 @@ import { join } from "node:path";
 const standaloneDir = ".next/standalone";
 /** Нескрытая папка для Amvera (в UI можно указать только один ключ artifacts). */
 const amveraBundleDir = "amvera-bundle";
+const amveraRunSrc = "scripts/amvera-run.mjs";
 
 if (!existsSync(standaloneDir)) {
   console.error("Missing .next/standalone — run next build with output: standalone");
@@ -20,4 +21,10 @@ if (existsSync("certs")) {
 rmSync(amveraBundleDir, { recursive: true, force: true });
 cpSync(standaloneDir, amveraBundleDir, { recursive: true });
 
-console.log("Standalone bundle prepared →", amveraBundleDir);
+if (!existsSync(amveraRunSrc)) {
+  console.error("Missing", amveraRunSrc);
+  process.exit(1);
+}
+cpSync(amveraRunSrc, join(amveraBundleDir, "run.mjs"));
+
+console.log("Standalone bundle prepared →", amveraBundleDir, "+ run.mjs");

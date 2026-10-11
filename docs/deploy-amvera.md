@@ -9,31 +9,27 @@
 2. Форк [dmitry76543/Fidelis](https://github.com/dmitry76543/Fidelis) синхронизируется с upstream.
 3. Amvera деплоит из форка `dmitry76543/Fidelis` (ветка `main`).
 
-Сборка: `amvera.yaml` → `npm ci --include=dev && npm run build`, артефакт `amvera-bundle` → `/`, запуск: `node amvera-bundle/server.js`, порт **80**.
+## Конфиг в UI Amvera (один ключ artifacts)
 
-В UI Amvera:
-- **artifacts:** один ключ `amvera-bundle` → `/`
-- **command:** `node amvera-bundle/server.js` (не `sh -c ...` — shell в runtime нет)
-- тариф не ниже **Стандартный** (2.5 ГБ)
-- env: `HOSTNAME=0.0.0.0`, `PORT=80`
+| Поле | Значение |
+| --- | --- |
+| окружение | Node.js / npm / **20** |
+| additionalCommands | `npm ci --include=dev && npm run build` |
+| artifacts ключ | `*` |
+| artifacts значение | `/` |
+| command | `node amvera-bundle/run.mjs` |
+| persistenceMount | `/data` |
+| containerPort | `80` |
 
----
+**Нельзя:** `sh -c ...` — в runtime нет shell → CrashLoopBackOff.
 
-## 1. Деплой после изменений
-
-```bash
-git push origin main
-```
-
-Затем на GitHub: **Sync fork** у `dmitry76543/Fidelis` → Amvera подхватит push автоматически.
+Сборка кладёт standalone в нескрытую папку `amvera-bundle/` (+ `run.mjs`).
 
 ---
 
-## 2. Переменные окружения (панель → Переменные)
+## Переменные окружения
 
-Переменные из панели **недоступны на этапе сборки**, только при запуске контейнера. После изменений — **перезапуск**.
-
-На Amvera **нельзя** использовать кавычки в значениях. Category map — только CSV.
+Без кавычек. После изменений — перезапуск.
 
 | Переменная | Значение | Тип |
 | --- | --- | --- |
@@ -47,43 +43,27 @@ git push origin main
 | `SITE_URL` | публичный URL витрины (Amvera или свой домен) | обычная |
 | `ADVANTSHOP_ORDER_SOURCE` | `fidelis` | обычная (опционально) |
 
-`ADVANTSHOP_CATEGORY_MAP` (без кавычек и пробелов вокруг `:` / `,`):
+`ADVANTSHOP_CATEGORY_MAP`:
 
 ```
 rings:koltso,ankle-bracelets:braslety-na-nogu,bracelets:braslet,necklaces:kole,pendants:podveski,chain-pendants:kulon-na-tsepi,earrings:sergi,cords:shnurki
 ```
 
-Ключи API — из локального `.env.local` (в git не коммитить).
-
-Опционально позже: `YOOKASSA_*`, `MAX_*`, `PHOTTA_*`, `ADVANTSHOP_STORE_COOKIE` (если картинки с техдомена отдают HTML).
-
 ---
 
-## 3. Проверка после деплоя
+## Если CrashLoopBackOff
 
-```bash
-curl -I https://<имя>.amvera.io/
-curl https://<имя>.amvera.io/shop
-```
-
-Ожидается HTTP 200. Каталог может быть пустым, пока в AdvantShop нет товаров — это нормально: API уже отвечает 0 products.
-
-В логах Amvera не должно быть `ADVANTSHOP_* is not configured` и падений на `Check apikey`.
-
----
-
-## 4. Домен
-
-1. Amvera → **Домены** → добавить свой домен.
-2. DNS: CNAME/A по подсказке Amvera.
-3. Обновить `SITE_URL` и перезапустить контейнер.
+1. Открой **лог приложения** (не системы) — там текст ошибки Node.
+2. Проверь command = `node amvera-bundle/run.mjs` (без `sh`).
+3. Sync fork `dmitry76543/Fidelis` → пересобери.
+4. В логе сборки должно быть: `Standalone bundle prepared → amvera-bundle + run.mjs`.
 
 ---
 
 ## Чеклист
 
-- [ ] Push в `KodBuster/Fidelis`, Sync fork `dmitry76543/Fidelis`
-- [ ] Сборка Amvera зелёная
-- [ ] Env: BASE_URL, оба API-ключа, CATEGORY_MAP (CSV), PORT, HOSTNAME, SITE_URL
-- [ ] Контейнер перезапущен после env
-- [ ] `/shop` открывается без 502
+- [ ] Push + Sync fork
+- [ ] UI: artifacts `*` → `/`, command `node amvera-bundle/run.mjs`
+- [ ] Env: HOSTNAME, PORT, AdvantShop, SITE_URL
+- [ ] Лог приложения: `Amvera start:` и `Ready`
+- [ ] Открывается домен с вкладки «Домены»

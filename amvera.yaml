@@ -9,16 +9,13 @@ meta:
     version: "20"
 
 build:
-  # npm install уже делает Amvera; ci + build — чтобы в артефакт попал standalone.
   additionalCommands: npm ci --include=dev && npm run build
-  # В UI Amvera часто можно указать только один ключ artifacts.
-  # amvera-bundle — нескрытая копия .next/standalone (см. prepare-standalone.mjs).
+  # Один ключ в UI: "*" — после build попадает нескрытый amvera-bundle/
   artifacts:
-    "amvera-bundle": /
+    "*": /
 
 run:
-  # Без sh -c: в runtime Amvera shell часто недоступен → CrashLoopBackOff.
-  command: node amvera-bundle/server.js
+  # Не использовать sh -c — shell в runtime Amvera часто отсутствует
+  command: node amvera-bundle/run.mjs
   containerPort: 80
-  # Счётчик заказов (src/lib/order-sequence.ts) пишет в /data при AMVERA=1
   persistenceMount: /data
