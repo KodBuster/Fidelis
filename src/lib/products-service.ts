@@ -44,7 +44,7 @@ const getCachedGiftCatalog = unstable_cache(
     if (isAdvantShopConfigured()) {
       const lists = await Promise.all(
         GIFT_SOURCE_CATEGORIES.map((category) =>
-          getCachedAdvantShopCatalog(category, "default")
+          getCachedAdvantShopCatalog(category, "default", "full")
         )
       );
       return pickGiftProducts(lists.flat(), sort, periodId);
