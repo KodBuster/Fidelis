@@ -17,7 +17,8 @@ build:
     "amvera-bundle": /
 
 run:
-  command: node amvera-bundle/server.js
+  # cwd = amvera-bundle — корректные пути к .next/static и public
+  command: sh -c "cd amvera-bundle && exec node server.js"
   containerPort: 80
   # Счётчик заказов (src/lib/order-sequence.ts) пишет в /data при AMVERA=1
   persistenceMount: /data

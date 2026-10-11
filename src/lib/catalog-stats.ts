@@ -85,7 +85,8 @@ function buildCategoryStat(
 
 async function loadProductsForCategory(slug: CategorySlug): Promise<Product[]> {
   try {
-    return await getCatalogProducts({ category: slug });
+    // Без enrichStock: иначе главная ждёт сотни details и Amvera отдаёт 502.
+    return await getCatalogProducts({ category: slug, enrichStock: false });
   } catch (error) {
     console.error(`Catalog unavailable for category "${slug}":`, error);
     return [];

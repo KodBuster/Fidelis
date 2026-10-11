@@ -26,10 +26,14 @@ import {
 } from "@/lib/products";
 
 const getCachedAdvantShopCatalog = unstable_cache(
-  async (categoryKey: string, sort: string) => {
+  async (categoryKey: string, sort: string, mode: string) => {
     const category =
       categoryKey === "all" ? undefined : (categoryKey as CategorySlug);
-    return fetchAdvantShopProducts({ category, sort });
+    return fetchAdvantShopProducts({
+      category,
+      sort,
+      enrichStock: mode !== "light",
+    });
   },
   ["advantshop-catalog"],
   { revalidate: CATALOG_REVALIDATE_SECONDS, tags: ["catalog"] }
@@ -67,14 +71,18 @@ export function getGiftCatalogCacheSeconds(): number {
 export async function getCatalogProducts(options?: {
   category?: CategorySlug;
   sort?: string;
+  /** false — быстрый list без details (главная). */
+  enrichStock?: boolean;
 }): Promise<Product[]> {
   const sort = options?.sort ?? "default";
+  const mode = options?.enrichStock === false ? "light" : "full";
 
   if (isAdvantShopConfigured()) {
     try {
       return await getCachedAdvantShopCatalog(
         options?.category ?? "all",
-        sort
+        sort,
+        mode,
       );
     } catch (error) {
       console.error("AdvantShop catalog unavailable:", error);

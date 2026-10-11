@@ -1,33 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BRAND_NAME_CAPS, BRAND_TAGLINE } from "@/lib/brand";
-import {
-  STOREFRONT_COLLECTIONS,
-  filterProductsByManufacturer,
-} from "@/lib/collections";
-import { getCatalogProducts } from "@/lib/products-service";
-import type { Product } from "@/lib/products";
+import { STOREFRONT_COLLECTIONS } from "@/lib/collections";
 
-export async function Hero() {
-  let catalog: Product[] = [];
-  try {
-    catalog = await getCatalogProducts();
-  } catch (error) {
-    console.error("Hero collections catalog unavailable:", error);
-  }
-
-  const collections = STOREFRONT_COLLECTIONS.map((collection) => {
-    const products = collection.manufacturer
-      ? filterProductsByManufacturer(catalog, collection.manufacturer)
-      : [];
-    const cover = products[0]?.image ?? collection.fallbackImage;
-
-    return {
-      ...collection,
-      image: cover,
-      count: products.length,
-    };
-  });
+export function Hero() {
+  const collections = STOREFRONT_COLLECTIONS.map((collection) => ({
+    ...collection,
+    image: collection.fallbackImage,
+  }));
 
   return (
     <section className="relative border-b border-brand-sand bg-brand-page">
@@ -65,16 +45,6 @@ export async function Hero() {
                 <h3 className="font-heading text-base md:text-xl text-[#F4F5F7]">
                   {collection.title}
                 </h3>
-                {collection.manufacturer && collection.count > 0 ? (
-                  <p className="mt-1 text-xs text-[#F4F5F7]/75">
-                    {collection.count}{" "}
-                    {collection.count === 1
-                      ? "модель"
-                      : collection.count < 5
-                        ? "модели"
-                        : "моделей"}
-                  </p>
-                ) : null}
               </div>
             </Link>
           ))}

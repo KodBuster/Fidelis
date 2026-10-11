@@ -319,8 +319,12 @@ async function mapCatalogItems(
   category: CategorySlug,
   setMap: Record<string, string[]>,
   includeOutOfStock = true,
+  enrichStock = true,
 ): Promise<Product[]> {
-  const stockMap = await loadStockInfoMap(items, category);
+  // enrichStock=false — только list API (главная/статы), без N запросов details.
+  const stockMap = enrichStock
+    ? await loadStockInfoMap(items, category)
+    : new Map<number, AdvantShopStockInfo>();
 
   // Товары с остатком ≤ 0 тоже показываем — на карточке кнопка «Скоро будет».
   const visible = includeOutOfStock
@@ -348,10 +352,16 @@ export async function fetchAdvantShopProducts(options?: {
   sort?: string;
   /** Если false — скрывать товары с нулевым остатком. По умолчанию показываем все. */
   includeOutOfStock?: boolean;
+  /**
+   * Если false — не ходить в /api/products/{id} за весом/брендом (быстро для главной).
+   * По умолчанию true (каталог/карточки с ценой изделия).
+   */
+  enrichStock?: boolean;
 }): Promise<Product[]> {
   const categoryMap = getCategoryUrlMap();
   const sort = SORT_MAP[options?.sort ?? "default"] ?? "NoSorting";
-  const setMap = await getCachedSetMap();
+  const enrichStock = options?.enrichStock !== false;
+  const setMap = enrichStock ? await getCachedSetMap() : {};
   const includeOutOfStock = options?.includeOutOfStock !== false;
 
   if (options?.category) {
@@ -363,7 +373,13 @@ export async function fetchAdvantShopProducts(options?: {
         url: categoryUrl,
         sorting: sort,
       });
-      return mapCatalogItems(items, options.category, setMap, includeOutOfStock);
+      return mapCatalogItems(
+        items,
+        options.category,
+        setMap,
+        includeOutOfStock,
+        enrichStock,
+      );
     } catch (error) {
       if (isMissingCategoryError(error)) {
         console.warn(
@@ -385,7 +401,13 @@ export async function fetchAdvantShopProducts(options?: {
 
       try {
         const items = await fetchAllCatalogProducts({ url, sorting: sort });
-        return mapCatalogItems(items, slug, setMap, includeOutOfStock);
+        return mapCatalogItems(
+          items,
+          slug,
+          setMap,
+          includeOutOfStock,
+          enrichStock,
+        );
       } catch (error) {
         if (isMissingCategoryError(error)) {
           console.warn(
