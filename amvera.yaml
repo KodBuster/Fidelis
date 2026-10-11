@@ -11,14 +11,13 @@ meta:
 build:
   # npm install уже делает Amvera; ci + build — чтобы в артефакт попал standalone.
   additionalCommands: npm ci --include=dev && npm run build
-  # Маска "*" не захватывает скрытую папку .next — без неё контейнер
-  # пересобирает Next на старте и падает по SIGTERM/OOM.
+  # В UI Amvera часто можно указать только один ключ artifacts.
+  # amvera-bundle — нескрытая копия .next/standalone (см. prepare-standalone.mjs).
   artifacts:
-    "*": /
-    ".next": /
+    "amvera-bundle": /
 
 run:
-  command: node scripts/start-server.mjs
+  command: node amvera-bundle/server.js
   containerPort: 80
   # Счётчик заказов (src/lib/order-sequence.ts) пишет в /data при AMVERA=1
   persistenceMount: /data

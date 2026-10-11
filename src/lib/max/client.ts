@@ -32,6 +32,8 @@ type MaxApiResult = {
 function resolveCertsDir(): string | null {
   const candidates = [
     join(process.cwd(), "certs"),
+    join(process.cwd(), "amvera-bundle", "certs"),
+    join(process.cwd(), ".next", "standalone", "certs"),
     join(process.cwd(), "..", "certs"),
   ];
   for (const dir of candidates) {
