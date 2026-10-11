@@ -9,7 +9,13 @@ meta:
     version: "20"
 
 build:
+  # npm install уже делает Amvera; ci + build — чтобы в артефакт попал standalone.
   additionalCommands: npm ci --include=dev && npm run build
+  # Маска "*" не захватывает скрытую папку .next — без неё контейнер
+  # пересобирает Next на старте и падает по SIGTERM/OOM.
+  artifacts:
+    "*": /
+    ".next": /
 
 run:
   command: node scripts/start-server.mjs

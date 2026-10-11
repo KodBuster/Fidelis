@@ -9,7 +9,9 @@
 2. Форк [dmitry76543/Fidelis](https://github.com/dmitry76543/Fidelis) синхронизируется с upstream.
 3. Amvera деплоит из форка `dmitry76543/Fidelis` (ветка `main`).
 
-Сборка: `amvera.yaml` → `npm ci --include=dev && npm run build`, запуск: `node scripts/start-server.mjs`, порт **80**.
+Сборка: `amvera.yaml` → `npm ci --include=dev && npm run build`, артефакты `*` + `.next`, запуск: `node scripts/start-server.mjs`, порт **80**.
+
+Если в логах `Standalone bundle missing` / `SIGTERM` на старте — в панели Amvera не должно быть своего `artifacts`, только из `amvera.yaml` (обязательно с `.next`). Тариф не ниже **Стандартный** (2.5 ГБ).
 
 ---
 
