@@ -11,10 +11,11 @@ export type StorefrontCollection = {
 
 export const STOREFRONT_COLLECTIONS: StorefrontCollection[] = [
   {
-    id: "collection-1",
-    title: "Коллекция 1",
-    href: "/shop?collection=1",
-    fallbackImage: "/images/product-ring.webp",
+    id: "1210-1",
+    title: "1210-1",
+    href: "/shop?manufacturer=1210-1",
+    manufacturer: "1210-1",
+    fallbackImage: "/images/collections/1210-1.jpg",
   },
   {
     id: "collection-2",

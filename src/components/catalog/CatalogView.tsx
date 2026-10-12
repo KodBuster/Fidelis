@@ -118,20 +118,17 @@ export function CatalogView({
   const products = filterProducts(filters, catalogProducts);
   const activeFilterCount = countActiveFilters(filters);
 
+  const manufacturerTitle = filters.manufacturer?.trim() || "";
   const pageTitle = category
     ? CATEGORIES[category].titlePlural
-    : filters.manufacturer?.toLowerCase() === "prosecco"
-      ? "БРЮТ"
-      : filters.manufacturer
-        ? filters.manufacturer
-        : "Все украшения";
+    : manufacturerTitle
+      ? manufacturerTitle
+      : "Все украшения";
   const pageDescription = category
     ? CATEGORIES[category].description
-    : filters.manufacturer?.toLowerCase() === "prosecco"
-      ? "Коллекция БРЮТ: украшения из серебра 925"
-      : filters.manufacturer
-        ? `Коллекция ${filters.manufacturer}: украшения из серебра 925`
-        : "Каталог украшений из серебра 925";
+    : manufacturerTitle
+      ? `Коллекция ${manufacturerTitle}: украшения из серебра 925`
+      : "Каталог украшений из серебра 925";
 
   return (
     <section className="py-8 md:py-12">
