@@ -1,5 +1,18 @@
 import { getAdvantShopBaseUrl, isAdvantShopConfigured } from "./config";
 
+/** Баннер вместо фото, когда у товара нет изображения. */
+export const PRODUCT_IMAGE_PLACEHOLDER = "/images/photo-coming-soon.svg";
+
+export function isMissingProductPhoto(src?: string | null): boolean {
+  if (!src?.trim()) return true;
+  const lower = src.toLowerCase();
+  return (
+    lower.includes("nophoto") ||
+    src === PRODUCT_IMAGE_PLACEHOLDER ||
+    lower.endsWith("/photo-coming-soon.svg")
+  );
+}
+
 const ADVANTSHOP_IMAGE_HOSTS = [
   "advantme.ru",
   "on-advantshop.net",
@@ -54,7 +67,8 @@ export function isAllowedAdvantShopImageUrl(src: string): boolean {
 }
 
 export function resolveProductImageUrl(src: string): string {
-  if (!src || src.startsWith("/")) return src;
+  if (isMissingProductPhoto(src)) return PRODUCT_IMAGE_PLACEHOLDER;
+  if (src.startsWith("/")) return src;
 
   if (isAdvantShopConfigured() && isAdvantShopImageUrl(src)) {
     return `/api/advantshop-image?src=${encodeURIComponent(src)}`;
@@ -64,5 +78,8 @@ export function resolveProductImageUrl(src: string): string {
 }
 
 export function resolveProductImages(urls: string[]): string[] {
-  return urls.map(resolveProductImageUrl);
+  const resolved = urls
+    .map(resolveProductImageUrl)
+    .filter((url) => !isMissingProductPhoto(url));
+  return resolved.length ? resolved : [PRODUCT_IMAGE_PLACEHOLDER];
 }

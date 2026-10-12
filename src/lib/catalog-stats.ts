@@ -53,12 +53,16 @@ function pickCategoryCover(products: Product[], slug: CategorySlug): string {
     (product) =>
       product.image &&
       !product.image.includes("nophoto") &&
+      !product.image.includes("photo-coming-soon") &&
       product.inStock !== false,
   );
   if (withImage?.image) return withImage.image;
 
   const anyImage = products.find(
-    (product) => product.image && !product.image.includes("nophoto"),
+    (product) =>
+      product.image &&
+      !product.image.includes("nophoto") &&
+      !product.image.includes("photo-coming-soon"),
   );
   return anyImage?.image ?? CATEGORY_IMAGES[slug];
 }

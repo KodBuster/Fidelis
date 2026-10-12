@@ -17,7 +17,11 @@ import {
 import { resolveSetArtNos } from "@/lib/product-complect";
 import { buildSeoProductSlug } from "@/lib/product-slug";
 import { normalizeProductDescription } from "@/lib/product-description";
-import { resolveProductImageUrl, resolveProductImages } from "./images";
+import {
+  PRODUCT_IMAGE_PLACEHOLDER,
+  resolveProductImageUrl,
+  resolveProductImages,
+} from "./images";
 import {
   getAdvantShopDetailsStockInfo,
   getAdvantShopStockAmount,
@@ -71,7 +75,7 @@ export function extractProductSizes(
     .filter((size) => !Number.isNaN(size));
 }
 
-const DEFAULT_IMAGE = "/images/product-ring.webp";
+const DEFAULT_IMAGE = PRODUCT_IMAGE_PLACEHOLDER;
 
 const STONE_VARIANT_WEIGHTS = [0.1, 0.2, 0.3, 0.5, 1] as const;
 
