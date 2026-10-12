@@ -15,7 +15,7 @@ const NAV_ITEMS = [
   { label: "Подвески", href: "/shop/pendants" },
   { label: "Кулон на цепи", href: "/shop/chain-pendants" },
   { label: "Серьги", href: "/shop/earrings" },
-  { label: "Шнурки", href: "/shop/cords" },
+  { label: "Броши", href: "/shop/brooches" },
 ];
 
 const EXTRA_LINKS = [

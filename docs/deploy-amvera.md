@@ -46,7 +46,7 @@
 `ADVANTSHOP_CATEGORY_MAP`:
 
 ```
-rings:koltso,ankle-bracelets:braslety-na-nogu,bracelets:braslet,necklaces:kole,pendants:podveski,chain-pendants:kulon-na-tsepi,earrings:sergi,cords:shnurki
+rings:koltso,ankle-bracelets:braslety-na-nogu,bracelets:braslet,necklaces:kole,pendants:podveska,chain-pendants:kulon-na-tsepi,earrings:sergi,brooches:brosh
 ```
 
 ---

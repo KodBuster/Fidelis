@@ -9,7 +9,7 @@ const COMPLECT_CATEGORY_ORDER: CategorySlug[] = [
   "necklaces",
   "bracelets",
   "ankle-bracelets",
-  "cords",
+  "brooches",
 ];
 
 function normalizeArtNo(value: string): string {

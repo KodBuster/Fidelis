@@ -37,16 +37,16 @@ const CYRILLIC_TO_LATIN: Record<string, string> = {
 };
 
 const GENERIC_LEGACY_SLUG =
-  /^(koltsa|koltso|sergi|kole|podveski|podveska|braslety-na-ruku|braslety-na-nogu|braslet|kulon-na-tsepi|shnurki|podarok)(-\d+)?$/i;
+  /^(koltsa|koltso|sergi|kole|podveski|podveska|braslety-na-ruku|braslety-na-nogu|braslet|kulon-na-tsepi|shnurki|brosh|podarok)(-\d+)?$/i;
 
 const CATEGORY_FALLBACK: Record<CategorySlug, string> = {
   rings: "koltso",
   earrings: "sergi",
-  pendants: "podveski",
+  pendants: "podveska",
   necklaces: "kole",
   bracelets: "braslet",
   "ankle-bracelets": "braslety-na-nogu",
-  cords: "shnurki",
+  brooches: "brosh",
   "chain-pendants": "kulon-na-tsepi",
 };
 

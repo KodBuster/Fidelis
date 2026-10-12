@@ -191,7 +191,7 @@ const FEATURED_CATEGORY_SLUGS: CategorySlug[] = [
   "necklaces",
   "bracelets",
   "ankle-bracelets",
-  "cords",
+  "brooches",
 ];
 
 function pickRandomProduct(products: Product[]): Product | undefined {

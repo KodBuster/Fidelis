@@ -25,7 +25,7 @@ const CATEGORY_IMAGES: Record<CategorySlug, string> = {
   necklaces: "/images/categories/pendants.jpg",
   pendants: "/images/categories/pendants.jpg",
   earrings: "/images/categories/earrings.jpg",
-  cords: "/images/product-necklace.webp",
+  brooches: "/images/product-necklace.webp",
   "chain-pendants": "/images/categories/pendants.jpg",
 };
 

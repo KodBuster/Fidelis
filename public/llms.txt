@@ -9,7 +9,7 @@
 - /shop/necklaces — колье
 - /shop/pendants — подвески
 - /shop/earrings — серьги
-- /shop/cords — шнурки
+- /shop/brooches — броши
 
 ## Покупателям
 - /shipping — доставка СДЭК и оплата по счёту

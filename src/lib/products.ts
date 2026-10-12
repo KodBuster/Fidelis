@@ -5,7 +5,7 @@ export type CategorySlug =
   | "necklaces"
   | "bracelets"
   | "ankle-bracelets"
-  | "cords"
+  | "brooches"
   | "chain-pendants";
 
 /** Категории с выбором размера (кольца и браслеты). */
@@ -124,10 +124,10 @@ export const CATEGORIES: Record<
     titlePlural: "Серьги",
     description: "Серьги-пусеты и подвесные модели из серебра 925",
   },
-  cords: {
-    title: "Шнурки",
-    titlePlural: "Шнурки",
-    description: "Шнурки для подвесок и кулонов",
+  brooches: {
+    title: "Броши",
+    titlePlural: "Броши",
+    description: "Броши из серебра 925",
   },
   "chain-pendants": {
     title: "Кулон на цепи",
@@ -409,7 +409,6 @@ export function getProductWeightGrams(
 
 /**
  * Цена изделия = цена за грамм × вес.
- * Для категории «Шнурки» цена AdvantShop уже за изделие — вес не умножаем.
  * Если вес неизвестен — возвращает цену AdvantShop как есть.
  */
 export function getProductTotalPrice(
@@ -420,15 +419,12 @@ export function getProductTotalPrice(
   sizeValue: string | null,
 ): number {
   const unitPrice = getProductSizePrice(product, sizeValue);
-  if (product.category === "cords") {
-    return Math.round(unitPrice);
-  }
   const weight = getProductWeightGrams(product, sizeValue);
   if (!weight) return unitPrice;
   return Math.round(unitPrice * weight);
 }
 
-/** Цена изделия для карточек каталога (обычно AdvantShop = за грамм; шнурки — за изделие). */
+/** Цена изделия для карточек каталога (AdvantShop = за грамм × вес). */
 export function getCatalogProductTotalPrice(
   product: Pick<Product, "price" | "weightGrams" | "category">,
 ): number {
@@ -438,9 +434,6 @@ export function getCatalogProductTotalPrice(
     product.price <= 0
   ) {
     return 0;
-  }
-  if (product.category === "cords") {
-    return Math.round(product.price);
   }
   const weight = parseWeightGramsValue(product.weightGrams);
   if (!weight) return Math.round(product.price);
@@ -459,7 +452,7 @@ const CATEGORY_IMAGES: Record<CategorySlug, string[]> = {
   necklaces: ["/images/product-necklace.webp"],
   pendants: ["/images/product-necklace.webp"],
   earrings: ["/images/product-earrings.webp"],
-  cords: ["/images/product-necklace.webp", "/images/product-bracelet.webp"],
+  brooches: ["/images/product-necklace.webp", "/images/product-bracelet.webp"],
   "chain-pendants": ["/images/product-necklace.webp"],
 };
 

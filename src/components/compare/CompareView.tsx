@@ -37,9 +37,7 @@ function buildRows(products: ProductDetails[]): CompareRow[] {
     },
     {
       label: "Цена за грамм",
-      values: products.map((p) =>
-        p.category === "cords" ? "—" : formatPrice(p.price),
-      ),
+      values: products.map((p) => formatPrice(p.price)),
     },
     {
       label: "Карат (базовый)",

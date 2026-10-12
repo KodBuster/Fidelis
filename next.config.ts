@@ -87,6 +87,7 @@ const nextConfig: NextConfig = {
       { source: "/blog/:path*", destination: "/", permanent: false },
       { source: "/showroom", destination: "/", permanent: false },
       { source: "/shop/gifts", destination: "/shop", permanent: false },
+      { source: "/shop/cords", destination: "/shop/brooches", permanent: true },
     ];
   },
 };

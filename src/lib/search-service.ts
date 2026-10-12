@@ -90,10 +90,10 @@ const SEARCH_CATEGORY_SYNONYMS: Record<string, CategorySlug[]> = {
   "браслеты на ногу": ["ankle-bracelets"],
   bracelet: ["bracelets", "ankle-bracelets"],
   bracelets: ["bracelets"],
-  шнурок: ["cords"],
-  шнурки: ["cords"],
-  cord: ["cords"],
-  cords: ["cords"],
+  брошь: ["brooches"],
+  броши: ["brooches"],
+  brooch: ["brooches"],
+  brooches: ["brooches"],
 };
 
 function searchCatalogByText(catalog: Product[], query: string): Product[] {
