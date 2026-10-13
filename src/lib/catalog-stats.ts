@@ -2,7 +2,6 @@ import {
   CATALOG_CATEGORY_SLUGS,
   CATEGORIES,
   formatPrice,
-  getCatalogProductTotalPrice,
   type CategorySlug,
   type Product,
 } from "@/lib/products";
@@ -42,12 +41,17 @@ function formatModelCount(count: number): string {
   return `${count} моделей`;
 }
 
-/** Минимальная цена изделия (цена за грамм × вес). */
-function getMinProductPrice(products: Product[]): number {
+/** Минимальная цена за грамм (для подписей «от … ₽ / гр.» на главной). */
+function getMinPricePerGram(products: Product[]): number {
   return products.reduce((min, product) => {
-    const total = getCatalogProductTotalPrice(product);
-    if (total <= 0) return min;
-    return Math.min(min, total);
+    if (
+      typeof product.price !== "number" ||
+      !Number.isFinite(product.price) ||
+      product.price <= 0
+    ) {
+      return min;
+    }
+    return Math.min(min, product.price);
   }, Number.POSITIVE_INFINITY);
 }
 
@@ -79,7 +83,7 @@ function buildCategoryStat(
   categoryProducts: Product[],
 ): CategoryStat {
   const count = categoryProducts.length;
-  const minPrice = getMinProductPrice(categoryProducts);
+  const minPrice = getMinPricePerGram(categoryProducts);
 
   return {
     slug,
@@ -87,7 +91,7 @@ function buildCategoryStat(
     countLabel: count > 0 ? formatModelCount(count) : "Скоро в каталоге",
     priceFromLabel:
       count > 0 && Number.isFinite(minPrice)
-        ? `от ${formatPrice(minPrice)}`
+        ? `от ${formatPrice(minPrice)} / гр.`
         : "Уточняйте цену",
     href: `/shop/${slug}`,
     image: pickCategoryCover(categoryProducts, slug),

@@ -24,7 +24,7 @@ export const STOREFRONT_COLLECTIONS: StorefrontCollection[] = [
     title: "1210-2",
     href: "/shop?manufacturer=1210-2",
     manufacturer: "1210-2",
-    fallbackImage: "/images/collections/1210-2.jpg",
+    fallbackImage: "/images/collections/1210-2-v2.jpg",
   },
   {
     id: "collection-3",
