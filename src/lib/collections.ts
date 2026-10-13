@@ -30,10 +30,11 @@ export const STOREFRONT_COLLECTIONS: StorefrontCollection[] = [
     imageFit: "contain",
   },
   {
-    id: "collection-3",
-    title: "Коллекция 3",
-    href: "#",
-    comingSoon: true,
+    id: "1310-1",
+    title: "1310-1",
+    href: "/shop?manufacturer=1310-1",
+    manufacturer: "1310-1",
+    fallbackImage: "/images/collections/1310-1.jpg",
   },
   {
     id: "collection-4",
