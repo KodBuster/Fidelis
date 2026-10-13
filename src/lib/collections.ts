@@ -6,7 +6,9 @@ export type StorefrontCollection = {
   href: string;
   /** Filter products by AdvantShop brand / manufacturer name. */
   manufacturer?: string;
-  fallbackImage: string;
+  fallbackImage?: string;
+  /** Плейсхолдер без фото и без товаров. */
+  comingSoon?: boolean;
 };
 
 export const STOREFRONT_COLLECTIONS: StorefrontCollection[] = [
@@ -27,26 +29,26 @@ export const STOREFRONT_COLLECTIONS: StorefrontCollection[] = [
   {
     id: "collection-3",
     title: "Коллекция 3",
-    href: "/shop?collection=3",
-    fallbackImage: "/images/product-necklace.webp",
+    href: "#",
+    comingSoon: true,
   },
   {
     id: "collection-4",
     title: "Коллекция 4",
-    href: "/shop?collection=4",
-    fallbackImage: "/images/product-bracelet.webp",
+    href: "#",
+    comingSoon: true,
   },
   {
     id: "collection-5",
     title: "Коллекция 5",
-    href: "/shop?collection=5",
-    fallbackImage: "/images/product-ring.webp",
+    href: "#",
+    comingSoon: true,
   },
   {
     id: "collection-6",
     title: "Коллекция 6",
-    href: "/shop?collection=6",
-    fallbackImage: "/images/product-earrings.webp",
+    href: "#",
+    comingSoon: true,
   },
 ];
 

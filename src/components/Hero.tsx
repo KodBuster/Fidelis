@@ -4,11 +4,6 @@ import { BRAND_NAME_CAPS, BRAND_TAGLINE } from "@/lib/brand";
 import { STOREFRONT_COLLECTIONS } from "@/lib/collections";
 
 export function Hero() {
-  const collections = STOREFRONT_COLLECTIONS.map((collection) => ({
-    ...collection,
-    image: collection.fallbackImage,
-  }));
-
   return (
     <section className="relative border-b border-brand-sand bg-brand-page">
       <h1 className="sr-only">
@@ -26,28 +21,46 @@ export function Hero() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
-          {collections.map((collection, index) => (
-            <Link
-              key={collection.id}
-              href={collection.href}
-              className="group relative aspect-[4/5] overflow-hidden rounded-xl bg-brand-surface shadow-sm transition-shadow hover:shadow-md touch-manipulation cursor-pointer"
-            >
-              <Image
-                src={collection.image}
-                alt={collection.title}
-                fill
-                priority={index < 2}
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-                sizes="(max-width: 768px) 50vw, 33vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-olive-dark/70 via-brand-olive-dark/10 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-3 md:p-5">
-                <h3 className="font-heading text-base md:text-xl text-[#F4F5F7]">
-                  {collection.title}
-                </h3>
-              </div>
-            </Link>
-          ))}
+          {STOREFRONT_COLLECTIONS.map((collection, index) => {
+            if (collection.comingSoon) {
+              return (
+                <div
+                  key={collection.id}
+                  className="relative flex aspect-[4/5] items-center justify-center overflow-hidden rounded-xl bg-brand-surface"
+                  aria-label={`${collection.title}: скоро`}
+                >
+                  <p className="font-heading text-xl md:text-2xl tracking-[0.2em] uppercase text-brand-muted">
+                    Скоро
+                  </p>
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={collection.id}
+                href={collection.href}
+                className="group relative aspect-[4/5] overflow-hidden rounded-xl bg-brand-surface shadow-sm transition-shadow hover:shadow-md touch-manipulation cursor-pointer"
+              >
+                {collection.fallbackImage ? (
+                  <Image
+                    src={collection.fallbackImage}
+                    alt={collection.title}
+                    fill
+                    priority={index < 2}
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                  />
+                ) : null}
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-olive-dark/70 via-brand-olive-dark/10 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-3 md:p-5">
+                  <h3 className="font-heading text-base md:text-xl text-[#F4F5F7]">
+                    {collection.title}
+                  </h3>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>
