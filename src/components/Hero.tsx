@@ -30,7 +30,7 @@ export function Hero() {
                   aria-label={`${collection.title}: скоро`}
                 >
                   <p className="font-heading text-xl md:text-2xl tracking-[0.2em] uppercase text-brand-muted">
-                    Скоро
+                    СКОРО
                   </p>
                 </div>
               );
