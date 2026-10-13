@@ -20,7 +20,7 @@ export type CategoryStat = {
 
 const CATEGORY_IMAGES: Record<CategorySlug, string> = {
   rings: "/images/categories/rings.jpg",
-  "ankle-bracelets": "/images/categories/bracelets.jpg",
+  "ankle-bracelets": "/images/categories/ankle-bracelets.png",
   bracelets: "/images/categories/bracelets.jpg",
   necklaces: "/images/categories/pendants.jpg",
   pendants: "/images/categories/pendants.jpg",
@@ -28,6 +28,9 @@ const CATEGORY_IMAGES: Record<CategorySlug, string> = {
   brooches: "/images/product-necklace.webp",
   "chain-pendants": "/images/categories/pendants.jpg",
 };
+
+/** Категории с фиксированной обложкой (не подменять фото товара). */
+const FIXED_CATEGORY_COVERS = new Set<CategorySlug>(["ankle-bracelets"]);
 
 function formatModelCount(count: number): string {
   const mod10 = count % 10;
@@ -49,6 +52,10 @@ function getMinProductPrice(products: Product[]): number {
 }
 
 function pickCategoryCover(products: Product[], slug: CategorySlug): string {
+  if (FIXED_CATEGORY_COVERS.has(slug)) {
+    return CATEGORY_IMAGES[slug];
+  }
+
   const withImage = products.find(
     (product) =>
       product.image &&
