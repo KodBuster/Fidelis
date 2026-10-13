@@ -48,7 +48,11 @@ export function Hero() {
                     alt={collection.title}
                     fill
                     priority={index < 2}
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className={
+                      collection.imageFit === "contain"
+                        ? "object-contain object-center transition-transform duration-500 group-hover:scale-105"
+                        : "object-cover transition-transform duration-500 group-hover:scale-105"
+                    }
                     sizes="(max-width: 768px) 50vw, 33vw"
                   />
                 ) : null}

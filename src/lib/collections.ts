@@ -7,6 +7,8 @@ export type StorefrontCollection = {
   /** Filter products by AdvantShop brand / manufacturer name. */
   manufacturer?: string;
   fallbackImage?: string;
+  /** Как вписывать фото в плитку 4:5. По умолчанию cover. */
+  imageFit?: "cover" | "contain";
   /** Плейсхолдер без фото и без товаров. */
   comingSoon?: boolean;
 };
@@ -25,6 +27,7 @@ export const STOREFRONT_COLLECTIONS: StorefrontCollection[] = [
     href: "/shop?manufacturer=1210-2",
     manufacturer: "1210-2",
     fallbackImage: "/images/collections/1210-2-v2.jpg",
+    imageFit: "contain",
   },
   {
     id: "collection-3",
