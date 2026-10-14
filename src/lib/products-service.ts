@@ -156,9 +156,8 @@ export async function getComplectProducts(
   product: Product,
   limit = 3
 ): Promise<Product[]> {
-  if (!product.setArtNos?.length) return [];
-
-  const catalog = await getCatalogProducts();
+  // Нужен manufacturer с details (enrichStock), иначе fallback по бренду пустой.
+  const catalog = await getCatalogProducts({ enrichStock: true });
   return getComplectSiblings(product, catalog, limit);
 }
 

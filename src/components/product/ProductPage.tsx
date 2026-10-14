@@ -113,7 +113,7 @@ export function ProductPage({
           </ProductSelectionProvider>
         </Suspense>
 
-        {complectProducts.length > 0 && product.setArtNos?.length ? (
+        {complectProducts.length > 0 ? (
           <ProductComplectSection products={complectProducts} />
         ) : null}
 
