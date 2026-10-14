@@ -1,10 +1,9 @@
-import { unstable_cache } from "next/cache";
 import type { CategorySlug, Product, ProductDetails } from "@/lib/products";
 import { findProductBySlug } from "@/lib/product-slug";
 import { parseDiamondWeightNumber } from "@/lib/product-weight";
 import { parseSetArtNosFromProperties } from "@/lib/product-complect";
 import { advantshopClientFetch, advantshopFetch } from "./client";
-import { getCategoryUrlMap, CATALOG_REVALIDATE_SECONDS } from "./config";
+import { getCategoryUrlMap } from "./config";
 import {
   mapCatalogProduct,
   mapProductDetails,
@@ -224,38 +223,6 @@ async function mapPool<T, R>(
   return results;
 }
 
-const getCachedSetMap = unstable_cache(
-  async (): Promise<Record<string, string[]>> => {
-    const categoryMap = getCategoryUrlMap();
-    const productIds = new Set<number>();
-
-    for (const url of Object.values(categoryMap)) {
-      const items = await fetchAllCatalogProducts({
-        url,
-        sorting: "NoSorting",
-      });
-      for (const item of items) {
-        productIds.add(item.productId);
-      }
-    }
-
-    const setMap: Record<string, string[]> = {};
-    const ids = [...productIds];
-
-    await mapPool(ids, 8, async (productId) => {
-      const properties = await fetchProductProperties(productId);
-      const setArtNos = parseSetArtNosFromProperties(properties);
-      if (setArtNos.length) {
-        setMap[String(productId)] = setArtNos;
-      }
-    });
-
-    return setMap;
-  },
-  ["advantshop-set-map"],
-  { revalidate: CATALOG_REVALIDATE_SECONDS, tags: ["catalog"] },
-);
-
 async function fetchProductStockInfo(
   productId: number,
   category: CategorySlug,
@@ -272,10 +239,12 @@ async function fetchProductStockInfo(
     // В этом магазине weight оффера часто 0 — вес берём из «Вес, гр.».
     const weightGrams =
       stock.weightGrams ?? parseWeightGramsLabelFromProperties(properties);
+    const setArtNos = parseSetArtNosFromProperties(properties);
     return {
       ...stock,
       weightGrams,
       listPrice: listPrice > 0 ? listPrice : undefined,
+      setArtNos: setArtNos.length ? setArtNos : undefined,
     };
   } catch (error) {
     console.warn(
@@ -317,7 +286,6 @@ function resolveListStockInfo(
 async function mapCatalogItems(
   items: NonNullable<AdvantShopCatalogResponse["products"]>,
   category: CategorySlug,
-  setMap: Record<string, string[]>,
   includeOutOfStock = true,
   enrichStock = true,
 ): Promise<Product[]> {
@@ -331,14 +299,10 @@ async function mapCatalogItems(
     ? items
     : items.filter((item) => resolveListStockInfo(item, stockMap).inStock);
 
-  return visible.map((item) =>
-    mapCatalogProduct(
-      item,
-      category,
-      setMap[String(item.productId)],
-      stockMap.get(item.productId),
-    ),
-  );
+  return visible.map((item) => {
+    const stock = stockMap.get(item.productId);
+    return mapCatalogProduct(item, category, stock?.setArtNos, stock);
+  });
 }
 
 export async function fetchAdvantShopCategories() {
@@ -361,7 +325,6 @@ export async function fetchAdvantShopProducts(options?: {
   const categoryMap = getCategoryUrlMap();
   const sort = SORT_MAP[options?.sort ?? "default"] ?? "NoSorting";
   const enrichStock = options?.enrichStock !== false;
-  const setMap = enrichStock ? await getCachedSetMap() : {};
   const includeOutOfStock = options?.includeOutOfStock !== false;
 
   if (options?.category) {
@@ -376,7 +339,6 @@ export async function fetchAdvantShopProducts(options?: {
       return mapCatalogItems(
         items,
         options.category,
-        setMap,
         includeOutOfStock,
         enrichStock,
       );
@@ -401,13 +363,7 @@ export async function fetchAdvantShopProducts(options?: {
 
       try {
         const items = await fetchAllCatalogProducts({ url, sorting: sort });
-        return mapCatalogItems(
-          items,
-          slug,
-          setMap,
-          includeOutOfStock,
-          enrichStock,
-        );
+        return mapCatalogItems(items, slug, includeOutOfStock, enrichStock);
       } catch (error) {
         if (isMissingCategoryError(error)) {
           console.warn(

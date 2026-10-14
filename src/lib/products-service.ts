@@ -156,9 +156,14 @@ export async function getComplectProducts(
   product: Product,
   limit = 3
 ): Promise<Product[]> {
-  // Нужен manufacturer с details (enrichStock), иначе fallback по бренду пустой.
-  const catalog = await getCatalogProducts({ enrichStock: true });
-  return getComplectSiblings(product, catalog, limit);
+  try {
+    // Нужен manufacturer/Set с details (enrichStock), иначе комплект пустой.
+    const catalog = await getCatalogProducts({ enrichStock: true });
+    return getComplectSiblings(product, catalog, limit);
+  } catch (error) {
+    console.error("Complect products unavailable:", error);
+    return [];
+  }
 }
 
 export async function getProductsBySlugs(slugs: string[]): Promise<Product[]> {

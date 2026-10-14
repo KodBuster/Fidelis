@@ -149,6 +149,8 @@ export type AdvantShopStockInfo = {
   manufacturer?: string;
   /** Вес изделия (г) с оффера / карточки. */
   weightGrams?: string;
+  /** Артикулы / ключи комплекта из свойства Set. */
+  setArtNos?: string[];
 };
 
 export function getAdvantShopDetailsStockInfo(

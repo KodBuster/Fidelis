@@ -94,18 +94,23 @@ function sortComplectProducts(products: Product[]): Product[] {
   );
 }
 
+function normalizeSetKey(value: string): string {
+  return value.trim().toLowerCase();
+}
+
 export function getComplectSiblingsBySet(
   product: Product,
   catalog: Product[],
   limit = 3,
 ): Product[] {
-  const setArtNos = product.setArtNos;
-  if (!setArtNos?.length) return [];
+  const setKeys = product.setArtNos;
+  if (!setKeys?.length) return [];
 
   const matched: Product[] = [];
   const seenIds = new Set<string>([product.id]);
 
-  for (const artNo of setArtNos) {
+  // 1) Значения Set как артикулы других товаров.
+  for (const artNo of setKeys) {
     const found = catalog.find((item) => {
       if (seenIds.has(item.id)) return false;
       return productMatchesArtNo(item, artNo);
@@ -116,12 +121,23 @@ export function getComplectSiblingsBySet(
     }
   }
 
-  return sortComplectProducts(matched).slice(0, limit);
+  if (matched.length) {
+    return sortComplectProducts(matched).slice(0, limit);
+  }
+
+  // 2) Общий ключ комплекта (select/название): товары с тем же Set.
+  const keySet = new Set(setKeys.map(normalizeSetKey).filter(Boolean));
+  const shared = catalog.filter((item) => {
+    if (seenIds.has(item.id) || !item.setArtNos?.length) return false;
+    return item.setArtNos.some((key) => keySet.has(normalizeSetKey(key)));
+  });
+
+  return sortComplectProducts(shared).slice(0, limit);
 }
 
 /**
  * Запасной комплект: другие товары того же производителя (бренд AdvantShop).
- * Сначала другие категории, затем та же.
+ * Сначала другие категории и в наличии, затем остальные.
  */
 export function getComplectSiblingsByManufacturer(
   product: Product,
@@ -134,21 +150,25 @@ export function getComplectSiblingsByManufacturer(
   const siblings = catalog.filter(
     (item) =>
       item.id !== product.id &&
-      item.manufacturer?.trim().toLowerCase() === manufacturer &&
-      item.inStock !== false,
+      item.manufacturer?.trim().toLowerCase() === manufacturer,
   );
 
-  const otherCategory = siblings.filter(
-    (item) => item.category !== product.category,
-  );
-  const sameCategory = siblings.filter(
-    (item) => item.category === product.category,
-  );
+  const rank = (item: Product) => {
+    const otherCategory = item.category !== product.category ? 0 : 1;
+    const outOfStock = item.inStock === false ? 1 : 0;
+    return otherCategory * 2 + outOfStock;
+  };
 
-  return sortComplectProducts([...otherCategory, ...sameCategory]).slice(
-    0,
-    limit,
-  );
+  return [...siblings]
+    .sort((a, b) => {
+      const byRank = rank(a) - rank(b);
+      if (byRank !== 0) return byRank;
+      return (
+        COMPLECT_CATEGORY_ORDER.indexOf(a.category) -
+        COMPLECT_CATEGORY_ORDER.indexOf(b.category)
+      );
+    })
+    .slice(0, limit);
 }
 
 export function getComplectSiblings(
