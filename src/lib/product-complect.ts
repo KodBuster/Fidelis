@@ -103,36 +103,53 @@ export function getComplectSiblingsBySet(
   catalog: Product[],
   limit = 3,
 ): Product[] {
-  const setKeys = product.setArtNos;
-  if (!setKeys?.length) return [];
-
+  const setKeys = product.setArtNos ?? [];
   const matched: Product[] = [];
   const seenIds = new Set<string>([product.id]);
 
-  // 1) Значения Set как артикулы других товаров.
+  const add = (item: Product) => {
+    if (seenIds.has(item.id)) return;
+    seenIds.add(item.id);
+    matched.push(item);
+  };
+
+  // 1) Значения Set текущего товара → артикулы других.
   for (const artNo of setKeys) {
-    const found = catalog.find((item) => {
-      if (seenIds.has(item.id)) return false;
-      return productMatchesArtNo(item, artNo);
-    });
-    if (found) {
-      seenIds.add(found.id);
-      matched.push(found);
+    const found = catalog.find(
+      (item) => !seenIds.has(item.id) && productMatchesArtNo(item, artNo),
+    );
+    if (found) add(found);
+  }
+
+  // 2) Обратная связь: другие товары, у которых в Set указан этот артикул.
+  const selfArtNos = new Set<string>();
+  if (product.artNo) selfArtNos.add(normalizeArtNo(product.artNo));
+  for (const offer of product.offerArtNos ?? []) {
+    selfArtNos.add(normalizeArtNo(offer));
+  }
+
+  if (selfArtNos.size) {
+    for (const item of catalog) {
+      if (seenIds.has(item.id) || !item.setArtNos?.length) continue;
+      const listsSelf = item.setArtNos.some((artNo) =>
+        selfArtNos.has(normalizeArtNo(artNo)),
+      );
+      if (listsSelf) add(item);
     }
   }
 
-  if (matched.length) {
-    return sortComplectProducts(matched).slice(0, limit);
+  // 3) Общий ключ комплекта (одно select-значение на несколько товаров).
+  if (!matched.length && setKeys.length) {
+    const keySet = new Set(setKeys.map(normalizeSetKey).filter(Boolean));
+    for (const item of catalog) {
+      if (seenIds.has(item.id) || !item.setArtNos?.length) continue;
+      if (item.setArtNos.some((key) => keySet.has(normalizeSetKey(key)))) {
+        add(item);
+      }
+    }
   }
 
-  // 2) Общий ключ комплекта (select/название): товары с тем же Set.
-  const keySet = new Set(setKeys.map(normalizeSetKey).filter(Boolean));
-  const shared = catalog.filter((item) => {
-    if (seenIds.has(item.id) || !item.setArtNos?.length) return false;
-    return item.setArtNos.some((key) => keySet.has(normalizeSetKey(key)));
-  });
-
-  return sortComplectProducts(shared).slice(0, limit);
+  return sortComplectProducts(matched).slice(0, limit);
 }
 
 /**
