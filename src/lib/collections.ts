@@ -44,10 +44,11 @@ export const STOREFRONT_COLLECTIONS: StorefrontCollection[] = [
     fallbackImage: "/images/collections/1310-2.jpg",
   },
   {
-    id: "collection-5",
-    title: "Коллекция 5",
-    href: "#",
-    comingSoon: true,
+    id: "1410-1",
+    title: "1410-1",
+    href: "/shop?manufacturer=1410-1",
+    manufacturer: "1410-1",
+    fallbackImage: "/images/collections/1410-1.jpg",
   },
   {
     id: "collection-6",
