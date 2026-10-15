@@ -111,6 +111,10 @@ export function getAvailableSizePickerSizes(
 /**
  * Единый признак «можно показать в каталоге / купить».
  * Совпадает с логикой карточки товара (иначе каталог и страница расходятся).
+ *
+ * Важно: категория «с размерами» (браслеты/кольца) ≠ у товара есть sizeColorPicker.
+ * Если сетки размеров нет, а на оффере amount > 0 — товар в наличии
+ * (типичный случай браслетов без размера в AdvantShop).
  */
 export function isAdvantShopDetailsInStock(
   item: Pick<AdvantShopProductDetails, "amount" | "offers" | "sizeColorPicker">,
@@ -122,19 +126,20 @@ export function isAdvantShopDetailsInStock(
 
   if (hasOfferStockData(item)) {
     if (!getInStockOffers(item).length) return false;
-    // Кольца/браслеты и товары с размерами — только если есть размер с остатком
-    if (needsSizes) return availableSizes.length > 0;
+    // Размерная сетка есть — нужен размер с остатком (sizeId ↔ sizes).
+    if (sizes.length > 0) return availableSizes.length > 0;
+    // Сетки нет: достаточно остатка на оффере (даже для категорий с размерами).
     return true;
   }
 
   const amount = getAdvantShopStockAmount(item);
   if (amount === undefined) {
-    // Нет данных об остатке: кольца без picker всё равно не продаём
+    // Нет данных об остатке: кольца/браслеты без picker не продаём
     if (needsSizes && sizes.length === 0) return false;
     return true;
   }
   if (amount <= 0) return false;
-  if (needsSizes) return availableSizes.length > 0 || sizes.length > 0;
+  if (sizes.length > 0) return availableSizes.length > 0 || sizes.length > 0;
   return true;
 }
 
@@ -151,6 +156,8 @@ export type AdvantShopStockInfo = {
   weightGrams?: string;
   /** Артикулы / ключи комплекта из свойства Set. */
   setArtNos?: string[];
+  /** Есть ли sizeColorPicker.sizes на карточке AdvantShop. */
+  hasSizePicker?: boolean;
 };
 
 export function getAdvantShopDetailsStockInfo(
@@ -176,6 +183,7 @@ export function getAdvantShopDetailsStockInfo(
     offerArtNos: [...offerArtNos],
     manufacturer: item.brand?.name?.trim() || undefined,
     weightGrams: pickWeightGramsFromDetails(item),
+    hasSizePicker: (item.sizeColorPicker?.sizes?.length ?? 0) > 0,
   };
 }
 

@@ -620,12 +620,13 @@ function mapBadge(
 
 function resolveCatalogSizeOptions(
   sizeOptions: ProductSizeOption[],
-  category: CategorySlug
+  category: CategorySlug,
+  hasSizePicker?: boolean,
 ): ProductSizeOption[] | undefined {
-  const needsSizes = categoryHasSizes(category) || sizeOptions.length > 0;
-  if (!needsSizes) return undefined;
   if (sizeOptions.length) return sortProductSizeOptions(sizeOptions);
-  if (categoryHasSizes(category)) {
+  // Дефолтные размеры — только если на карточке AdvantShop есть size picker.
+  // Иначе браслеты без размера получают фейковую сетку 15–21.
+  if (categoryHasSizes(category) && hasSizePicker !== false) {
     return defaultRingBraceletSizeOptions();
   }
   return undefined;
@@ -680,7 +681,11 @@ export function mapCatalogProduct(
     isNew: Boolean(item.newProduct),
     description,
     images: resolveProductImages(collectImages(item.photos)),
-    sizeOptions: resolveCatalogSizeOptions(sizeOptions, category),
+    sizeOptions: resolveCatalogSizeOptions(
+      sizeOptions,
+      category,
+      stock?.hasSizePicker,
+    ),
     artNo,
     offerArtNos,
     manufacturer: stock?.manufacturer,
@@ -740,7 +745,6 @@ export function mapProductDetails(
       return { value: label, label };
     },
   );
-  const hasSizes = categoryHasSizes(category) || allSizes.length > 0;
   const artNo = pickDefaultArtNo(item);
   const sizeArtNos = buildSizeArtNos(
     item,
@@ -764,6 +768,9 @@ export function mapProductDetails(
     item,
     category,
   );
+  // Не подставляем пустую «обязательную» сетку, если в AdvantShop размеров нет.
+  const resolvedSizeOptions =
+    sizeOptions.length > 0 ? sortProductSizeOptions(sizeOptions) : [];
 
   return {
     id: String(item.productId),
@@ -790,7 +797,7 @@ export function mapProductDetails(
     metal:
       parseProperty(properties, ["металл", "проба", "silver"]) ??
       "Серебро 925, родиевое покрытие",
-    sizeOptions: hasSizes ? sortProductSizeOptions(sizeOptions) : [],
+    sizeOptions: resolvedSizeOptions,
     stoneVariants,
     artNo: artNo || undefined,
     sizeArtNos,
