@@ -10,9 +10,10 @@ meta:
 
 build:
   additionalCommands: npm ci --include=dev && npm run build
-  # Один ключ в UI: "*" — после build попадает нескрытый amvera-bundle/
+  # Только standalone-бандл: иначе "*" тащит node_modules + .next (~800+ МБ)
+  # и скачивание артефакта из S3 часто падает с 403.
   artifacts:
-    "*": /
+    amvera-bundle: /
 
 run:
   # Не использовать sh -c — shell в runtime Amvera часто отсутствует

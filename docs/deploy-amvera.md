@@ -15,7 +15,7 @@
 | --- | --- |
 | окружение | Node.js / npm / **20** |
 | additionalCommands | `npm ci --include=dev && npm run build` |
-| artifacts ключ | `*` |
+| artifacts ключ | `amvera-bundle` |
 | artifacts значение | `/` |
 | command | `node amvera-bundle/run.mjs` |
 | persistenceMount | `/data` |
@@ -51,6 +51,30 @@ rings:koltso,ankle-bracelets:braslety-na-nogu,bracelets:braslet,necklaces:kole,p
 
 ---
 
+## Лог: S3 403 / архив ~800 МБ / Server Action
+
+- **Download failed … 403 Forbidden** при `…tar.gz` (~800 МБ) — в артефакт попал весь проект (`artifacts: *`), включая `node_modules`. В `amvera.yaml` должно быть `amvera-bundle: /` (только standalone). В UI Amvera уберите ключ `*`, если он перебивает yaml. После смены — пересборка.
+- **Failed to find Server Action** — после деплоя у клиента старая вкладка. Жёсткое обновление страницы (Ctrl+F5) или открыть сайт заново.
+
+---
+
+## GitHub → Amvera не подхватывает push
+
+Amvera тянет **форк** [`dmitry76543/Fidelis`](https://github.com/dmitry76543/Fidelis) (не KodBuster). Webhook должен быть на **этом** репозитории.
+
+1. Amvera → проект → **Репозиторий** → скопируйте URL вебхука (должен быть ровно `https://webhook.git.msk1.amvera.ru`, без лишнего пути/слеша).
+2. GitHub форка → **Settings → Webhooks** → Payload URL = этот адрес.
+3. Content type: `application/json`.
+4. Secret = тот же, что в Amvera (поле «Секрет»).
+5. Events: **Just the push event** (или Push; на другие Amvera отвечает 400).
+6. Ветка в Amvera = `main`.
+7. После пуша в KodBuster сделайте **Sync fork** у `dmitry76543/Fidelis` — иначе webhook нечего деплоить.
+8. В webhook → Recent Deliveries: ответ **200**. Если 401/403 — секрет/токен; если нет доставок — URL неверный или webhook на другом репо.
+
+Документация Amvera: [вебхуки](https://docs.amvera.ru/applications/git/webhooks.html).
+
+---
+
 ## Если CrashLoopBackOff
 
 1. Открой **лог приложения** (не системы) — там текст ошибки Node.
@@ -63,7 +87,8 @@ rings:koltso,ankle-bracelets:braslety-na-nogu,bracelets:braslet,necklaces:kole,p
 ## Чеклист
 
 - [ ] Push + Sync fork
-- [ ] UI: artifacts `*` → `/`, command `node amvera-bundle/run.mjs`
+- [ ] Webhook на форке: `https://webhook.git.msk1.amvera.ru`, JSON, секрет, Push
+- [ ] UI/yaml: artifacts `amvera-bundle` → `/`, command `node amvera-bundle/run.mjs`
 - [ ] Env: HOSTNAME, PORT, AdvantShop, SITE_URL
 - [ ] Лог приложения: `Amvera start:` и `Ready`
 - [ ] Открывается домен с вкладки «Домены»
