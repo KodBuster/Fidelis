@@ -157,7 +157,8 @@ export async function getComplectProducts(
   limit = 3
 ): Promise<Product[]> {
   try {
-    // Нужен manufacturer/Set с details (enrichStock), иначе комплект пустой.
+    // Set приходит с properties при enrichStock; без Set блок комплекта скрыт.
+    if (!product.setArtNos?.length) return [];
     const catalog = await getCatalogProducts({ enrichStock: true });
     return getComplectSiblings(product, catalog, limit);
   } catch (error) {

@@ -152,48 +152,12 @@ export function getComplectSiblingsBySet(
   return sortComplectProducts(matched).slice(0, limit);
 }
 
-/**
- * Запасной комплект: другие товары того же производителя (бренд AdvantShop).
- * Сначала другие категории и в наличии, затем остальные.
- */
-export function getComplectSiblingsByManufacturer(
-  product: Product,
-  catalog: Product[],
-  limit = 3,
-): Product[] {
-  const manufacturer = product.manufacturer?.trim().toLowerCase();
-  if (!manufacturer) return [];
-
-  const siblings = catalog.filter(
-    (item) =>
-      item.id !== product.id &&
-      item.manufacturer?.trim().toLowerCase() === manufacturer,
-  );
-
-  const rank = (item: Product) => {
-    const otherCategory = item.category !== product.category ? 0 : 1;
-    const outOfStock = item.inStock === false ? 1 : 0;
-    return otherCategory * 2 + outOfStock;
-  };
-
-  return [...siblings]
-    .sort((a, b) => {
-      const byRank = rank(a) - rank(b);
-      if (byRank !== 0) return byRank;
-      return (
-        COMPLECT_CATEGORY_ORDER.indexOf(a.category) -
-        COMPLECT_CATEGORY_ORDER.indexOf(b.category)
-      );
-    })
-    .slice(0, limit);
-}
-
+/** Комплект только из свойства Set. Без Set блок на карточке не показываем. */
 export function getComplectSiblings(
   product: Product,
   catalog: Product[],
   limit = 3,
 ): Product[] {
-  const fromSet = getComplectSiblingsBySet(product, catalog, limit);
-  if (fromSet.length) return fromSet;
-  return getComplectSiblingsByManufacturer(product, catalog, limit);
+  if (!product.setArtNos?.length) return [];
+  return getComplectSiblingsBySet(product, catalog, limit);
 }
