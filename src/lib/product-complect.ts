@@ -10,6 +10,7 @@ const COMPLECT_CATEGORY_ORDER: CategorySlug[] = [
   "bracelets",
   "ankle-bracelets",
   "brooches",
+  "watches",
 ];
 
 const SET_PROPERTY_NAMES = new Set(["set", "комплект", "complect"]);

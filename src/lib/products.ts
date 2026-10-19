@@ -6,7 +6,8 @@ export type CategorySlug =
   | "bracelets"
   | "ankle-bracelets"
   | "brooches"
-  | "chain-pendants";
+  | "chain-pendants"
+  | "watches";
 
 /** Категории с выбором размера (кольца и браслеты). */
 export function categoryHasSizes(category: CategorySlug): boolean {
@@ -133,6 +134,11 @@ export const CATEGORIES: Record<
     title: "Кулон на цепи",
     titlePlural: "Кулоны на цепи",
     description: "Кулоны на цепи из серебра 925",
+  },
+  watches: {
+    title: "Часы",
+    titlePlural: "Часы",
+    description: "Часы из коллекции ФИДЕЛИС",
   },
 };
 
@@ -454,6 +460,7 @@ const CATEGORY_IMAGES: Record<CategorySlug, string[]> = {
   earrings: ["/images/product-earrings.webp"],
   brooches: ["/images/product-necklace.webp", "/images/product-bracelet.webp"],
   "chain-pendants": ["/images/product-necklace.webp"],
+  watches: ["/images/categories/watches.jpg"],
 };
 
 export function getProductBySlug(slug: string): Product | undefined {

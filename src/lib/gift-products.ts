@@ -14,6 +14,7 @@ export const GIFT_SOURCE_CATEGORIES: CategorySlug[] = [
   "bracelets",
   "ankle-bracelets",
   "brooches",
+  "watches",
 ];
 
 type MoscowDateParts = {

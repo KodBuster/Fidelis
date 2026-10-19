@@ -37,7 +37,7 @@ const CYRILLIC_TO_LATIN: Record<string, string> = {
 };
 
 const GENERIC_LEGACY_SLUG =
-  /^(koltsa|koltso|sergi|kole|podveski|podveska|braslety-na-ruku|braslety-na-nogu|braslet|kulon-na-tsepi|shnurki|brosh|podarok)(-\d+)?$/i;
+  /^(koltsa|koltso|sergi|kole|podveski|podveska|braslety-na-ruku|braslety-na-nogu|braslet|kulon-na-tsepi|shnurki|brosh|chasy|podarok)(-\d+)?$/i;
 
 const CATEGORY_FALLBACK: Record<CategorySlug, string> = {
   rings: "koltso",
@@ -48,6 +48,7 @@ const CATEGORY_FALLBACK: Record<CategorySlug, string> = {
   "ankle-bracelets": "braslety-na-nogu",
   brooches: "brosh",
   "chain-pendants": "kulon-na-tsepi",
+  watches: "chasy",
 };
 
 function transliterate(value: string): string {

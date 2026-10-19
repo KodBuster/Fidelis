@@ -25,6 +25,7 @@ const NAV_ITEMS = [
   { label: "Кулон на цепи", href: "/shop/chain-pendants" },
   { label: "Серьги", href: "/shop/earrings" },
   { label: "Броши", href: "/shop/brooches" },
+  { label: "Часы", href: "/shop/watches" },
 ];
 
 const iconButtonClass =

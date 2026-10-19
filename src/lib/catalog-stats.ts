@@ -26,10 +26,14 @@ const CATEGORY_IMAGES: Record<CategorySlug, string> = {
   earrings: "/images/categories/earrings.jpg",
   brooches: "/images/product-necklace.webp",
   "chain-pendants": "/images/categories/pendants.jpg",
+  watches: "/images/categories/watches.jpg",
 };
 
 /** Категории с фиксированной обложкой (не подменять фото товара). */
-const FIXED_CATEGORY_COVERS = new Set<CategorySlug>(["ankle-bracelets"]);
+const FIXED_CATEGORY_COVERS = new Set<CategorySlug>([
+  "ankle-bracelets",
+  "watches",
+]);
 
 function formatModelCount(count: number): string {
   const mod10 = count % 10;
