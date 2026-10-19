@@ -15,6 +15,8 @@ export type CategoryStat = {
   priceFromLabel: string;
   href: string;
   image: string;
+  /** Как вписывать фото в карточку. */
+  imageFit?: "cover" | "contain";
 };
 
 const CATEGORY_IMAGES: Record<CategorySlug, string> = {
@@ -34,6 +36,25 @@ const FIXED_CATEGORY_COVERS = new Set<CategorySlug>([
   "ankle-bracelets",
   "watches",
 ]);
+
+/** Обложка только из товаров категории (не статический jpg). */
+const PRODUCT_PHOTO_CATEGORIES = new Set<CategorySlug>([
+  "pendants",
+  "brooches",
+  "chain-pendants",
+]);
+
+/** Фото товара целиком в карточке (без обрезки). */
+const CONTAIN_COVER_CATEGORIES = new Set<CategorySlug>([
+  "bracelets",
+  "ankle-bracelets",
+  "pendants",
+  "brooches",
+  "chain-pendants",
+]);
+
+/** Цена за изделие, не за грамм. */
+const PRODUCT_PRICE_CATEGORIES = new Set<CategorySlug>(["watches"]);
 
 function formatModelCount(count: number): string {
   const mod10 = count % 10;
@@ -59,27 +80,38 @@ function getMinPricePerGram(products: Product[]): number {
   }, Number.POSITIVE_INFINITY);
 }
 
+function isUsableProductImage(image?: string): boolean {
+  if (!image) return false;
+  return (
+    !image.includes("nophoto") &&
+    !image.includes("photo-coming-soon") &&
+    !image.endsWith("photo-coming-soon.svg")
+  );
+}
+
 function pickCategoryCover(products: Product[], slug: CategorySlug): string {
-  if (FIXED_CATEGORY_COVERS.has(slug)) {
+  if (FIXED_CATEGORY_COVERS.has(slug) && !PRODUCT_PHOTO_CATEGORIES.has(slug)) {
     return CATEGORY_IMAGES[slug];
   }
 
   const withImage = products.find(
     (product) =>
-      product.image &&
-      !product.image.includes("nophoto") &&
-      !product.image.includes("photo-coming-soon") &&
-      product.inStock !== false,
+      isUsableProductImage(product.image) && product.inStock !== false,
   );
   if (withImage?.image) return withImage.image;
 
-  const anyImage = products.find(
-    (product) =>
-      product.image &&
-      !product.image.includes("nophoto") &&
-      !product.image.includes("photo-coming-soon"),
+  const anyImage = products.find((product) =>
+    isUsableProductImage(product.image),
   );
-  return anyImage?.image ?? CATEGORY_IMAGES[slug];
+  if (anyImage?.image) return anyImage.image;
+
+  // Для подвесок/брошей/кулонов без фото в каталоге — всё равно не
+  // подставляем чужой статический баннер, если есть хоть один image.
+  if (PRODUCT_PHOTO_CATEGORIES.has(slug) && products[0]?.image) {
+    return products[0].image;
+  }
+
+  return CATEGORY_IMAGES[slug];
 }
 
 function buildCategoryStat(
@@ -88,6 +120,7 @@ function buildCategoryStat(
 ): CategoryStat {
   const count = categoryProducts.length;
   const minPrice = getMinPricePerGram(categoryProducts);
+  const priceUnit = PRODUCT_PRICE_CATEGORIES.has(slug) ? "" : " / гр.";
 
   return {
     slug,
@@ -95,10 +128,11 @@ function buildCategoryStat(
     countLabel: count > 0 ? formatModelCount(count) : "Скоро в каталоге",
     priceFromLabel:
       count > 0 && Number.isFinite(minPrice)
-        ? `от ${formatPrice(minPrice)} / гр.`
+        ? `от ${formatPrice(minPrice)}${priceUnit}`
         : "Уточняйте цену",
     href: `/shop/${slug}`,
     image: pickCategoryCover(categoryProducts, slug),
+    imageFit: CONTAIN_COVER_CATEGORIES.has(slug) ? "contain" : "cover",
   };
 }
 

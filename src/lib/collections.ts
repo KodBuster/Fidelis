@@ -84,6 +84,7 @@ export const STOREFRONT_COLLECTIONS: StorefrontCollection[] = [
     href: "/shop?manufacturer=1910-3",
     manufacturer: "1910-3",
     fallbackImage: "/images/collections/1910-3.jpg",
+    imageFit: "contain",
   },
 ];
 

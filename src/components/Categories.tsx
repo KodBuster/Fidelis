@@ -27,8 +27,7 @@ export async function Categories() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           {categories.map((cat) => {
-            const isBracelets =
-              cat.slug === "bracelets" || cat.slug === "ankle-bracelets";
+            const containFit = cat.imageFit === "contain";
 
             return (
               <Link
@@ -51,7 +50,7 @@ export async function Categories() {
 
                   <div
                     className={`relative h-full shrink-0 overflow-hidden ${
-                      isBracelets
+                      containFit
                         ? "w-[59%] md:w-[63%] bg-brand-surface"
                         : "w-[42%] md:w-[45%] bg-brand-surface"
                     }`}
@@ -61,12 +60,12 @@ export async function Categories() {
                       alt={cat.title}
                       fill
                       className={
-                        isBracelets
+                        containFit
                           ? "object-contain object-center transition-transform duration-500 group-hover:scale-[1.03]"
                           : "object-cover transition-transform duration-500 group-hover:scale-105"
                       }
                       sizes={
-                        isBracelets
+                        containFit
                           ? "(max-width: 768px) 59vw, 31vw"
                           : "(max-width: 768px) 42vw, 22vw"
                       }
