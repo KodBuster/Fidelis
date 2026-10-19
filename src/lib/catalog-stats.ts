@@ -35,6 +35,7 @@ const CATEGORY_IMAGES: Record<CategorySlug, string> = {
 const FIXED_CATEGORY_COVERS = new Set<CategorySlug>([
   "ankle-bracelets",
   "watches",
+  "earrings",
 ]);
 
 /** Обложка только из товаров категории (не статический jpg). */
