@@ -18,6 +18,13 @@ export function categoryHasSizes(category: CategorySlug): boolean {
   );
 }
 
+/** Цена AdvantShop за изделие целиком (не ₽/г × вес). */
+export function categoryUsesFixedProductPrice(
+  category: CategorySlug | undefined,
+): boolean {
+  return category === "watches";
+}
+
 export type ProductSizeOption = {
   /** Ключ размера из AdvantShop, например «16.0+4». */
   value: string;
@@ -415,6 +422,7 @@ export function getProductWeightGrams(
 
 /**
  * Цена изделия = цена за грамм × вес.
+ * Для часов — цена AdvantShop как есть (без умножения на вес).
  * Если вес неизвестен — возвращает цену AdvantShop как есть.
  */
 export function getProductTotalPrice(
@@ -425,12 +433,15 @@ export function getProductTotalPrice(
   sizeValue: string | null,
 ): number {
   const unitPrice = getProductSizePrice(product, sizeValue);
+  if (categoryUsesFixedProductPrice(product.category)) {
+    return Math.round(unitPrice);
+  }
   const weight = getProductWeightGrams(product, sizeValue);
   if (!weight) return unitPrice;
   return Math.round(unitPrice * weight);
 }
 
-/** Цена изделия для карточек каталога (AdvantShop = за грамм × вес). */
+/** Цена изделия для карточек каталога. */
 export function getCatalogProductTotalPrice(
   product: Pick<Product, "price" | "weightGrams" | "category">,
 ): number {
@@ -440,6 +451,9 @@ export function getCatalogProductTotalPrice(
     product.price <= 0
   ) {
     return 0;
+  }
+  if (categoryUsesFixedProductPrice(product.category)) {
+    return Math.round(product.price);
   }
   const weight = parseWeightGramsValue(product.weightGrams);
   if (!weight) return Math.round(product.price);
