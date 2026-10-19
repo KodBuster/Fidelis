@@ -52,6 +52,7 @@ const CONTAIN_COVER_CATEGORIES = new Set<CategorySlug>([
   "pendants",
   "brooches",
   "chain-pendants",
+  "earrings",
 ]);
 
 /** Цена за изделие, не за грамм. */
