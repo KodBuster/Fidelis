@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { ProductImage } from "@/components/catalog/ProductImage";
 import { ProductQuickViewModal } from "@/components/product/ProductQuickViewModal";
@@ -51,6 +51,7 @@ export function CheckoutForm() {
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
   const [previewItem, setPreviewItem] = useState<CartItem | null>(null);
   const [personalDataConsent, setPersonalDataConsent] = useState(false);
+  const [consentHint, setConsentHint] = useState(false);
   const checkoutTrackedRef = useRef(false);
 
   const deliveryFee = useMemo(
@@ -89,9 +90,11 @@ export function CheckoutForm() {
     event.preventDefault();
     const consentError = validatePersonalDataConsent(personalDataConsent);
     if (consentError) {
-      setError(consentError);
+      setConsentHint(true);
+      setError(null);
       return;
     }
+    setConsentHint(false);
     const validationError = validateCheckoutForm(form);
     if (validationError) {
       setError(validationError);
@@ -447,11 +450,11 @@ export function CheckoutForm() {
                         checked={personalDataConsent}
                         onChange={(e) => {
                           setPersonalDataConsent(e.target.checked);
+                          if (e.target.checked) setConsentHint(false);
                           setError(null);
                           setOutOfStockItems([]);
                         }}
                         className="peer sr-only"
-                        required
                         aria-required="true"
                       />
                       <span
@@ -563,11 +566,21 @@ export function CheckoutForm() {
 
                 <button
                   type="submit"
-                  disabled={isSubmitting || !personalDataConsent}
+                  disabled={isSubmitting}
                   className="w-full px-6 py-3.5 bg-brand-terracotta hover:bg-brand-terracotta-logo disabled:opacity-60 text-white text-sm tracking-widest uppercase transition-colors"
                 >
                   {isSubmitting ? "Отправка…" : "Оформить заказ"}
                 </button>
+
+                {consentHint ? (
+                  <p
+                    className="text-xs text-brand-terracotta leading-relaxed"
+                    role="alert"
+                  >
+                    Чтобы оформить заказ, включите согласие на обработку
+                    персональных данных
+                  </p>
+                ) : null}
 
                 <Link
                   href="/cart"
