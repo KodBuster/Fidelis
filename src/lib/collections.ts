@@ -86,6 +86,13 @@ export const STOREFRONT_COLLECTIONS: StorefrontCollection[] = [
     fallbackImage: "/images/collections/1910-3.jpg",
     imageFit: "contain",
   },
+  {
+    id: "2210-2",
+    title: "2210-2",
+    href: "/shop?manufacturer=2210-2",
+    manufacturer: "2210-2",
+    fallbackImage: "/images/collections/2210-2.jpg",
+  },
 ];
 
 export function filterProductsByManufacturer(
