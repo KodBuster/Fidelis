@@ -7,6 +7,204 @@ export const METRIKA_IDS: readonly number[] = [109167160];
 export const METRIKA_ID = METRIKA_IDS[0] ?? 0;
 export const METRIKA_READY_EVENT = "fidelis:metrika-ready";
 
+/**
+ * Каталог JS-целей для кабинета Метрики (тип «JavaScript-событие»).
+ * Идентификатор = conditions.url / reachGoal target.
+ */
+export type MetrikaGoalDef = {
+  id: string;
+  name: string;
+  group: "funnel" | "contact" | "catalog" | "interest";
+  /** Приоритет для оптимизации в Яндекс Директе */
+  direct: "primary" | "secondary" | "optional";
+  when: string;
+};
+
+export const METRIKA_GOALS: readonly MetrikaGoalDef[] = [
+  {
+    id: "purchase",
+    name: "Покупка / успешный заказ",
+    group: "funnel",
+    direct: "primary",
+    when: "Страница успеха оплаты или подтверждения заказа",
+  },
+  {
+    id: "order_submit",
+    name: "Отправка заказа",
+    group: "funnel",
+    direct: "primary",
+    when: "Успешная отправка формы оформления заказа",
+  },
+  {
+    id: "begin_checkout",
+    name: "Начало оформления",
+    group: "funnel",
+    direct: "secondary",
+    when: "Открытие страницы /checkout с товарами в корзине",
+  },
+  {
+    id: "add_to_cart",
+    name: "Добавление в корзину",
+    group: "funnel",
+    direct: "secondary",
+    when: "Клик «В корзину» на карточке / в галерее товара",
+  },
+  {
+    id: "view_item",
+    name: "Просмотр товара",
+    group: "funnel",
+    direct: "optional",
+    when: "Открытие страницы товара",
+  },
+  {
+    id: "page_cart",
+    name: "Корзина",
+    group: "funnel",
+    direct: "secondary",
+    when: "Посещение /cart",
+  },
+  {
+    id: "page_checkout",
+    name: "Оформление заказа",
+    group: "funnel",
+    direct: "secondary",
+    when: "Посещение /checkout",
+  },
+  {
+    id: "page_checkout_success",
+    name: "Страница успеха заказа",
+    group: "funnel",
+    direct: "optional",
+    when: "Посещение /checkout/success",
+  },
+  {
+    id: "contact_lead",
+    name: "Контакт (звонок или мессенджер)",
+    group: "contact",
+    direct: "primary",
+    when: "Клик по телефону, MAX или Telegram (составная лид-цель)",
+  },
+  {
+    id: "contact_phone",
+    name: "Клик по телефону",
+    group: "contact",
+    direct: "optional",
+    when: "Клик tel: в FAB или на странице",
+  },
+  {
+    id: "contact_max",
+    name: "Переход в MAX",
+    group: "contact",
+    direct: "optional",
+    when: "Клик по кнопке MAX",
+  },
+  {
+    id: "contact_telegram",
+    name: "Переход в Telegram",
+    group: "contact",
+    direct: "optional",
+    when: "Клик по кнопке Telegram",
+  },
+  {
+    id: "showroom_map_click",
+    name: "Клик по карте шоурума",
+    group: "contact",
+    direct: "optional",
+    when: "Клик по ссылке/карте шоурума",
+  },
+  {
+    id: "site_search",
+    name: "Поиск по сайту",
+    group: "interest",
+    direct: "optional",
+    when: "Отправка поискового запроса (форма поиска)",
+  },
+  {
+    id: "page_shop",
+    name: "Каталог",
+    group: "catalog",
+    direct: "optional",
+    when: "Посещение /shop",
+  },
+  {
+    id: "page_rings",
+    name: "Категория: Кольца",
+    group: "catalog",
+    direct: "optional",
+    when: "Посещение /shop/rings",
+  },
+  {
+    id: "page_earrings",
+    name: "Категория: Серьги",
+    group: "catalog",
+    direct: "optional",
+    when: "Посещение /shop/earrings",
+  },
+  {
+    id: "page_bracelets",
+    name: "Категория: Браслеты",
+    group: "catalog",
+    direct: "optional",
+    when: "Посещение /shop/bracelets",
+  },
+  {
+    id: "page_ankle_bracelets",
+    name: "Категория: Анклеты",
+    group: "catalog",
+    direct: "optional",
+    when: "Посещение /shop/ankle-bracelets",
+  },
+  {
+    id: "page_necklaces",
+    name: "Категория: Колье",
+    group: "catalog",
+    direct: "optional",
+    when: "Посещение /shop/necklaces",
+  },
+  {
+    id: "page_pendants",
+    name: "Категория: Подвески",
+    group: "catalog",
+    direct: "optional",
+    when: "Посещение /shop/pendants",
+  },
+  {
+    id: "page_chain_pendants",
+    name: "Категория: Цепи с подвесками",
+    group: "catalog",
+    direct: "optional",
+    when: "Посещение /shop/chain-pendants",
+  },
+  {
+    id: "page_brooches",
+    name: "Категория: Броши",
+    group: "catalog",
+    direct: "optional",
+    when: "Посещение /shop/brooches",
+  },
+  {
+    id: "page_watches",
+    name: "Категория: Часы",
+    group: "catalog",
+    direct: "optional",
+    when: "Посещение /shop/watches",
+  },
+  {
+    id: "page_shipping",
+    name: "Доставка и оплата",
+    group: "interest",
+    direct: "optional",
+    when: "Посещение /shipping",
+  },
+  {
+    id: "page_guide",
+    name: "Гид / справка",
+    group: "interest",
+    direct: "optional",
+    when: "Посещение /guide или разделов гида",
+  },
+] as const;
+
 const BRAND = "Fidelis";
 const TRACKED_PURCHASES_KEY = "fidelis-metrika-purchases";
 const TRACKED_ORDERS_KEY = "fidelis-metrika-orders";
@@ -332,12 +530,13 @@ export function trackShowroomMapClick() {
   reachGoal("showroom_map_click");
 }
 
-/**
- * Цели «посетил страницу» для Директа / Метрики.
- * В кабинете Метрики создайте JS-цели с этими идентификаторами:
- * page_rings, page_earrings, page_pendants, page_bracelets, page_gifts,
- * page_about, page_blog, page_showroom, page_shipping, page_guide.
- */
+export function trackSiteSearch(query: string) {
+  const q = query.trim();
+  if (!q) return;
+  reachGoal("site_search", { query: q.slice(0, 100) });
+}
+
+/** Цели «посетил страницу» — идентификаторы из METRIKA_GOALS (page_*). */
 export function trackPageVisit(goal: string) {
   reachGoal(goal);
 }

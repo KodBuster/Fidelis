@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { trackSiteSearch } from "@/lib/analytics/metrika";
 import {
   flattenAutocompleteSuggestions,
   type SearchAutocompleteResult,
@@ -124,7 +125,10 @@ export function SearchForm({
 
   const readQuery = () => inputRef.current?.value ?? suggestQuery;
 
-  const leaveTo = (href: string) => {
+  const leaveTo = (href: string, searchQuery?: string) => {
+    if (searchQuery?.trim() && href.startsWith("/search")) {
+      trackSiteSearch(searchQuery);
+    }
     onSubmit?.();
     setOpen(false);
     window.location.assign(href);
@@ -137,7 +141,8 @@ export function SearchForm({
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (activeIndex >= 0 && flatSuggestions[activeIndex]) {
-      leaveTo(flatSuggestions[activeIndex].href);
+      const suggestion = flatSuggestions[activeIndex];
+      leaveTo(suggestion.href, suggestQuery.trim() || readQuery().trim());
       return;
     }
     const q = String(new FormData(event.currentTarget).get("q") ?? "").trim();
@@ -145,7 +150,7 @@ export function SearchForm({
       inputRef.current?.focus();
       return;
     }
-    leaveTo(searchHref(q));
+    leaveTo(searchHref(q), q);
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -228,7 +233,7 @@ export function SearchForm({
           }
           onShowAll={() => {
             const q = readQuery().trim();
-            if (q) leaveTo(searchHref(q));
+            if (q) leaveTo(searchHref(q), q);
           }}
         />
       ) : null}
