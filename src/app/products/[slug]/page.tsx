@@ -7,7 +7,6 @@ import { buildPageMetadata } from "@/lib/metadata";
 import { buildProductMetaDescription } from "@/lib/product-metadata";
 import { isLegacyProductSlug } from "@/lib/product-slug";
 import { buildProductJsonLd } from "@/lib/product-schema";
-import { CATALOG_REVALIDATE_SECONDS } from "@/lib/advantshop/config";
 import {
   getComplectProducts,
   getProductDetails,
@@ -16,8 +15,8 @@ import {
 
 // Данные товара кэшируются в unstable_cache; force-dynamic оставляем,
 // чтобы next build не ходил в AdvantShop на Render/Amvera.
+// Не экспортировать revalidate вместе с force-dynamic — Next 16 падает на сборке.
 export const dynamic = "force-dynamic";
-export const revalidate = CATALOG_REVALIDATE_SECONDS;
 
 type PageProps = {
   params: Promise<{ slug: string }>;
