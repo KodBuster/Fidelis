@@ -87,6 +87,13 @@ export const STOREFRONT_COLLECTIONS: StorefrontCollection[] = [
     imageFit: "contain",
   },
   {
+    id: "2210-1",
+    title: "2210-1",
+    href: "/shop?manufacturer=2210-1",
+    manufacturer: "2210-1",
+    fallbackImage: "/images/collections/2210-1.jpg",
+  },
+  {
     id: "2210-2",
     title: "2210-2",
     href: "/shop?manufacturer=2210-2",
