@@ -2,8 +2,8 @@ import type { CartItem } from "@/lib/cart";
 import type { Order } from "@/lib/checkout";
 import type { CategorySlug } from "@/lib/products";
 
-/** Основной счётчик Метрики (0 / пустой список — счётчики Fidelis ещё не подключены) */
-export const METRIKA_IDS: readonly number[] = [];
+/** Основной счётчик Метрики Fidelis */
+export const METRIKA_IDS: readonly number[] = [109167160];
 export const METRIKA_ID = METRIKA_IDS[0] ?? 0;
 export const METRIKA_READY_EVENT = "fidelis:metrika-ready";
 

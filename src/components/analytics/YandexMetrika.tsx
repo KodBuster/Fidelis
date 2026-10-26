@@ -6,11 +6,14 @@ import {
 } from "@/lib/analytics/metrika";
 
 const INIT_OPTIONS = `{
-  clickmap:true,
-  trackLinks:true,
-  accurateTrackBounce:true,
+  ssr:true,
   webvisor:true,
-  ecommerce:'dataLayer'
+  clickmap:true,
+  ecommerce:"dataLayer",
+  referrer: document.referrer,
+  url: location.href,
+  accurateTrackBounce:true,
+  trackLinks:true
 }`;
 
 const initCalls = METRIKA_IDS.map(
