@@ -28,6 +28,11 @@ export type AdvantShopCatalogProduct = {
     sizes?: { id: number; name: string }[];
   };
   offers?: AdvantShopOffer[] | null;
+  /** Иногда приходит в list API — тогда manufacturer без enrich. */
+  brand?: {
+    name?: string | null;
+    urlPath?: string | null;
+  } | null;
 };
 
 export type AdvantShopCatalogResponse = {

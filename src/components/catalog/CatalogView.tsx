@@ -80,6 +80,10 @@ export function CatalogView({
     const params = new URLSearchParams();
     if (category) params.set("category", category);
     if (filters.sort !== "default") params.set("sort", filters.sort);
+    if (filters.manufacturer?.trim()) {
+      params.set("manufacturer", filters.manufacturer.trim());
+    }
+    if (filters.complectsOnly) params.set("complect", "1");
 
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => {
@@ -113,7 +117,12 @@ export function CatalogView({
         window.clearTimeout(timeoutId);
         setLoading(false);
       });
-  }, [category, filters.sort]);
+  }, [
+    category,
+    filters.sort,
+    filters.manufacturer,
+    filters.complectsOnly,
+  ]);
 
   const products = filterProducts(filters, catalogProducts);
   const activeFilterCount = countActiveFilters(filters);

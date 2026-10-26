@@ -7,13 +7,17 @@ import { buildPageMetadata } from "@/lib/metadata";
 import { buildProductMetaDescription } from "@/lib/product-metadata";
 import { isLegacyProductSlug } from "@/lib/product-slug";
 import { buildProductJsonLd } from "@/lib/product-schema";
+import { CATALOG_REVALIDATE_SECONDS } from "@/lib/advantshop/config";
 import {
   getComplectProducts,
   getProductDetails,
   getRelatedProducts,
 } from "@/lib/products-service";
 
+// Данные товара кэшируются в unstable_cache; force-dynamic оставляем,
+// чтобы next build не ходил в AdvantShop на Render/Amvera.
 export const dynamic = "force-dynamic";
+export const revalidate = CATALOG_REVALIDATE_SECONDS;
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -21,7 +25,7 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const product = await getProductDetails(slug, { includeOutOfStock: true });
+  const product = await getProductDetails(slug);
   if (!product) return {};
 
   const canonicalSlug = product.slug;
@@ -36,7 +40,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function ProductRoute({ params }: PageProps) {
   const { slug } = await params;
-  const product = await getProductDetails(slug, { includeOutOfStock: true });
+  const product = await getProductDetails(slug);
 
   if (!product) {
     notFound();

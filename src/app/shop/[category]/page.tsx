@@ -9,7 +9,10 @@ import { hasCatalogFilterParams } from "@/lib/catalog-utils";
 import { buildCatalogItemListJsonLd } from "@/lib/item-list-schema";
 import { buildPageMetadata } from "@/lib/metadata";
 import { CATEGORIES, isValidCategory, type CategorySlug, type Product } from "@/lib/products";
-import { getCatalogProducts } from "@/lib/products-service";
+import {
+  catalogNeedsEnrichStock,
+  getCatalogProducts,
+} from "@/lib/products-service";
 import { getSiteUrl } from "@/lib/site-url";
 
 type PageProps = {
@@ -19,6 +22,7 @@ type PageProps = {
     price?: string | string[];
     size?: string | string[];
     complect?: string;
+    manufacturer?: string;
   }>;
 };
 
@@ -27,6 +31,7 @@ function buildFilterParams(searchParams: {
   price?: string | string[];
   size?: string | string[];
   complect?: string;
+  manufacturer?: string;
 }) {
   const query = new URLSearchParams();
   if (searchParams.sort) query.set("sort", searchParams.sort);
@@ -45,6 +50,9 @@ function buildFilterParams(searchParams: {
       : [];
   sizes.forEach((value) => query.append("size", value));
   if (searchParams.complect) query.set("complect", searchParams.complect);
+  if (searchParams.manufacturer) {
+    query.set("manufacturer", searchParams.manufacturer);
+  }
 
   return query;
 }
@@ -73,7 +81,8 @@ function CatalogFallback() {
 
 export default async function CategoryPage({ params, searchParams }: PageProps) {
   const { category } = await params;
-  const { sort } = await searchParams;
+  const query = await searchParams;
+  const { sort, manufacturer, complect } = query;
 
   if (!isValidCategory(category)) {
     notFound();
@@ -88,6 +97,10 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
     initialProducts = await getCatalogProducts({
       category: categorySlug,
       sort: sort ?? "default",
+      enrichStock: catalogNeedsEnrichStock({
+        manufacturer,
+        complectsOnly: complect === "1",
+      }),
     });
   } catch {
     initialError = "Не удалось загрузить каталог из AdvantShop";

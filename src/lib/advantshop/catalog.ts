@@ -407,24 +407,31 @@ export async function loadAdvantShopProductDetails(
     summary.price,
   );
 
-  const fetchedSizeDiamondWeights = await fetchDiamondWeightsForSizes(
-    Number(summary.id),
-    details.sizeColorPicker?.sizes ?? getAvailableSizePickerSizes(details),
-    details.offers ?? [],
-  );
+  const sizePickerSizes =
+    details.sizeColorPicker?.sizes ?? getAvailableSizePickerSizes(details);
+  const offers = details.offers ?? [];
+  const productId = Number(summary.id);
+
+  // Не долбим properties по каждому размеру, если вес камня уже есть с карточки.
+  const hasProductDiamondWeights =
+    Boolean(product.diamondWeightLabel) ||
+    Object.keys(product.sizeDiamondWeights ?? {}).length > 0;
+  const fetchedSizeDiamondWeights = hasProductDiamondWeights
+    ? undefined
+    : await fetchDiamondWeightsForSizes(productId, sizePickerSizes, offers);
   const sizeDiamondWeights = {
     ...(product.sizeDiamondWeights ?? {}),
     ...(fetchedSizeDiamondWeights ?? {}),
   };
-  const fetchedSizeLengthMm =
-    summary.category === "bracelets" ||
-    summary.category === "ankle-bracelets"
-      ? await fetchLengthMmForSizes(
-          Number(summary.id),
-          details.sizeColorPicker?.sizes ?? getAvailableSizePickerSizes(details),
-          details.offers ?? [],
-        )
-      : undefined;
+
+  const needsLengthBySize =
+    (summary.category === "bracelets" ||
+      summary.category === "ankle-bracelets") &&
+    !product.lengthMmLabel &&
+    Object.keys(product.sizeLengthMm ?? {}).length === 0;
+  const fetchedSizeLengthMm = needsLengthBySize
+    ? await fetchLengthMmForSizes(productId, sizePickerSizes, offers)
+    : undefined;
   const sizeLengthMm = {
     ...(product.sizeLengthMm ?? {}),
     ...(fetchedSizeLengthMm ?? {}),

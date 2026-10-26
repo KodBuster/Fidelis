@@ -17,7 +17,10 @@ export type CartStockCheckResult = {
 };
 
 async function loadDetailsIncludingOutOfStock(slug: string) {
-  const products = await fetchAdvantShopProducts({ includeOutOfStock: true });
+  const products = await fetchAdvantShopProducts({
+    includeOutOfStock: true,
+    enrichStock: false,
+  });
   const summary = findProductBySlug(products, slug);
   if (!summary) return undefined;
   return loadAdvantShopProductDetails(summary);

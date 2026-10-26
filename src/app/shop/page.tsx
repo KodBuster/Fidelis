@@ -7,7 +7,10 @@ import { buildBreadcrumbJsonLd } from "@/lib/breadcrumb-schema";
 import { hasCatalogFilterParams } from "@/lib/catalog-utils";
 import { buildCatalogItemListJsonLd } from "@/lib/item-list-schema";
 import { buildPageMetadata } from "@/lib/metadata";
-import { getCatalogProducts } from "@/lib/products-service";
+import {
+  catalogNeedsEnrichStock,
+  getCatalogProducts,
+} from "@/lib/products-service";
 import { getSiteUrl } from "@/lib/site-url";
 import type { Product } from "@/lib/products";
 
@@ -17,6 +20,7 @@ type PageProps = {
     price?: string | string[];
     size?: string | string[];
     complect?: string;
+    manufacturer?: string;
   }>;
 };
 
@@ -50,12 +54,19 @@ function CatalogFallback() {
 }
 
 export default async function ShopPage({ searchParams }: PageProps) {
-  const { sort } = await searchParams;
+  const params = await searchParams;
+  const { sort, manufacturer, complect } = params;
   let initialProducts: Product[] = [];
   let initialError: string | undefined;
 
   try {
-    initialProducts = await getCatalogProducts({ sort: sort ?? "default" });
+    initialProducts = await getCatalogProducts({
+      sort: sort ?? "default",
+      enrichStock: catalogNeedsEnrichStock({
+        manufacturer,
+        complectsOnly: complect === "1",
+      }),
+    });
   } catch {
     initialError = "Не удалось загрузить каталог из AdvantShop";
   }

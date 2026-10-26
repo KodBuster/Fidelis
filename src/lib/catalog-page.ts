@@ -13,9 +13,10 @@ export async function loadCatalogPageData(
   category?: CategorySlug
 ): Promise<CatalogPageData> {
   try {
-    const initialProducts = await getCatalogProducts(
-      category ? { category } : undefined
-    );
+    const initialProducts = await getCatalogProducts({
+      category,
+      enrichStock: false,
+    });
     return { initialProducts };
   } catch (error) {
     return {

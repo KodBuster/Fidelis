@@ -1,18 +1,27 @@
 import { NextResponse } from "next/server";
 import { CATALOG_REVALIDATE_SECONDS } from "@/lib/advantshop/config";
 import { isValidCategory } from "@/lib/products";
-import { getCatalogProducts } from "@/lib/products-service";
+import {
+  catalogNeedsEnrichStock,
+  getCatalogProducts,
+} from "@/lib/products-service";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const categoryParam = searchParams.get("category");
   const sort = searchParams.get("sort") ?? "default";
+  const manufacturer = searchParams.get("manufacturer");
+  const complectsOnly = searchParams.get("complect") === "1";
 
   const category =
     categoryParam && isValidCategory(categoryParam) ? categoryParam : undefined;
 
   try {
-    const products = await getCatalogProducts({ category, sort });
+    const products = await getCatalogProducts({
+      category,
+      sort,
+      enrichStock: catalogNeedsEnrichStock({ manufacturer, complectsOnly }),
+    });
     const cacheSeconds = CATALOG_REVALIDATE_SECONDS;
 
     return NextResponse.json(

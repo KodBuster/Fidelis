@@ -688,7 +688,8 @@ export function mapCatalogProduct(
     ),
     artNo,
     offerArtNos,
-    manufacturer: stock?.manufacturer,
+    manufacturer:
+      stock?.manufacturer ?? item.brand?.name?.trim() ?? undefined,
     weightGrams: stock?.weightGrams,
     setArtNos: setArtNos?.length ? setArtNos : undefined,
     stockAmount,
