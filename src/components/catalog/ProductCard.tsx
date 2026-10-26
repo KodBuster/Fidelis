@@ -59,6 +59,11 @@ export function ProductCard({
         {product.artNo ? (
           <p className="mt-1 text-xs text-brand-muted">Арт. {product.artNo}</p>
         ) : null}
+        {product.manufacturer?.trim() ? (
+          <p className="mt-1 text-xs text-brand-muted">
+            Коллекция {product.manufacturer.trim()}
+          </p>
+        ) : null}
         <p className="mt-1.5 font-heading text-brand-olive-dark text-lg">
           {formatPrice(getCatalogProductTotalPrice(product))}
         </p>

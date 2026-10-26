@@ -138,6 +138,14 @@ export function ProductConfigurator({ product }: ProductConfiguratorProps) {
             <span className="font-medium text-brand-olive-dark">{artNo}</span>
           </p>
         ) : null}
+        {product.manufacturer?.trim() ? (
+          <p className="mt-1 text-sm text-brand-muted">
+            Коллекция{" "}
+            <span className="font-medium text-brand-olive-dark">
+              {product.manufacturer.trim()}
+            </span>
+          </p>
+        ) : null}
       </div>
 
       <div className="space-y-4">

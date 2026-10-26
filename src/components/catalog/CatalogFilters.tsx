@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import Link from "next/link";
+import { STOREFRONT_COLLECTIONS } from "@/lib/collections";
 import {
   CATEGORIES,
   PRICE_RANGES,
@@ -14,6 +15,11 @@ import {
   shouldShowSizeFilter,
   type CatalogFilters as Filters,
 } from "@/lib/catalog-utils";
+
+const COLLECTION_FILTER_OPTIONS = STOREFRONT_COLLECTIONS.filter(
+  (collection) => collection.manufacturer && !collection.comingSoon,
+);
+
 type CatalogFiltersProps = {
   filters: Filters;
   basePath: string;
@@ -113,11 +119,22 @@ export function CatalogFilters({
   const toggleComplects = () =>
     buildFilterQuery(filters, { complectsOnly: !filters.complectsOnly });
 
+  const manufacturerHref = (manufacturer: string | null) => {
+    const current = filters.manufacturer?.trim().toLowerCase() || "";
+    const next =
+      manufacturer && manufacturer.trim().toLowerCase() === current
+        ? undefined
+        : manufacturer ?? undefined;
+    return `${basePath}${buildFilterQuery(filters, { manufacturer: next })}`;
+  };
+
   const categoryHref = (slug: CategorySlug | null) => {
     const path = slug ? `/shop/${slug}` : "/shop";
     const query = buildFilterQuery({ ...filters, category: slug ?? undefined }, {});
     return `${path}${query}`;
   };
+
+  const activeManufacturer = filters.manufacturer?.trim().toLowerCase() || "";
 
   return (
     <div className="flex flex-col h-full">
@@ -154,6 +171,29 @@ export function CatalogFilters({
               href={categoryHref(slug)}
             />
           ))}
+        </div>
+      </FilterSection>
+
+      <FilterSection title="Коллекция">
+        <div className="space-y-1">
+          <CheckboxItem
+            id="collection-all"
+            label="Все коллекции"
+            checked={!activeManufacturer}
+            href={manufacturerHref(null)}
+          />
+          {COLLECTION_FILTER_OPTIONS.map((collection) => {
+            const manufacturer = collection.manufacturer!;
+            return (
+              <CheckboxItem
+                key={collection.id}
+                id={`collection-${collection.id}`}
+                label={collection.title}
+                checked={activeManufacturer === manufacturer.trim().toLowerCase()}
+                href={manufacturerHref(manufacturer)}
+              />
+            );
+          })}
         </div>
       </FilterSection>
 
