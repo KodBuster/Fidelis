@@ -1,10 +1,20 @@
 import { promises as fs } from "fs";
 import path from "path";
 
-const COUNTER_DIR =
-  process.env.AMVERA === "1"
-    ? "/data"
-    : path.join(process.cwd(), "data");
+/**
+ * На Amvera persistenceMount=/data. Без AMVERA=1 счётчик писал в эфемерный
+ * cwd/data → после рестарта снова 1, 2… и AdvantShop отклонял дубли Number.
+ */
+function resolveCounterDir(): string {
+  if (process.env.AMVERA === "1") return "/data";
+  // Авто-детект тома Amvera, даже если env забыли
+  if (process.env.HOME === "/data" || process.env.PWD?.startsWith("/data")) {
+    return "/data";
+  }
+  return path.join(process.cwd(), "data");
+}
+
+const COUNTER_DIR = resolveCounterDir();
 const COUNTER_FILE = path.join(COUNTER_DIR, "order-counter.json");
 
 type CounterState = { next: number };
@@ -38,21 +48,29 @@ async function writeCounter(state: CounterState): Promise<void> {
 }
 
 /**
- * Выдаёт следующий порядковый номер заказа, начиная с 1
- * (или ORDER_NUMBER_START). Потокобезопасно в рамках одного процесса.
+ * Выдаёт следующий порядковый номер заказа.
+ * При ошибке ФС возвращает null — заказ уйдёт без Number (назначит AdvantShop).
  */
-export async function allocateNextOrderNumber(): Promise<number> {
-  let allocated = 0;
+export async function allocateNextOrderNumber(): Promise<number | null> {
+  let allocated: number | null = null;
 
   const run = lock.then(async () => {
-    const state = await readCounter();
-    allocated = state.next;
-    await writeCounter({ next: allocated + 1 });
+    try {
+      const state = await readCounter();
+      allocated = state.next;
+      await writeCounter({ next: allocated + 1 });
+    } catch (error) {
+      console.error(
+        `Order counter unavailable at ${COUNTER_FILE}:`,
+        error,
+      );
+      allocated = null;
+    }
   });
 
   lock = run.then(
     () => undefined,
-    () => undefined
+    () => undefined,
   );
   await run;
 

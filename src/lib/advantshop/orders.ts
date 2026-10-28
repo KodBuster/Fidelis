@@ -44,8 +44,8 @@ type AdvantShopOrderAddResponse = {
 };
 
 export type SubmitStorefrontOrderInput = {
-  /** Порядковый номер для AdvantShop (1, 2, 3…). */
-  orderNumber: string;
+  /** Порядковый номер для AdvantShop (1, 2, 3…). Если нет — назначит AdvantShop. */
+  orderNumber?: string | null;
   customer: CheckoutFormData;
   items: CartItem[];
   deliveryFee: number;
@@ -105,10 +105,15 @@ async function resolveArtNo(item: CartItem): Promise<string> {
 
 function buildOrderPayload(
   input: SubmitStorefrontOrderInput,
-  orderItems: AdvantShopOrderItem[]
+  orderItems: AdvantShopOrderItem[],
+  options?: { omitNumber?: boolean },
 ): AdvantShopOrderPayload {
   const { firstName, lastName } = splitCustomerName(input.customer.name);
   const phone = normalizePhone(input.customer.phone);
+  const number =
+    options?.omitNumber || !input.orderNumber?.trim()
+      ? undefined
+      : input.orderNumber.trim();
 
   return {
     OrderCustomer: {
@@ -120,7 +125,7 @@ function buildOrderPayload(
       Street: input.customer.address.trim(),
       Apartment: input.customer.apartment.trim() || undefined,
     },
-    Number: input.orderNumber,
+    ...(number ? { Number: number } : {}),
     OrderSource: process.env.ADVANTSHOP_ORDER_SOURCE?.trim() || "fidelis",
     Currency: "RUB",
     CustomerComment: buildCustomerComment(input.items, input.customer.comment),
@@ -130,6 +135,21 @@ function buildOrderPayload(
     CheckOrderItemAvailable: true,
     OrderItems: orderItems,
   };
+}
+
+function isDuplicateNumberError(errors: string | string[] | undefined): boolean {
+  const text = formatAdvantShopErrors(errors);
+  return /номер|number|уже существу|duplicate|занят|unique|повтор/i.test(text);
+}
+
+async function postOrder(
+  payload: AdvantShopOrderPayload,
+): Promise<AdvantShopOrderAddResponse> {
+  return advantshopFetch<AdvantShopOrderAddResponse>("/api/order/add", {
+    method: "POST",
+    body: payload,
+    revalidate: false,
+  });
 }
 
 export async function submitAdvantShopOrder(
@@ -151,12 +171,18 @@ export async function submitAdvantShopOrder(
     });
   }
 
-  const payload = buildOrderPayload(input, orderItems);
-  const response = await advantshopFetch<AdvantShopOrderAddResponse>("/api/order/add", {
-    method: "POST",
-    body: payload,
-    revalidate: false,
-  });
+  let payload = buildOrderPayload(input, orderItems);
+  let response = await postOrder(payload);
+
+  // После редеплоя локальный счётчик мог сброситься → Number уже есть в AdvantShop.
+  if (response.result === false && isDuplicateNumberError(response.errors)) {
+    console.warn(
+      "AdvantShop rejected duplicate order Number, retrying without Number:",
+      response.errors,
+    );
+    payload = buildOrderPayload(input, orderItems, { omitNumber: true });
+    response = await postOrder(payload);
+  }
 
   if (response.result === false) {
     throw new Error(formatAdvantShopErrors(response.errors));
@@ -168,7 +194,6 @@ export async function submitAdvantShopOrder(
 
   return {
     advantshopOrderId: response.obj?.Id,
-    // Приоритет — номер из AdvantShop; иначе тот, что отправили мы
-    advantshopOrderNumber: fromShop || input.orderNumber,
+    advantshopOrderNumber: fromShop || input.orderNumber?.trim() || String(response.obj?.Id ?? ""),
   };
 }

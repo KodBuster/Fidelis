@@ -81,16 +81,19 @@ export async function POST(request: Request) {
       );
     }
 
-    const sequentialNumber = String(await allocateNextOrderNumber());
+    const sequential = await allocateNextOrderNumber();
     const advantshop = await submitAdvantShopOrder({
-      orderNumber: sequentialNumber,
+      orderNumber: sequential != null ? String(sequential) : undefined,
       customer,
       items: body.items,
       deliveryFee,
     });
 
-    // Публичный номер: то, что вернул AdvantShop (обычно совпадает с отправленным 1, 2, 3…)
+    // Публичный номер: то, что вернул AdvantShop
     const orderId = advantshop.advantshopOrderNumber;
+    if (!orderId) {
+      throw new Error("AdvantShop не вернул номер заказа");
+    }
 
     return NextResponse.json({
       id: orderId,

@@ -1,7 +1,6 @@
 import type { CartItem } from "@/lib/cart";
-import { fetchAdvantShopProducts, loadAdvantShopProductDetails } from "@/lib/advantshop/catalog";
 import { isAdvantShopConfigured } from "@/lib/advantshop/config";
-import { findProductBySlug } from "@/lib/product-slug";
+import { getProductDetails } from "@/lib/products-service";
 
 export const OUT_OF_STOCK_CHECKOUT_MESSAGE =
   "К сожалению, эти изделия закончились. Пожалуйста, подберите вместо них другие. У нас ещё много чего есть.";
@@ -16,19 +15,9 @@ export type CartStockCheckResult = {
   message?: string;
 };
 
-async function loadDetailsIncludingOutOfStock(slug: string) {
-  const products = await fetchAdvantShopProducts({
-    includeOutOfStock: true,
-    enrichStock: false,
-  });
-  const summary = findProductBySlug(products, slug);
-  if (!summary) return undefined;
-  return loadAdvantShopProductDetails(summary);
-}
-
 function isCartItemAvailable(
   item: CartItem,
-  details: Awaited<ReturnType<typeof loadDetailsIncludingOutOfStock>>,
+  details: Awaited<ReturnType<typeof getProductDetails>>,
 ): boolean {
   if (!details) return false;
 
@@ -58,10 +47,11 @@ export async function checkCartItemsStock(
 
   const unavailable: CartStockCheckResult["unavailable"] = [];
 
+  // getProductDetails — кэш light-каталога + details по slug (не N полных выгрузок).
   await Promise.all(
     items.map(async (item) => {
       try {
-        const details = await loadDetailsIncludingOutOfStock(item.productSlug);
+        const details = await getProductDetails(item.productSlug);
         if (!isCartItemAvailable(item, details)) {
           unavailable.push({
             name: item.name,

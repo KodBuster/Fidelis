@@ -42,6 +42,8 @@
 | `HOSTNAME` | `0.0.0.0` | обычная |
 | `SITE_URL` | публичный URL витрины (Amvera или свой домен) | обычная |
 | `ADVANTSHOP_ORDER_SOURCE` | `fidelis` | обычная (опционально) |
+| `AMVERA` | `1` | обычная (опционально; `run.mjs` выставляет сам) |
+| `ORDER_NUMBER_START` | `1` | обычная (опционально; старт счётчика в `/data`) |
 
 `ADVANTSHOP_CATEGORY_MAP`:
 

@@ -19,8 +19,16 @@ const env = { ...process.env };
 // Amvera/Docker подставляет HOSTNAME=id контейнера — Next обязан слушать 0.0.0.0
 env.HOSTNAME = "0.0.0.0";
 if (!env.PORT) env.PORT = "80";
+// Счётчик заказов пишет в persistenceMount /data (см. order-sequence.ts)
+env.AMVERA = env.AMVERA || "1";
 
-console.log("Amvera start:", server, "HOSTNAME="+env.HOSTNAME, "PORT="+env.PORT);
+console.log(
+  "Amvera start:",
+  server,
+  "HOSTNAME="+env.HOSTNAME,
+  "PORT="+env.PORT,
+  "AMVERA="+env.AMVERA,
+);
 
 const result = spawnSync(process.execPath, [server], {
   stdio: "inherit",
