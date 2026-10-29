@@ -17,7 +17,7 @@ export function Hero() {
           </h2>
           <Link
             href="/shop"
-            className="text-sm text-brand-terracotta hover:text-brand-terracotta transition-colors tracking-wide"
+            className="inline-flex w-fit items-center justify-center rounded-lg bg-brand-terracotta px-5 py-3 text-sm font-medium tracking-widest text-white uppercase transition-colors hover:bg-brand-terracotta-logo"
           >
             Весь каталог →
           </Link>
