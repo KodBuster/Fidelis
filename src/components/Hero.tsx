@@ -11,13 +11,16 @@ export function Hero() {
       </h1>
 
       <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-10 py-10 md:py-14">
-        <div className="mb-8 md:mb-10">
-          <p className="text-brand-terracotta text-sm tracking-[0.2em] uppercase mb-2">
-            Подборки
-          </p>
+        <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
           <h2 className="font-heading text-3xl md:text-4xl text-brand-olive-dark">
             Коллекции
           </h2>
+          <Link
+            href="/shop"
+            className="text-sm text-brand-terracotta hover:text-brand-terracotta transition-colors tracking-wide"
+          >
+            Весь каталог →
+          </Link>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
