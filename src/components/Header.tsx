@@ -15,6 +15,7 @@ import {
   SITE_PHONE_TEL,
 } from "@/lib/contacts";
 import { BRAND_LOGO_SRC, BRAND_NAME_CAPS, BRAND_TAGLINE } from "@/lib/brand";
+import { useAccount } from "@/context/AccountContext";
 
 const NAV_ITEMS = [
   { label: "Кольца", href: "/shop/rings" },
@@ -135,6 +136,8 @@ function Logo({ compact = false }: { compact?: boolean }) {
 
 export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
+  const { access, signedIn } = useAccount();
+  const accountLink = <Link href="/account" className="shrink-0 px-2 py-2 text-sm text-brand-olive-dark hover:text-brand-terracotta">{signedIn ? "Кабинет" : "Войти"}</Link>;
 
   useEffect(() => {
     if (!searchOpen) return;
@@ -191,7 +194,7 @@ export function Header() {
             >
               <IconMenu />
             </Link>
-            <MobileSearchLink className="py-2 px-0.5" />
+            {access && <MobileSearchLink className="py-2 px-0.5" />}
           </div>
 
           <div className="relative z-0 flex justify-center px-2 sm:px-3">
@@ -199,8 +202,9 @@ export function Header() {
           </div>
 
           <div className="relative z-[2] flex items-center justify-end min-w-0">
-            <FavoritesLink className="touch-manipulation py-2 pl-2 pr-0.5" />
-            <CartLink className="touch-manipulation py-2 pl-0.5 pr-3" />
+            {accountLink}
+            {access && <><FavoritesLink className="touch-manipulation py-2 pl-2 pr-0.5" />
+            <CartLink className="touch-manipulation py-2 pl-0.5 pr-3" /></>}
           </div>
         </div>
 
@@ -208,7 +212,7 @@ export function Header() {
           <Logo />
 
           <nav className="flex items-center gap-8">
-            {NAV_ITEMS.map((item) => (
+            {(access ? NAV_ITEMS : []).map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -220,14 +224,15 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2 shrink-0">
-            <HeaderActions
+            {accountLink}
+            {access && <HeaderActions
               searchOpen={searchOpen}
               onSearchToggle={toggleDesktopSearch}
-            />
+            />}
           </div>
         </div>
 
-        {searchOpen && (
+        {access && searchOpen && (
           <div
             id="header-search"
             className="relative z-[2] hidden lg:block lg:absolute lg:left-0 lg:right-0 lg:top-full lg:border-b lg:border-brand-olive/10 lg:bg-brand-surface lg:px-10 lg:py-4 lg:shadow-sm"

@@ -14,6 +14,7 @@ import {
   getCatalogProducts,
 } from "@/lib/products-service";
 import { getSiteUrl } from "@/lib/site-url";
+import { requireCatalogAccess } from "@/lib/auth/access";
 
 type PageProps = {
   params: Promise<{ category: string }>;
@@ -80,6 +81,7 @@ function CatalogFallback() {
 }
 
 export default async function CategoryPage({ params, searchParams }: PageProps) {
+  await requireCatalogAccess();
   const { category } = await params;
   const query = await searchParams;
   const { sort, manufacturer, complect } = query;

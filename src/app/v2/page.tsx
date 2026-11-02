@@ -4,6 +4,7 @@ import { Header } from "@/components/Header";
 import { HeroVideoBanner } from "@/components/HeroVideoBanner";
 import { TrustBar } from "@/components/TrustBar";
 import { buildPageMetadata } from "@/lib/metadata";
+import { requireCatalogAccess } from "@/lib/auth/access";
 
 export const metadata = buildPageMetadata({
   title: "ФИДЕЛИС — вариант с видео",
@@ -13,7 +14,8 @@ export const metadata = buildPageMetadata({
   noIndex: true,
 });
 
-export default function HomeVariantPage() {
+export default async function HomeVariantPage() {
+  await requireCatalogAccess();
   return (
     <>
       <Header />

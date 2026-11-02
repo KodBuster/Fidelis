@@ -1,4 +1,5 @@
 import { notFound, permanentRedirect } from "next/navigation";
+import { requireCatalogAccess } from "@/lib/auth/access";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { ProductPage } from "@/components/product/ProductPage";
@@ -23,6 +24,7 @@ type PageProps = {
 };
 
 export async function generateMetadata({ params }: PageProps) {
+  await requireCatalogAccess();
   const { slug } = await params;
   const product = await getProductDetails(slug);
   if (!product) return {};
@@ -38,6 +40,7 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export default async function ProductRoute({ params }: PageProps) {
+  await requireCatalogAccess();
   const { slug } = await params;
   const product = await getProductDetails(slug);
 

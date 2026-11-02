@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { CATALOG_REVALIDATE_SECONDS } from "@/lib/advantshop/config";
+import { getCurrentAccount } from "@/lib/auth/session";
 import { isValidCategory } from "@/lib/products";
 import {
   catalogNeedsEnrichStock,
@@ -7,6 +7,7 @@ import {
 } from "@/lib/products-service";
 
 export async function GET(request: Request) {
+  if (!(await getCurrentAccount())?.access) return NextResponse.json({ error: "Доступ закрыт" }, { status: 403 });
   const { searchParams } = new URL(request.url);
   const categoryParam = searchParams.get("category");
   const sort = searchParams.get("sort") ?? "default";
@@ -22,13 +23,12 @@ export async function GET(request: Request) {
       sort,
       enrichStock: catalogNeedsEnrichStock({ manufacturer, complectsOnly }),
     });
-    const cacheSeconds = CATALOG_REVALIDATE_SECONDS;
 
     return NextResponse.json(
       { products },
       {
         headers: {
-          "Cache-Control": `public, s-maxage=${cacheSeconds}, stale-while-revalidate=600`,
+          "Cache-Control": "private, no-store",
         },
       }
     );

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getCurrentAccount } from "@/lib/auth/session";
 import { MetrikaPhoneLink } from "@/components/analytics/MetrikaPhoneLink";
 import {
   SITE_EMAIL,
@@ -28,7 +29,8 @@ const EXTRA_LINKS = [
   { label: "Сотрудничество", href: "/cooperation" },
 ];
 
-export function MobileMenuPage() {
+export async function MobileMenuPage() {
+  const account = await getCurrentAccount();
   return (
     <section className="py-6 md:py-10">
       <div className="mx-auto max-w-lg px-4 md:px-6">
@@ -57,7 +59,7 @@ export function MobileMenuPage() {
         </div>
 
         <ul className="flex flex-col gap-1 mb-8">
-          {NAV_ITEMS.map((item) => (
+          {(account?.access ? NAV_ITEMS : []).map((item) => (
             <li key={item.href}>
               <Link
                 href={item.href}
@@ -70,7 +72,8 @@ export function MobileMenuPage() {
         </ul>
 
         <div className="flex flex-col gap-3 border-t border-brand-sand pt-6 text-sm text-brand-muted">
-          {EXTRA_LINKS.map((item) => (
+          <Link href="/account" className="text-brand-terracotta">{account ? "Личный кабинет" : "Войти / Зарегистрироваться"}</Link>
+          {EXTRA_LINKS.filter(item => account?.access || ["/shipping", "/cooperation"].includes(item.href)).map((item) => (
             <Link
               key={item.href}
               href={item.href}

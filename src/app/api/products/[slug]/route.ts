@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getCurrentAccount } from "@/lib/auth/session";
 import { getProductDetails } from "@/lib/products-service";
 
 type RouteContext = {
@@ -6,6 +7,7 @@ type RouteContext = {
 };
 
 export async function GET(_request: Request, context: RouteContext) {
+  if (!(await getCurrentAccount())?.access) return NextResponse.json({ error: "Доступ закрыт" }, { status: 403 });
   const { slug } = await context.params;
 
   try {

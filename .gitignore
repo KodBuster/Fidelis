@@ -19,6 +19,7 @@
 
 # production
 /build
+/amvera-bundle/
 
 # misc
 .DS_Store

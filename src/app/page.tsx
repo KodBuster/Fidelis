@@ -8,6 +8,8 @@ import { TrustBar } from "@/components/TrustBar";
 import { buildHomeJsonLd } from "@/lib/home-schema";
 import { BRAND_NAME_CAPS, BRAND_TAGLINE } from "@/lib/brand";
 import { buildPageMetadata } from "@/lib/metadata";
+import { getCurrentAccount } from "@/lib/auth/session";
+import { RegistrationBanner } from "@/components/account/RegistrationBanner";
 
 export const revalidate = 300;
 
@@ -18,16 +20,18 @@ export const metadata = buildPageMetadata({
   path: "/",
 });
 
-export default function HomePage() {
+export default async function HomePage() {
+  const account = await getCurrentAccount();
+  const access = Boolean(account?.access);
   return (
     <>
       <JsonLd data={buildHomeJsonLd()} />
       <Header />
       <main>
-        <Hero />
+        {access ? <Hero /> : <RegistrationBanner signedIn={Boolean(account)} />}
         <TrustBar />
-        <PriceOverview />
-        <Categories />
+        {access && <PriceOverview />}
+        <Categories restricted={!access} />
       </main>
       <Footer />
     </>

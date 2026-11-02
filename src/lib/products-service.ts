@@ -110,6 +110,8 @@ export async function getCatalogProducts(options?: {
       );
     } catch (error) {
       console.error("AdvantShop catalog unavailable:", error);
+      // A configured live shop must never silently become the demonstration catalog.
+      throw error;
     }
   }
 

@@ -5,8 +5,10 @@ import {
   type CategorySlug,
   type Product,
 } from "@/lib/products";
-import { isAdvantShopConfigured } from "@/lib/advantshop/config";
+import { getAdvantShopBaseUrl, getCategoryUrlMap, isAdvantShopConfigured } from "@/lib/advantshop/config";
 import { getCatalogProducts } from "@/lib/products-service";
+import { unstable_cache } from "next/cache";
+import { randomInt } from "node:crypto";
 
 export type CategoryStat = {
   slug: CategorySlug;
@@ -172,4 +174,32 @@ export async function getCategoryStats(): Promise<CategoryStat[]> {
     );
     return buildCategoryStat(slug, categoryProducts);
   });
+}
+
+/** Cache successful live categories separately; failed requests must not cache demo data or zero counts. */
+const getPublicCategoryPreview = unstable_cache(async (slug: CategorySlug, source: string) => {
+    if (!source) throw new Error("AdvantShop is not configured");
+    if (!getCategoryUrlMap()[slug]) throw new Error(`Missing AdvantShop category mapping: ${slug}`);
+    const catalog = await getCatalogProducts({ category: slug, enrichStock: false });
+    const products = [...new Map(catalog.filter(p => p.category === slug).map(p => [p.id, p])).values()];
+    const pool = [...new Set(products.map(p => p.image).filter(isUsableProductImage))];
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = randomInt(i + 1); [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    return { slug, title: CATEGORIES[slug].title, countLabel: formatModelCount(products.length), images: pool.slice(0, 3) };
+}, ["live-public-category-preview-v2"], { revalidate: 300 });
+
+/** Public projection: never serialize catalog products or prices into guest props. */
+export async function getPublicCategoryPreviews() {
+  const configured = isAdvantShopConfigured();
+  const source = configured ? `${getAdvantShopBaseUrl()}|${JSON.stringify(getCategoryUrlMap())}` : "";
+  return Promise.all(CATALOG_CATEGORY_SLUGS.map(async slug => {
+    try {
+      if (!configured) throw new Error("AdvantShop is not configured");
+      return await getPublicCategoryPreview(slug, source);
+    } catch {
+      console.error(`Live category preview unavailable: ${slug}`);
+      return { slug, title: CATEGORIES[slug].title, countLabel: "Количество временно недоступно", images: [] as string[] };
+    }
+  }));
 }

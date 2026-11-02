@@ -1,8 +1,20 @@
 ﻿import Image from "next/image";
 import Link from "next/link";
-import { getCategoryStats } from "@/lib/catalog-stats";
+import { getCategoryStats, getPublicCategoryPreviews } from "@/lib/catalog-stats";
+import { CategoryCarousel } from "./CategoryCarousel";
 
-export async function Categories() {
+export async function Categories({ restricted = false }: { restricted?: boolean }) {
+  if (restricted) {
+    const previews = await getPublicCategoryPreviews();
+    return <section className="py-14 md:py-20"><div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-10">
+      <p className="mb-2 text-sm uppercase tracking-[0.2em] text-brand-terracotta">Каталог</p>
+      <h2 className="mb-8 font-heading text-3xl text-brand-olive-dark md:text-4xl">Наши категории</h2>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">{previews.map(cat => <article key={cat.slug} className="flex aspect-[7/4] overflow-hidden rounded-xl bg-brand-surface shadow-sm md:aspect-[8/5]">
+        <div className="flex w-[45%] flex-col justify-center p-5 md:p-6"><h3 className="mb-2 font-heading text-2xl text-brand-olive-dark md:text-3xl">{cat.title}</h3><p className="text-sm text-brand-muted md:text-base">{cat.countLabel}</p></div>
+        <div className="relative w-[55%]"><CategoryCarousel images={cat.images} title={cat.title} /></div>
+      </article>)}</div>
+    </div></section>;
+  }
   const categories = await getCategoryStats();
 
   return (

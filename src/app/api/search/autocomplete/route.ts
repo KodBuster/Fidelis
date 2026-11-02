@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
+import { getCurrentAccount } from "@/lib/auth/session";
 import { getSearchAutocomplete } from "@/lib/search-service";
 
-const AUTOCOMPLETE_CACHE_SECONDS = 60;
 
 export async function GET(request: Request) {
+  if (!(await getCurrentAccount())?.access) return NextResponse.json({ error: "Доступ закрыт" }, { status: 403 });
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q")?.trim() ?? "";
 
@@ -15,7 +16,7 @@ export async function GET(request: Request) {
     const result = await getSearchAutocomplete(query);
     return NextResponse.json(result, {
       headers: {
-        "Cache-Control": `public, s-maxage=${AUTOCOMPLETE_CACHE_SECONDS}, stale-while-revalidate=120`,
+        "Cache-Control": "private, no-store",
       },
     });
   } catch (error) {

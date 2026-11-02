@@ -12,6 +12,8 @@ import { getSiteUrl } from "@/lib/site-url";
 import { getSiteVerification } from "@/lib/site-verification";
 import { BRAND_NAME_CAPS, BRAND_TAGLINE } from "@/lib/brand";
 import "./globals.css";
+import { getCurrentAccount } from "@/lib/auth/session";
+import { AccountProvider } from "@/context/AccountContext";
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
@@ -33,14 +35,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const account = await getCurrentAccount();
   return (
     <html lang="ru" className="h-full antialiased">
       <body className="min-h-full flex flex-col font-body">
+        <AccountProvider value={{ signedIn: Boolean(account), access: Boolean(account?.access) }}>
         <YandexMetrika />
         <PageVisitTracker />
         <CartProvider>
@@ -51,6 +55,7 @@ export default function RootLayout({
             </FavoritesProvider>
           </CompareProvider>
         </CartProvider>
+        </AccountProvider>
       </body>
     </html>
   );

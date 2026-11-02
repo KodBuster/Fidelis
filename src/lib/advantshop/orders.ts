@@ -14,6 +14,9 @@ type AdvantShopOrderItem = {
 
 type AdvantShopOrderPayload = {
   OrderCustomer: {
+    CustomerId?: string;
+    Email?: string;
+    Organization?: string;
     FirstName: string;
     LastName?: string;
     Phone: string;
@@ -44,6 +47,7 @@ type AdvantShopOrderAddResponse = {
 };
 
 export type SubmitStorefrontOrderInput = {
+  accountCustomer: { id: string; email: string; organization: string };
   /** Порядковый номер для AdvantShop (1, 2, 3…). Если нет — назначит AdvantShop. */
   orderNumber?: string | null;
   customer: CheckoutFormData;
@@ -117,6 +121,9 @@ function buildOrderPayload(
 
   return {
     OrderCustomer: {
+      CustomerId: input.accountCustomer.id,
+      Email: input.accountCustomer.email,
+      Organization: input.accountCustomer.organization,
       FirstName: firstName,
       LastName: lastName,
       Phone: phone,

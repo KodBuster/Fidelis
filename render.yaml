@@ -7,7 +7,17 @@ services:
     startCommand: npm start
     envVars:
       - key: NODE_VERSION
-        value: "20"
+        value: "22"
+      - key: AUTH_DB_PATH
+        value: /data/fidelis-auth.sqlite
+      - key: SITE_URL
+        value: https://fidelischina.ru
+      - key: ADVANTSHOP_APPROVED_GROUP_ID
+        value: "2"
+      - key: ADVANTSHOP_APPROVED_GROUP_NAME
+        value: Оптовик
+      - key: SMTP_PASSWORD
+        sync: false
       - key: ADVANTSHOP_BASE_URL
         sync: false
       - key: ADVANTSHOP_SERVER_API_KEY

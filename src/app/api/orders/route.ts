@@ -11,6 +11,8 @@ import {
   type PaymentMethod,
 } from "@/lib/checkout";
 import { allocateNextOrderNumber } from "@/lib/order-sequence";
+import { getCurrentAccount } from "@/lib/auth/session";
+import { requireSameOrigin } from "@/lib/auth/http";
 
 type CreateOrderRequest = {
   customer: CheckoutFormData;
@@ -20,6 +22,9 @@ type CreateOrderRequest = {
 };
 
 export async function POST(request: Request) {
+  try { requireSameOrigin(request); } catch { return NextResponse.json({ error: "Недопустимый источник запроса" }, { status: 403 }); }
+  const account = await getCurrentAccount();
+  if (!account?.access || !account.customer_id) return NextResponse.json({ error: "Необходима подтверждённая регистрация" }, { status: 403 });
   let body: CreateOrderRequest;
 
   try {
@@ -83,6 +88,7 @@ export async function POST(request: Request) {
 
     const sequential = await allocateNextOrderNumber();
     const advantshop = await submitAdvantShopOrder({
+      accountCustomer: { id: account.customer_id, email: account.email, organization: account.organization },
       orderNumber: sequential != null ? String(sequential) : undefined,
       customer,
       items: body.items,

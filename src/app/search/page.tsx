@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { requireCatalogAccess } from "@/lib/auth/access";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SearchResults } from "@/components/search/SearchResults";
@@ -38,6 +39,7 @@ export async function generateMetadata({
 }
 
 export default async function SearchPage({ searchParams }: PageProps) {
+  await requireCatalogAccess();
   const { q } = await searchParams;
   const query = q?.trim() ?? "";
 

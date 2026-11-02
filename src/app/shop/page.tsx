@@ -13,6 +13,7 @@ import {
 } from "@/lib/products-service";
 import { getSiteUrl } from "@/lib/site-url";
 import type { Product } from "@/lib/products";
+import { requireCatalogAccess } from "@/lib/auth/access";
 
 type PageProps = {
   searchParams: Promise<{
@@ -54,6 +55,7 @@ function CatalogFallback() {
 }
 
 export default async function ShopPage({ searchParams }: PageProps) {
+  await requireCatalogAccess();
   const params = await searchParams;
   const { sort, manufacturer, complect } = params;
   let initialProducts: Product[] = [];

@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { CATALOG_REVALIDATE_SECONDS } from "@/lib/advantshop/config";
+import { getCurrentAccount } from "@/lib/auth/session";
 import { getSearchProducts } from "@/lib/search-service";
 
 export async function GET(request: Request) {
+  if (!(await getCurrentAccount())?.access) return NextResponse.json({ error: "Доступ закрыт" }, { status: 403 });
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q")?.trim() ?? "";
   const sort = searchParams.get("sort") ?? "default";
@@ -17,7 +18,7 @@ export async function GET(request: Request) {
       { products, query },
       {
         headers: {
-          "Cache-Control": `public, s-maxage=${CATALOG_REVALIDATE_SECONDS}, stale-while-revalidate=600`,
+          "Cache-Control": "private, no-store",
         },
       }
     );
