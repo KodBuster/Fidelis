@@ -1,5 +1,5 @@
 import { cpSync, existsSync, rmSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 
 const standaloneDir = ".next/standalone";
 /** Нескрытая папка для Amvera (в UI можно указать только один ключ artifacts). */
@@ -18,8 +18,14 @@ if (existsSync("certs")) {
   cpSync("certs", join(standaloneDir, "certs"), { recursive: true });
 }
 
-rmSync(amveraBundleDir, { recursive: true, force: true });
-cpSync(standaloneDir, amveraBundleDir, { recursive: true });
+// Turbopack's .next/node_modules aliases may be absolute symlinks into the
+// build checkout's node_modules. The runtime artifact cannot depend on it.
+const bundlePath = resolve(amveraBundleDir);
+if (dirname(bundlePath) !== process.cwd() || bundlePath !== join(process.cwd(), "amvera-bundle")) {
+  throw new Error("Refusing to replace a bundle outside the project directory");
+}
+rmSync(bundlePath, { recursive: true, force: true });
+cpSync(standaloneDir, bundlePath, { recursive: true, dereference: true });
 
 if (!existsSync(amveraRunSrc)) {
   console.error("Missing", amveraRunSrc);

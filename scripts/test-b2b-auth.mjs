@@ -34,7 +34,7 @@ const upstream = createServer(async (request, response) => {
 await new Promise(r => upstream.listen(0, "127.0.0.1", r));
 const backend = `http://127.0.0.1:${upstream.address().port}`;
 const production = process.env.AUTH_TEST_PRODUCTION === "1";
-const args = production ? [".next/standalone/server.js"] : ["node_modules/next/dist/bin/next", "dev", "--hostname", "127.0.0.1", "--port", String(port)];
+const args = production ? [process.env.AUTH_TEST_BUNDLE_SERVER || ".next/standalone/server.js"] : ["node_modules/next/dist/bin/next", "dev", "--hostname", "127.0.0.1", "--port", String(port)];
 const child = spawn(process.execPath, args, {
   cwd: resolve("."), windowsHide: true,
   env: { ...process.env, HOSTNAME: "127.0.0.1", PORT: String(port), AUTH_DB_PATH: dbPath, SITE_URL: origin, ADVANTSHOP_BASE_URL: backend, ADVANTSHOP_SERVER_API_KEY: "test", ADVANTSHOP_CLIENT_API_KEY: "test", ADVANTSHOP_CATEGORY_MAP: "", ADVANTSHOP_APPROVED_GROUP_ID: "42", SMTP_HOST: "127.0.0.1", SMTP_PORT: "465", SMTP_PASSWORD: "local-test-only", NODE_ENV: production ? "production" : "development" },

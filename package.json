@@ -8,6 +8,7 @@
     "build": "next build && node scripts/prepare-standalone.mjs",
     "start": "node scripts/start-server.mjs",
     "lint": "eslint",
+    "test:amvera": "node scripts/test-amvera-bundle.mjs",
     "sync:1c": "node scripts/sync-ftp-to-advantshop.mjs",
     "sync:1c:dry": "node scripts/sync-ftp-to-advantshop.mjs --dry-run"
   },
