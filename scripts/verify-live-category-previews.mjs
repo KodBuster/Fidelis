@@ -41,6 +41,6 @@ for (const [slug, title] of Object.entries(titles)) {
   });
   assert(images.length <= 3);
   for (const image of images) assert(allowed.has(image), `Photo outside category ${title}: ${image}`);
-  if (allowed.size >= 3) assert.equal(images.length, 3, `Expected 3 photos: ${title}`);
+  if (allowed.size >= 3) assert.equal(images.length, 1, `Expected only the visible slide to load initially: ${title}`);
   console.log(`PASS ${title}: ${totalCount} models, ${images.length} category photos`);
 }

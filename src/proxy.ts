@@ -25,6 +25,7 @@ export async function proxy(request: NextRequest) {
     }
   }
   const response = NextResponse.next();
+  if (path === "/") response.headers.set("X-Accel-Buffering", "no");
   if (protectedPage || protectedApi || path === "/" || path.startsWith("/account")) {
     response.headers.set("Cache-Control", "private, no-store");
   }

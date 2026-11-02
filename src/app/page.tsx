@@ -10,6 +10,15 @@ import { BRAND_NAME_CAPS, BRAND_TAGLINE } from "@/lib/brand";
 import { buildPageMetadata } from "@/lib/metadata";
 import { getCurrentAccount } from "@/lib/auth/session";
 import { RegistrationBanner } from "@/components/account/RegistrationBanner";
+import { Suspense } from "react";
+
+function CategoriesLoading() {
+  return <section className="mx-auto max-w-7xl px-4 py-14 md:px-6 lg:px-10" aria-busy="true" aria-label="Загрузка категорий">
+    <h2 className="mb-8 font-heading text-3xl text-brand-olive-dark">Наши категории</h2>
+    <p role="status" className="mb-5 text-sm text-brand-muted">Загружаем категории…</p>
+    <div aria-hidden="true" className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">{Array.from({ length: 9 }, (_, index) => <div key={index} className="aspect-[7/4] rounded-xl bg-brand-surface motion-safe:animate-pulse md:aspect-[8/5]" />)}</div>
+  </section>;
+}
 
 export const revalidate = 300;
 
@@ -30,8 +39,8 @@ export default async function HomePage() {
       <main>
         {access ? <Hero /> : <RegistrationBanner signedIn={Boolean(account)} />}
         <TrustBar />
-        {access && <PriceOverview />}
-        <Categories restricted={!access} />
+        {access && <Suspense fallback={null}><PriceOverview /></Suspense>}
+        <Suspense fallback={<CategoriesLoading />}><Categories restricted={!access} /></Suspense>
       </main>
       <Footer />
     </>

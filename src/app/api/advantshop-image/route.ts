@@ -22,6 +22,7 @@ export async function GET(request: Request) {
     const response = await fetch(src, {
       headers,
       next: { revalidate: 86400 },
+      signal: AbortSignal.timeout(12000),
     });
 
     const contentType = response.headers.get("content-type") ?? "";

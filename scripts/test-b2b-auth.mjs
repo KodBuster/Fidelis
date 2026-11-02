@@ -12,6 +12,9 @@ const dbPath = join(temporary, "auth.sqlite");
 const port = Number(process.env.AUTH_TEST_PORT || 3321);
 const origin = `http://127.0.0.1:${port}`;
 const customerId = "b337541c-7c41-4bd1-a3d6-360cf655601b";
+const slowCatalog = process.env.AUTH_TEST_SLOW_CATALOG === "1";
+const catalogDelay = slowCatalog ? 1800 : 0;
+const categoryMap = slowCatalog ? "rings:rings,ankle-bracelets:ankle-bracelets,bracelets:bracelets,necklaces:necklaces,pendants:pendants,chain-pendants:chain-pendants,earrings:earrings,brooches:brooches,watches:watches" : "";
 let groupId = 1;
 let upstreamAvailable = true;
 let accountEmail = "partner@example.test";
@@ -19,7 +22,14 @@ const upstream = createServer(async (request, response) => {
   response.setHeader("Content-Type", "application/json");
   if (!upstreamAvailable) { response.statusCode = 503; response.end("{}"); return; }
   const path = new URL(request.url, "http://localhost").pathname;
-  if (path === "/api/customers") response.end(JSON.stringify({ customers: [{ id: customerId, email: accountEmail }] }));
+  if (path === "/api/init") response.end(JSON.stringify({ customer: { id: customerId } }));
+  else if (path === "/api/catalog") {
+    let text = ""; for await (const part of request) text += part;
+    const body = JSON.parse(text);
+    await new Promise(resolve => setTimeout(resolve, catalogDelay));
+    response.end(JSON.stringify({ category: { url: body.url }, pager: { currentPage: 1, totalPageCount: 1, totalCount: 3 }, products: [1, 2, 3].map(id => ({ productId: id, name: "Тестовое изделие", urlPath: `product-${id}`, price: 100, photoMiddle: `/images/test-${body.url}-${id}.jpg` })) }));
+  }
+  else if (path === "/api/customers") response.end(JSON.stringify({ customers: [{ id: customerId, email: accountEmail }] }));
   else if (path.startsWith("/api/customers/")) response.end(JSON.stringify({ id: customerId, groupId }));
   else if (path === "/api/order/getlist") {
     let text = ""; for await (const part of request) text += part;
@@ -37,7 +47,7 @@ const production = process.env.AUTH_TEST_PRODUCTION === "1";
 const args = production ? [process.env.AUTH_TEST_BUNDLE_SERVER || ".next/standalone/server.js"] : ["node_modules/next/dist/bin/next", "dev", "--hostname", "127.0.0.1", "--port", String(port)];
 const child = spawn(process.execPath, args, {
   cwd: resolve("."), windowsHide: true,
-  env: { ...process.env, HOSTNAME: "127.0.0.1", PORT: String(port), AUTH_DB_PATH: dbPath, SITE_URL: origin, ADVANTSHOP_BASE_URL: backend, ADVANTSHOP_SERVER_API_KEY: "test", ADVANTSHOP_CLIENT_API_KEY: "test", ADVANTSHOP_CATEGORY_MAP: "", ADVANTSHOP_APPROVED_GROUP_ID: "42", SMTP_HOST: "127.0.0.1", SMTP_PORT: "465", SMTP_PASSWORD: "local-test-only", NODE_ENV: production ? "production" : "development" },
+  env: { ...process.env, HOSTNAME: "127.0.0.1", PORT: String(port), AUTH_DB_PATH: dbPath, SITE_URL: origin, ADVANTSHOP_BASE_URL: backend, ADVANTSHOP_SERVER_API_KEY: "test", ADVANTSHOP_CLIENT_API_KEY: "test", ADVANTSHOP_CATEGORY_MAP: categoryMap, ADVANTSHOP_APPROVED_GROUP_ID: "42", SMTP_HOST: "127.0.0.1", SMTP_PORT: "465", SMTP_PASSWORD: "local-test-only", NODE_ENV: production ? "production" : "development" },
   stdio: ["ignore", "pipe", "pipe"],
 });
 let logs = ""; child.stdout.on("data", b => { logs = (logs + b).slice(-12000); }); child.stderr.on("data", b => { logs = (logs + b).slice(-12000); });
@@ -54,7 +64,25 @@ try {
   }
   for (const path of ["/api/catalog", "/api/search?q=ring", "/api/search/autocomplete?q=ri", "/api/products/test", "/api/orders"]) assert.equal((await get(path)).status, 403, path);
   for (const path of ["/shop", "/shop/rings", "/products/test", "/search", "/v2", "/checkout"]) assert.equal((await get(path)).status, 307, path);
-  const guest = await (await get("/")).text();
+  const started = performance.now();
+  const home = await get("/");
+  assert.equal(home.headers.get("x-accel-buffering"), "no", "Ingress must allow streaming homepage content");
+  const reader = home.body.getReader();
+  const decoder = new TextDecoder();
+  let guest = ""; let registrationAt;
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    guest += decoder.decode(value, { stream: true });
+    if (registrationAt === undefined && guest.includes("Для ознакомления с каталогом")) registrationAt = performance.now() - started;
+  }
+  if (slowCatalog) {
+    assert(registrationAt < catalogDelay, `Registration blocked on catalog: ${registrationAt} ms`);
+    const articles = [...guest.matchAll(/<article\b[\s\S]*?<\/article>/g)].map(match => match[0]);
+    assert.equal(articles.length, 9);
+    for (const article of articles) assert.equal([...article.matchAll(/<img\b/g)].length, 1, "Hidden carousel slides should not load initially");
+    console.log(`PASS guest streaming: registration in ${Math.round(registrationAt)} ms with ${catalogDelay} ms catalog delay; one initial image per category`);
+  }
   assert(guest.includes("Для ознакомления с каталогом"));
   assert(!guest.includes("Цены на украшения"));
   assert(!guest.includes('href="/shop/rings"'));
