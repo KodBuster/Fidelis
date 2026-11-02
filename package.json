@@ -5,7 +5,7 @@
   "engines": { "node": ">=22" },
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/prepare-standalone.mjs",
+    "build": "next build --webpack && node scripts/prepare-standalone.mjs",
     "start": "node scripts/start-server.mjs",
     "lint": "eslint",
     "test:amvera": "node scripts/test-amvera-bundle.mjs",

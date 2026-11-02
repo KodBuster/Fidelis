@@ -1,7 +1,7 @@
 // Test the exact deployable artifact outside the checkout so source dependencies
 // cannot accidentally satisfy missing runtime modules.
 import assert from "node:assert/strict";
-import { cpSync, lstatSync, mkdtempSync, readdirSync, readlinkSync, realpathSync, rmSync } from "node:fs";
+import { cpSync, existsSync, lstatSync, mkdtempSync, readdirSync, readlinkSync, realpathSync, rmSync } from "node:fs";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
@@ -28,9 +28,10 @@ try {
   // Preserve symlinks during this test; dereferencing here would hide packaging bugs.
   cpSync(source, bundle, { recursive: true, verbatimSymlinks: true });
   const requireFromBundle = createRequire(join(bundle, ".next/server/instrumentation.js"));
-  const aliases = readdirSync(join(bundle, ".next/node_modules")).filter(name => /^better-sqlite3-[a-f0-9]+$/.test(name));
-  assert(aliases.length > 0, "Missing Turbopack SQLite alias");
-  for (const alias of aliases) {
+  const aliasesDirectory = join(bundle, ".next/node_modules");
+  const aliases = existsSync(aliasesDirectory) ? readdirSync(aliasesDirectory).filter(name => /^better-sqlite3-[a-f0-9]+$/.test(name)) : [];
+  assert.equal(aliases.length, 0, "Production build still depends on Turbopack SQLite aliases");
+  for (const alias of ["better-sqlite3"]) {
     const resolved = requireFromBundle.resolve(alias);
     const path = relative(bundle, resolved);
     assert(!path.startsWith("..") && !isAbsolute(path), "SQLite resolved outside the runtime artifact");
@@ -41,7 +42,11 @@ try {
     });
     assert.equal(nativeCheck.status, 0, `Cannot load SQLite from artifact: ${alias}`);
   }
-  console.log("PASS isolated Amvera artifact: SQLite aliases and native binary load without checkout dependencies");
+  const preflight = spawnSync(process.execPath, [join(bundle, "check-runtime.mjs")], {
+    windowsHide: true, stdio: "inherit", env: { ...process.env, NODE_PATH: "" },
+  });
+  assert.equal(preflight.status, 0, "Amvera startup preflight failed");
+  console.log("PASS isolated Amvera artifact: canonical SQLite and native binary load without Turbopack aliases or checkout dependencies");
   const child = spawn(process.execPath, [resolve("scripts/test-b2b-auth.mjs")], {
     windowsHide: true, stdio: "inherit",
     env: { ...process.env, NODE_PATH: "", AUTH_TEST_PRODUCTION: "1", AUTH_TEST_BUNDLE_SERVER: join(bundle, "server.js") },

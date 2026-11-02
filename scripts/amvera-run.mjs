@@ -6,6 +6,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { checkRuntime } from "./check-runtime.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const server = join(here, "server.js");
@@ -14,6 +15,7 @@ if (!existsSync(server)) {
   console.error("Amvera: server.js not found at", server);
   process.exit(1);
 }
+checkRuntime(here);
 
 const env = { ...process.env };
 // Amvera/Docker подставляет HOSTNAME=id контейнера — Next обязан слушать 0.0.0.0
