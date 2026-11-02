@@ -63,6 +63,7 @@ try {
   assert.equal((await post("register", registration, { Origin: "https://evil.example" })).status, 403);
   assert.equal((await post("register", { ...registration, consent: false })).status, 400);
   assert.equal((await post("register", registration)).status, 200);
+  assert.equal((await post("resend-approval", {})).status, 403);
   database = new Database(dbPath);
   const account = database.prepare("SELECT * FROM accounts WHERE email = ?").get(accountEmail);
   assert(account && !account.verified && !account.customer_id);
@@ -84,6 +85,7 @@ try {
   for (let attempt = 0; !database.prepare("SELECT customer_id FROM accounts WHERE id = ?").get(account.id).customer_id; attempt++) { if (attempt > 40) throw new Error("Provisioning timed out"); await pause(250); }
   assert.equal((await get("/api/catalog")).status, 403);
   const notifications = database.prepare("SELECT recipient FROM mail WHERE subject LIKE '%новая заявка%'").all(); assert.equal(notifications.length, 4);
+  assert.equal((await post("resend-approval", {})).status, 403);
   console.log("PASS registration validation, CSRF, password hash, email verification, pending access, administrator queue");
   groupId = 42;
   assert.equal((await get("/api/catalog")).status, 200);
@@ -91,6 +93,11 @@ try {
   const cabinet = await (await get("/account")).text();
   assert(cabinet.includes("OWN-ORDER")); assert(!cabinet.includes("FOREIGN-ORDER")); assert(!cabinet.includes("PRIVATE-ADMIN-COMMENT"));
   assert(database.prepare("SELECT id FROM mail WHERE subject LIKE '%доступ к каталогу открыт%'").get());
+  const approvalCount = database.prepare("SELECT COUNT(*) AS n FROM mail WHERE subject LIKE '%доступ к каталогу открыт%'").get().n;
+  assert.equal((await post("resend-approval", { email: "other@example.test" })).status, 200);
+  assert.equal(database.prepare("SELECT COUNT(*) AS n FROM mail WHERE subject LIKE '%доступ к каталогу открыт%'").get().n, approvalCount);
+  assert.equal(database.prepare("SELECT COUNT(*) AS n FROM mail WHERE subject LIKE '%доступ к каталогу открыт%' AND recipient != ?").get(accountEmail).n, 0);
+  console.log("PASS approval email resend restricted to the approved account's own email");
   groupId = 1; assert.equal((await get("/api/catalog")).status, 403);
   groupId = 42; upstreamAvailable = false; assert.equal((await get("/api/catalog")).status, 403); upstreamAvailable = true;
   console.log("PASS approval, full homepage, own orders only, approval notification, revocation, fail-closed API outage");

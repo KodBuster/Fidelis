@@ -2,6 +2,7 @@ import "server-only";
 import nodemailer from "nodemailer";
 import { randomUUID } from "node:crypto";
 import { db } from "./store";
+import { mailKind, smtpDiagnostic } from "./mail-diagnostics";
 
 export function assertMailConfigured() {
   if (!process.env.SMTP_PASSWORD || process.env.SMTP_PASSWORD === "*****" || !process.env.SITE_URL) {
@@ -36,9 +37,14 @@ export async function flushMail() {
           messageId: `<${message.id}@fidelis.ru>`,
         });
         db().prepare("DELETE FROM mail WHERE id = ?").run(message.id);
-      } catch {
-        db().prepare("UPDATE mail SET attempts = attempts + 1, next_attempt = ? WHERE id = ?").run(Date.now() + Math.min(3600000, 60000 * 2 ** Math.min(message.attempts, 6)), message.id);
-        console.error("Registration email delivery failed; queued for retry", message.id);
+        console.info("Account email accepted by SMTP", { id: message.id, kind: mailKind(message.subject), attempt: message.attempts + 1 });
+      } catch (error) {
+        const nextAttempt = Date.now() + Math.min(3600000, 60000 * 2 ** Math.min(message.attempts, 6));
+        db().prepare("UPDATE mail SET attempts = attempts + 1, next_attempt = ? WHERE id = ?").run(nextAttempt, message.id);
+        console.error("Account email delivery failed; queued for retry", {
+          id: message.id, kind: mailKind(message.subject), attempt: message.attempts + 1,
+          retryAt: new Date(nextAttempt).toISOString(), ...smtpDiagnostic(error, process.env.SMTP_PASSWORD),
+        });
       }
     }
     transport.close();

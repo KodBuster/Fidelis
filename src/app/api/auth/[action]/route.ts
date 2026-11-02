@@ -4,7 +4,7 @@ import { accountByEmail, db } from "@/lib/auth/store";
 import { digest, hashPassword, randomToken, validPassword, verifyPassword } from "@/lib/auth/crypto";
 import { createSession, getCurrentAccount, logout } from "@/lib/auth/session";
 import { assertMailConfigured, queueMail } from "@/lib/auth/mail";
-import { approvedGroupId } from "@/lib/auth/sync";
+import { approvedGroupId, queueApprovalEmail } from "@/lib/auth/sync";
 import { runAccountJobs } from "@/lib/auth/jobs";
 import { AuthError, field, rateLimit, readAuthBody, requireSameOrigin } from "@/lib/auth/http";
 
@@ -28,6 +28,14 @@ export async function POST(request: Request, context: { params: Promise<{ action
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
     rateLimit(`ip:${ip}`, 60);
     if (action === "logout") { await logout(); return NextResponse.json({ ok: true }); }
+    if (action === "resend-approval") {
+      assertMailConfigured();
+      const account = await getCurrentAccount();
+      if (!account?.verified || !account.access) throw new AuthError("Письмо доступно после подтверждения регистрации администратором.", 403);
+      rateLimit(`approval-mail:${account.id}`, 3, 3600000);
+      queueApprovalEmail(account);
+      return NextResponse.json({ ok: true, message: "Письмо об открытии доступа поставлено в очередь отправки. Проверьте также папку «Спам»." });
+    }
     if (action === "register") {
       assertMailConfigured(); approvedGroupId();
       const email = field(body, "email", 254).toLowerCase();

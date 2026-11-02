@@ -9,13 +9,21 @@ export function approvedGroupId() {
   if (!Number.isSafeInteger(id) || id <= 0) throw new Error("Не настроена группа доступа AdvantShop");
   return id;
 }
+export function queueApprovalEmail(account: Pick<Account, "email">) {
+  const subject = "Фиделис — доступ к каталогу открыт";
+  db().transaction(() => {
+    const queued = db().prepare("SELECT id FROM mail WHERE recipient = ? AND subject = ? LIMIT 1").get(account.email, subject) as { id: string } | undefined;
+    if (queued) db().prepare("UPDATE mail SET next_attempt = 0 WHERE id = ?").run(queued.id);
+    else queueMail(account.email, subject, `Ваша регистрация подтверждена. Войдите в личный кабинет: ${process.env.SITE_URL}/account`);
+  })();
+}
 export async function syncApproval(account: Account) {
   const group = approvedGroupId();
   const customer = await advantshopFetch<{ id: string; groupId?: number }>(`/api/customers/${encodeURIComponent(account.customer_id!)}`, { revalidate: false });
   const approved = customer.id?.toLowerCase() === account.customer_id?.toLowerCase() && Number(customer.groupId) === group;
   db().transaction(() => {
     const current = accountById(account.id)!;
-    if (approved && !current.approved) queueMail(account.email, "Фиделис — доступ к каталогу открыт", `Ваша регистрация подтверждена. Войдите в личный кабинет: ${process.env.SITE_URL}/account`);
+    if (approved && !current.approved) queueApprovalEmail(account);
     db().prepare("UPDATE accounts SET approved = ? WHERE id = ?").run(approved ? 1 : 0, account.id);
   })();
   return approved;

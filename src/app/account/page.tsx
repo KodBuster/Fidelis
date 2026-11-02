@@ -22,6 +22,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
       <h2 className="font-heading text-xl">{account.serviceUnavailable ? "Не удалось проверить доступ" : !account.verified ? "Подтвердите электронную почту" : account.access ? "Доступ к каталогу открыт" : "Регистрация ожидает подтверждения"}</h2>
       <p className="mt-2 text-sm text-brand-muted">{account.serviceUnavailable ? "Сервис временно недоступен. Обновите страницу позже." : !account.verified ? "Откройте письмо от Фиделис и подтвердите ваш адрес. Если письмо не пришло, проверьте папку «Спам» или запросите его повторно." : account.access ? "Вы можете просматривать каталог, цены и оформлять заказы." : "Администратор проверит заявку. О решении мы сообщим по электронной почте."}</p>
       {account.access && <Link className="mt-4 inline-block text-brand-terracotta underline" href="/shop">Перейти в каталог →</Link>}
+      {account.access && <details className="mt-4 max-w-md text-sm"><summary className="cursor-pointer text-brand-terracotta">Не пришло письмо об открытии доступа?</summary><div className="mt-3"><AuthForm mode="resend-approval" /></div></details>}
       {!account.verified && <div className="mt-5 max-w-md"><AuthForm mode="resend" email={account.email} /></div>}
     </div>
     <div className="grid items-start gap-8 md:grid-cols-[1fr_2fr]">

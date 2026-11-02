@@ -1,0 +1,12 @@
+import assert from "node:assert/strict";
+import { smtpDiagnostic, mailKind } from "../src/lib/auth/mail-diagnostics.ts";
+const diagnostic = smtpDiagnostic({ code: "EENVELOPE", command: "RCPT TO", responseCode: 550, response: "550 recipient@example.test rejected\r\nsecret-password" }, "secret-password");
+assert.equal(diagnostic.responseCode, 550);
+assert.equal(diagnostic.command, "RCPT TO");
+assert(!JSON.stringify(diagnostic).includes("recipient@example.test"));
+assert(!JSON.stringify(diagnostic).includes("secret-password"));
+assert(diagnostic.response.includes("rejected"));
+assert.deepEqual(smtpDiagnostic(null), { code: "", command: "", responseCode: undefined, response: "", message: "" });
+assert.equal(mailKind("Фиделис — доступ к каталогу открыт"), "approval");
+assert.equal(mailKind("Фиделис — новая заявка на регистрацию"), "administrator-registration");
+console.log("PASS SMTP status diagnostics, secret/address redaction, and email purpose classification");

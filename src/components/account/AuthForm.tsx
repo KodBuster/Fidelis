@@ -3,8 +3,8 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { formatPhoneInput } from "@/lib/checkout";
 
-type Mode = "register" | "login" | "forgot" | "reset" | "verify" | "password" | "resend";
-const labels: Record<Mode, string> = { register: "Отправить заявку", login: "Войти", forgot: "Восстановить пароль", reset: "Задать новый пароль", verify: "Подтвердить почту", password: "Изменить пароль", resend: "Отправить письмо повторно" };
+type Mode = "register" | "login" | "forgot" | "reset" | "verify" | "password" | "resend" | "resend-approval";
+const labels: Record<Mode, string> = { register: "Отправить заявку", login: "Войти", forgot: "Восстановить пароль", reset: "Задать новый пароль", verify: "Подтвердить почту", password: "Изменить пароль", resend: "Отправить письмо повторно", "resend-approval": "Повторно отправить письмо об открытии доступа" };
 const inputClass = "w-full rounded-lg border border-brand-sand bg-white px-4 py-3 text-brand-text focus:outline-2 focus:outline-brand-terracotta";
 export function AuthForm({ mode, token = "", email = "" }: { mode: Mode; token?: string; email?: string }) {
   const [busy, setBusy] = useState(false);
