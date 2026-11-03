@@ -96,7 +96,7 @@ function parseCategoryUrlMap(raw: string): Partial<Record<CategorySlug, string>>
 /** Map site category slugs to AdvantShop category URL paths */
 export function getCategoryUrlMap(): Partial<Record<CategorySlug, string>> {
   const raw = readEnv("ADVANTSHOP_CATEGORY_MAP");
-  return { cords: "shnurki", ...parseCategoryUrlMap(raw ?? "") };
+  return { cords: "shnurok", ...parseCategoryUrlMap(raw ?? "") };
 }
 
 export const CATALOG_REVALIDATE_SECONDS = Number(
