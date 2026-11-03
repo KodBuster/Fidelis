@@ -5,6 +5,7 @@ export type CategorySlug =
   | "necklaces"
   | "bracelets"
   | "ankle-bracelets"
+  | "cords"
   | "brooches"
   | "chain-pendants"
   | "watches";
@@ -22,7 +23,7 @@ export function categoryHasSizes(category: CategorySlug): boolean {
 export function categoryUsesFixedProductPrice(
   category: CategorySlug | undefined,
 ): boolean {
-  return category === "watches";
+  return category === "watches" || category === "cords";
 }
 
 export type ProductSizeOption = {
@@ -131,6 +132,11 @@ export const CATEGORIES: Record<
     title: "Серьги",
     titlePlural: "Серьги",
     description: "Серьги-пусеты и подвесные модели из серебра 925",
+  },
+  cords: {
+    title: "Шнурки",
+    titlePlural: "Шнурки",
+    description: "Шнурки для подвесок и кулонов",
   },
   brooches: {
     title: "Броши",
@@ -472,6 +478,7 @@ const CATEGORY_IMAGES: Record<CategorySlug, string[]> = {
   necklaces: ["/images/product-necklace.webp"],
   pendants: ["/images/product-necklace.webp"],
   earrings: ["/images/product-earrings.webp"],
+  cords: ["/images/photo-coming-soon.svg"],
   brooches: ["/images/product-necklace.webp", "/images/product-bracelet.webp"],
   "chain-pendants": ["/images/product-necklace.webp"],
   watches: ["/images/categories/watches.jpg"],

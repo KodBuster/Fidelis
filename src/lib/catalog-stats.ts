@@ -28,6 +28,7 @@ const CATEGORY_IMAGES: Record<CategorySlug, string> = {
   necklaces: "/images/categories/pendants.jpg",
   pendants: "/images/categories/pendants.jpg",
   earrings: "/images/categories/earrings.jpg",
+  cords: "/images/photo-coming-soon.svg",
   brooches: "/images/product-necklace.webp",
   "chain-pendants": "/images/categories/pendants.jpg",
   watches: "/images/categories/watches.jpg",
@@ -58,7 +59,7 @@ const CONTAIN_COVER_CATEGORIES = new Set<CategorySlug>([
 ]);
 
 /** Цена за изделие, не за грамм. */
-const PRODUCT_PRICE_CATEGORIES = new Set<CategorySlug>(["watches"]);
+const PRODUCT_PRICE_CATEGORIES = new Set<CategorySlug>(["watches", "cords"]);
 
 function formatModelCount(count: number): string {
   const mod10 = count % 10;

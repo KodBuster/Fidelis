@@ -247,6 +247,7 @@ const FEATURED_CATEGORY_SLUGS: CategorySlug[] = [
   "necklaces",
   "bracelets",
   "ankle-bracelets",
+  "cords",
   "brooches",
   "watches",
 ];

@@ -16,7 +16,7 @@ function CategoriesLoading() {
   return <section className="mx-auto max-w-7xl px-4 py-14 md:px-6 lg:px-10" aria-busy="true" aria-label="Загрузка категорий">
     <h2 className="mb-8 font-heading text-3xl text-brand-olive-dark">Наши категории</h2>
     <p role="status" className="mb-5 text-sm text-brand-muted">Загружаем категории…</p>
-    <div aria-hidden="true" className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">{Array.from({ length: 9 }, (_, index) => <div key={index} className="aspect-[7/4] rounded-xl bg-brand-surface motion-safe:animate-pulse md:aspect-[8/5]" />)}</div>
+    <div aria-hidden="true" className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">{Array.from({ length: 10 }, (_, index) => <div key={index} className="aspect-[7/4] rounded-xl bg-brand-surface motion-safe:animate-pulse md:aspect-[8/5]" />)}</div>
   </section>;
 }
 

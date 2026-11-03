@@ -46,6 +46,7 @@ const CATEGORY_FALLBACK: Record<CategorySlug, string> = {
   necklaces: "kole",
   bracelets: "braslet",
   "ankle-bracelets": "braslety-na-nogu",
+  cords: "shnurki",
   brooches: "brosh",
   "chain-pendants": "kulon-na-tsepi",
   watches: "chasy",
