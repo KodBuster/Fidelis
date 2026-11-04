@@ -26,7 +26,7 @@ export async function Categories({ restricted = false }: { restricted?: boolean 
               Каталог
             </p>
             <h2 className="font-heading text-3xl md:text-4xl text-brand-olive-dark">
-              Выберите категорию
+              Выберите тип изделия
             </h2>
           </div>
           <Link
