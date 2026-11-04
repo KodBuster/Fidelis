@@ -36,7 +36,6 @@ const CATEGORY_IMAGES: Record<CategorySlug, string> = {
 
 /** Категории с фиксированной обложкой (не подменять фото товара). */
 const FIXED_CATEGORY_COVERS = new Set<CategorySlug>([
-  "ankle-bracelets",
   "watches",
   "earrings",
 ]);
@@ -94,7 +93,17 @@ function isUsableProductImage(image?: string): boolean {
   );
 }
 
+function getAnkleBraceletCover(products: Product[]): string {
+  const article = "F4JU0030-267";
+  const product = products.find(({ artNo, offerArtNos, image }) =>
+    (artNo === article || offerArtNos?.includes(article)) && isUsableProductImage(image),
+  );
+  return product?.image ?? CATEGORY_IMAGES["ankle-bracelets"];
+}
+
 function pickCategoryCover(products: Product[], slug: CategorySlug): string {
+  if (slug === "ankle-bracelets") return getAnkleBraceletCover(products);
+
   if (FIXED_CATEGORY_COVERS.has(slug) && !PRODUCT_PHOTO_CATEGORIES.has(slug)) {
     return CATEGORY_IMAGES[slug];
   }
@@ -183,12 +192,15 @@ const getPublicCategoryPreview = unstable_cache(async (slug: CategorySlug, sourc
     if (!getCategoryUrlMap()[slug]) throw new Error(`Missing AdvantShop category mapping: ${slug}`);
     const catalog = await getCatalogProducts({ category: slug, enrichStock: false });
     const products = [...new Map(catalog.filter(p => p.category === slug).map(p => [p.id, p])).values()];
+    if (slug === "ankle-bracelets") {
+      return { slug, title: CATEGORIES[slug].title, countLabel: formatModelCount(products.length), images: [getAnkleBraceletCover(products)] };
+    }
     const pool = [...new Set(products.map(p => p.image).filter(isUsableProductImage))];
     for (let i = pool.length - 1; i > 0; i--) {
       const j = randomInt(i + 1); [pool[i], pool[j]] = [pool[j], pool[i]];
     }
     return { slug, title: CATEGORIES[slug].title, countLabel: formatModelCount(products.length), images: pool.slice(0, 3) };
-}, ["live-public-category-preview-v2"], { revalidate: 300 });
+}, ["live-public-category-preview-v3"], { revalidate: 300 });
 
 /** Public projection: never serialize catalog products or prices into guest props. */
 export async function getPublicCategoryPreviews() {
