@@ -94,7 +94,7 @@ function isUsableProductImage(image?: string): boolean {
 }
 
 function getAnkleBraceletCover(products: Product[]): string {
-  const article = "F4JU0030-267";
+  const article = "F4JU0030";
   const product = products.find(({ artNo, offerArtNos, image }) =>
     (artNo === article || offerArtNos?.includes(article)) && isUsableProductImage(image),
   );
@@ -200,7 +200,7 @@ const getPublicCategoryPreview = unstable_cache(async (slug: CategorySlug, sourc
       const j = randomInt(i + 1); [pool[i], pool[j]] = [pool[j], pool[i]];
     }
     return { slug, title: CATEGORIES[slug].title, countLabel: formatModelCount(products.length), images: pool.slice(0, 3) };
-}, ["live-public-category-preview-v3"], { revalidate: 300 });
+}, ["live-public-category-preview-v4"], { revalidate: 300 });
 
 /** Public projection: never serialize catalog products or prices into guest props. */
 export async function getPublicCategoryPreviews() {
